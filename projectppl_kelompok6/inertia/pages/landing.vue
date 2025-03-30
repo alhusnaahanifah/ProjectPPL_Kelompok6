@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
     <!-- Header -->
-    <header class="flex justify-between items-center py-6 px-8">
+    <header class="absolute top-0 left-0 w-full flex justify-between items-center py-6 px-8 bg-opacity-80 z-50">
       <h1 class="text-3xl font-bold text-green-600">HidroGrow</h1>
       <nav>
         <ul class="flex space-x-6">
@@ -9,16 +9,37 @@
           <li><a href="#features" class="text-gray-700 hover:text-green-600">Features</a></li>
           <li><a href="#testimonials" class="text-gray-700 hover:text-green-600">Testimonials</a></li>
           <li><a href="#contact" class="text-gray-700 hover:text-green-600">Contact</a></li>
+          <li><a href="#login" class="text-gray-700 hover:text-green-600">Login</a></li>
         </ul>
       </nav>
     </header>
     
     <!-- Hero Section -->
-    <section class="text-center py-20 bg-green-100">
-      <h2 class="text-5xl font-bold text-green-700">Mulai Hidroponikmu Hari Ini!</h2>
-      <p class="mt-4 text-lg text-gray-600">Temukan tanaman yang cocok untukmu dan mulai bertanam dengan mudah.</p>
-      <button class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700">Coba Kuis</button>
+    <section class="relative h-screen w-full flex items-center z-10">
+        <!-- Bagian Kiri (Lebih Besar, Warna Putih) -->
+        <div class="w-2/3 h-full bg-white flex items-center justify-center">
+        <div class="text-center px-6">
+            <h2 class="text-5xl font-bold text-green-700">Mulai Hidroponikmu Hari Ini!</h2>
+            <p class="mt-4 text-lg text-gray-600">Temukan tanaman yang cocok untukmu dan mulai bertanam dengan mudah.</p>
+            <button class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700">
+            Coba Kuis
+            </button>
+        </div>
+        </div>
+
+        <!-- SVG Pemisah Melengkung -->
+        <div class="relative w-[7%] h-full flex-shrink-0 overflow-hidden">
+        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M0 0 C80 60, 90 10, 30 100 L120 100 L100 0 Z" fill="#BFCFBB" />
+        </svg>
+        </div>
+
+        <!-- Bagian Kanan (Lebih Kecil, Warna Hijau) -->
+        <div class="w-1/3 h-full bg-[#BFCFBB] flex items-center justify-center">
+        <img src="https://source.unsplash.com/300x300/?hydroponics,plants" alt="Hidroponik" class="rounded-lg shadow-lg">
+        </div>
     </section>
+
     
     <!-- About Section -->
     <section id="about" class="py-20 px-8">
