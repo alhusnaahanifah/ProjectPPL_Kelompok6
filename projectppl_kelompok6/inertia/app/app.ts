@@ -14,11 +14,11 @@ createInertiaApp({
 
   title: (title) => `${title} - ${appName}`,
 
-  resolve: (name) => {
+  resolve: (name: string) => {
     return resolvePageComponent(
-      `../pages/${name}.vue`,
-      import.meta.glob<DefineComponent>('../pages/**/*.vue'),
-    )
+      `../inertia/pages/${name}.vue`,
+      import.meta.glob<{ default: DefineComponent }>('../inertia/pages/**/*.vue')
+    ).then(module => module.default || module) as Promise<DefineComponent>
   },
 
   setup({ el, App, props, plugin }) {

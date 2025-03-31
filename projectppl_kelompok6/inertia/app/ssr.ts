@@ -7,9 +7,23 @@ export default function render(page: any) {
   return createInertiaApp({
     page,
     render: renderToString,
-    resolve: (name) => {
-      const pages = import.meta.glob<DefineComponent>('../pages/**/*.vue', { eager: true })
-      return pages[`../pages/${name}.vue`]
+    resolve: (name: string) => {
+      const pages = import.meta.glob<{ default: DefineComponent }>('../inertia/pages/**/*.vue', { eager: true })
+      const path = `../inertia/pages/${name}.vue` // Pastikan path ini match
+      
+      console.log('Mencari komponen di path:', path) // Debugging
+      console.log('Daftar komponen tersedia:', Object.keys(pages)) // Debugging
+      
+      if (!pages[path]) {
+        throw new Error(
+          `Komponen ${name} tidak ditemukan!\n` +
+          `Pastikan:\n` +
+          `1. File ada di: inertia/pages/${name}.vue\n` +
+          `2. Nama komponen di export default match dengan nama file`
+        )
+      }
+      
+      return pages[path].default
     },
 
     setup({ App, props, plugin }) {

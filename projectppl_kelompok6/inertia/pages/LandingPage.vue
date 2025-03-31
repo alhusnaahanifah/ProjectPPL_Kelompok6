@@ -1,0 +1,146 @@
+<template>
+  <div class="container mx-auto">
+    <!-- Header -->
+    <header class="absolute top-0 left-0 w-full flex justify-between items-center py-6 px-8 bg-opacity-80 z-50">
+      <h1 class="text-3xl font-bold text-green-600">HidroGrow</h1>
+      <nav>
+        <ul class="flex space-x-6">
+          <li><a href="#about" class="text-gray-700 hover:text-green-600">About</a></li>
+          <li><a href="#features" class="text-gray-700 hover:text-green-600">Features</a></li>
+          <li><a href="#testimonials" class="text-gray-700 hover:text-green-600">Testimonials</a></li>
+          <li><a href="#contact" class="text-gray-700 hover:text-green-600">Contact</a></li>
+          <li><a href="#login" class="text-gray-700 hover:text-green-600">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="relative h-screen w-full flex items-center z-10">
+        <!-- Bagian Kiri (Lebih Besar, Warna Putih) -->
+        <div class="w-2/3 h-full bg-white flex items-center justify-center">
+        <div class="text-center px-6">
+            <h2 class="text-5xl font-bold text-green-700">Mulai Hidroponikmu Hari Ini!</h2>
+            <p class="mt-4 text-lg text-gray-600">Temukan tanaman yang cocok untukmu dan mulai bertanam dengan mudah.</p>
+            <button class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700">
+            Coba Kuis
+            </button>
+        </div>
+        </div>
+
+        <!-- SVG Pemisah Melengkung -->
+        <div class="relative w-[7%] h-full flex-shrink-0 overflow-hidden">
+        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M0 0 C80 60, 90 10, 30 100 L120 100 L100 0 Z" fill="#BFCFBB" />
+        </svg>
+        </div>
+
+        <!-- Bagian Kanan (Lebih Kecil, Warna Hijau) -->
+        <div class="w-1/3 h-full bg-[#BFCFBB] flex items-center justify-center">
+        <img src="https://source.unsplash.com/300x300/?hydroponics,plants" alt="Hidroponik" class="rounded-lg shadow-lg">
+        </div>
+    </section>
+
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 px-8">
+      <h3 class="text-4xl font-bold text-center text-green-700">Tentang Hidroponik</h3>
+      <p class="mt-4 text-center text-gray-600">Hidroponik adalah metode menanam tanpa tanah yang lebih efisien dan ramah lingkungan.</p>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-green-50">
+      <div class="container mx-auto px-4">
+        <h3 class="text-4xl font-bold text-center text-green-700 mb-4">Fitur Utama</h3>
+        <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">
+          Temukan cara mudah memulai hidroponik dengan fitur-fitur unggulan kami
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Feature 1: Personality Test -->
+          <div 
+            class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center"
+            @click="navigateTo('/plant-quiz')"
+          >
+            <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <h4 class="text-xl font-semibold text-green-800 mb-3">Tes Kepribadian Tanaman</h4>
+            <p class="text-gray-600 mb-4">
+              Cari tahu tanaman yang cocok dengan gaya hidupmu hanya dalam 1 menit!
+            </p>
+            <button class="text-green-600 font-medium hover:text-green-800 transition-colors">
+              Coba Sekarang →
+            </button>
+          </div>
+
+          <!-- Feature 2: 7-Day Challenge -->
+          <div 
+            class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center"
+            @click="navigateTo('/7-day-challenge')"
+          >
+            <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h4 class="text-xl font-semibold text-green-800 mb-3">Tantangan 7 Hari</h4>
+            <p class="text-gray-600 mb-4">
+              Ikuti panduan harian untuk memulai hidroponik dari nol hingga panen pertama
+            </p>
+            <button class="text-green-600 font-medium hover:text-green-800 transition-colors">
+              Mulai Tantangan →
+            </button>
+          </div>
+
+          <!-- Feature 3: Practical Guide -->
+          <div 
+            class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 text-center"
+            @click="navigateTo('/guides')"
+          >
+            <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h4 class="text-xl font-semibold text-green-800 mb-3">Panduan Praktis</h4>
+            <p class="text-gray-600 mb-4">
+              Video tutorial singkat dan infografis yang mudah dipahami pemula
+            </p>
+            <button class="text-green-600 font-medium hover:text-green-800 transition-colors">
+              Lihat Panduan →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-20 px-8">
+      <h3 class="text-4xl font-bold text-center text-green-700">Apa Kata Mereka?</h3>
+      <p class="mt-4 text-center text-gray-600">Orang-orang yang sudah mencoba hidroponik dan berhasil!</p>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-green-100">
+      <h3 class="text-4xl font-bold text-center text-green-700">Mulai Sekarang!</h3>
+      <div class="flex justify-center mt-6">
+        <input type="email" placeholder="Masukkan email" class="px-4 py-2 border border-gray-300 rounded-l-lg">
+        <button class="px-6 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700">Daftar</button>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'LandingPage'
+}
+</script>
+
+<style scoped>
+.container {
+  font-family: 'Arial', sans-serif;
+}
+</style>
