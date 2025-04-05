@@ -1,10 +1,10 @@
 <template>
-  <div class="container mx-auto">
+  <div class="container mx-auto overflow-x-hidden">
     <!-- Header -->
-    <header class="absolute top-0 left-0 w-full flex justify-between items-center py-6 px-8 bg-opacity-80 z-50">
-      <h1 class="text-3xl font-bold text-green-600">HidroGrow</h1>
+    <header class="absolute top-0 left-0 w-full max-w-screen flex justify-between items-center py-4 px-4 sm:px-6 md:px-8 bg-opacity-80 z-50 overflow-x-hidden">
+      <h1 class="text-2xl sm:text-3xl font-bold text-green-600">HidroGrow</h1>
       <nav>
-        <ul class="flex space-x-6">
+        <ul class="flex flex-wrap justify-end items-center space-x-4 sm:space-x-6">
           <li><a href="#about" class="text-gray-700 hover:text-green-600">About</a></li>
           <li><a href="#features" class="text-gray-700 hover:text-green-600">Features</a></li>
           <li><a href="#contact" class="text-gray-700 hover:text-green-600">Contact</a></li>
@@ -12,9 +12,10 @@
         </ul>
       </nav>
     </header>
+
     
     <!-- Hero Section -->
-    <section class="relative h-screen w-screen flex items-center z-10">
+    <section class="relative h-screen w-full flex items-center z-10">
         <div class="w-2/3 h-full relative flex items-center justify-center">
           <!-- Gambar background -->
           <img
@@ -40,7 +41,7 @@
         </div>
 
         <!-- SVG Pemisah Melengkung -->
-        <div class="relative w-[7%] h-full flex overflow-hidden">
+        <div class="relative hidden md:block w-[3%] h-full flex overflow-hidden">
             <svg class="absolute inset-0 w-full h-full -right-px" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <defs>
                     <linearGradient id="gradienContoh" x1="0%" y1="0%" x2="0%" y2="100%">
