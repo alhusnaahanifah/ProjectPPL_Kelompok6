@@ -7,7 +7,6 @@
         <ul class="flex space-x-6">
           <li><a href="#about" class="text-gray-700 hover:text-green-600">About</a></li>
           <li><a href="#features" class="text-gray-700 hover:text-green-600">Features</a></li>
-          <li><a href="#testimonials" class="text-gray-700 hover:text-green-600">Testimonials</a></li>
           <li><a href="#contact" class="text-gray-700 hover:text-green-600">Contact</a></li>
           <li><a href="/login" class="text-gray-700 hover:text-green-600">Login</a></li>
         </ul>
@@ -59,18 +58,69 @@
         </div>
     </section>
 
-    
     <!-- About Section -->
-    <section id="about" class="py-20 px-8">
-      <h3 class="text-4xl font-bold text-center text-green-700">Tentang Hidroponik</h3>
-      <p class="mt-4 text-center text-gray-600">Hidroponik adalah metode menanam tanpa tanah yang lebih efisien dan ramah lingkungan.</p>
+    <section id="about" class="py-24 px-6 bg-gradient-to-b from-green-100 via-white to-green-50">
+      <div class="max-w-6xl mx-auto text-center">
+        
+        <h3 class="text-4xl md:text-4xl font-extrabold text-green-800 mb-6 tracking-tight leading-snug font-serif">
+          HidroGrow: Menanam Itu Mudah, Berdampak, dan Menyenangkan
+        </h3>
+
+        <p class="text-lg md:text-xl text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
+          Banyak orang ingin mulai menanam tapi bingung harus mulai dari mana. HidroGrow hadir untuk mengubah itu—
+          <span class="text-green-700 font-semibold">dengan panduan praktis, kuis interaktif, dan tantangan seru</span>,
+          kami membuat kegiatan menanam terasa personal, ringan, dan bisa dilakukan siapa saja di mana saja.
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-6 text-left">
+          <!-- Card 1 -->
+          <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-300 text-center">
+            <div class="text-4xl mb-3 text-green-600">🌱</div>
+            <h4 class="text-xl font-semibold text-green-800 mb-2">Menanam Tidak Harus Sulit</h4>
+            <p class="text-gray-600 mb-4">
+              HidroGrow membimbing kamu mulai dari memilih tanaman, menyiapkan media tanam, sampai merawatnya—semuanya bisa dilakukan dari rumah.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-300 text-center">
+            <div class="text-4xl mb-3 text-green-600">🧘‍♂️</div>
+            <h4 class="text-xl font-semibold text-green-800 mb-2">Bermanfaat untuk Kesehatan Mental</h4>
+            <p class="text-gray-600 mb-4">
+              Menanam terbukti mengurangi stres dan memberi rasa damai. HidroGrow menjadikan menanam sebagai rutinitas kecil yang menenangkan.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-300 text-center">
+            <div class="text-4xl mb-3 text-green-600">🌍</div>
+            <h4 class="text-xl font-semibold text-green-800 mb-2">Aksi Kecil untuk Perubahan Besar</h4>
+            <p class="text-gray-600 mb-4">
+              Dengan satu pot tanaman, kamu ikut menjaga bumi. HidroGrow ingin menunjukkan bahwa perubahan bisa dimulai dari rumahmu sendiri.
+            </p>
+          </div>
+        </div>
+
+        <!-- Penutup -->
+        <div class="mt-16 max-w-4xl mx-auto text-center">
+          <p class="text-md md:text-lg text-gray-700 leading-relaxed">
+            Di HidroGrow, kami percaya bahwa setiap orang bisa menanam—baik kamu tinggal di apartemen, kos, rumah kecil, atau bahkan belum pernah menyentuh tanah sekalipun.
+            Kami membuat prosesnya terasa seperti petualangan kecil yang menyegarkan dan penuh makna.
+          </p>
+        </div>
+      </div>
     </section>
-    
+
+    <!-- Garis Divider -->
+    <div class="w-full flex justify-center my-12">
+      <div class="w-24 h-1 bg-green-500 rounded-full"></div>
+    </div>
+
     <!-- Features Section -->
     <section id="features" class="py-20 bg-green-50">
       <div class="container mx-auto px-4">
-        <h3 class="text-4xl font-bold text-center text-green-700 mb-4">Fitur Utama</h3>
-        <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">
+        <h3 class="text-4xl md:text-4xl font-extrabold text-green-800 mb-6 tracking-tight text-center leading-snug font-serif">Fitur Utama</h3>
+        <p class="text-lg md:text-xl text-gray-700 mb-12 max-w-3xl mx-auto text-center leading-relaxed">
           Temukan cara mudah memulai hidroponik dengan fitur-fitur unggulan kami
         </p>
         
@@ -82,7 +132,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </div>
-            <h4 class="text-xl font-semibold text-green-800 mb-3">Tes Kepribadian Tanaman</h4>
+            <h4 class="text-xl font-semibold text-green-800 mb-2">Tes Kepribadian Tanaman</h4>
             <p class="text-gray-600 mb-4">
               Cari tahu tanaman yang cocok dengan gaya hidupmu hanya dalam 1 menit!
             </p>
@@ -98,7 +148,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h4 class="text-xl font-semibold text-green-800 mb-3">Tantangan 7 Hari</h4>
+            <h4 class="text-xl font-semibold text-green-800 mb-2">Tantangan 7 Hari</h4>
             <p class="text-gray-600 mb-4">
               Ikuti panduan harian untuk memulai hidroponik dari nol hingga panen pertama
             </p>
@@ -114,7 +164,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h4 class="text-xl font-semibold text-green-800 mb-3">Panduan Praktis</h4>
+            <h4 class="text-xl font-semibold text-green-800 mb-2">Panduan Praktis</h4>
             <p class="text-gray-600 mb-4">
               Video tutorial singkat dan infografis yang mudah dipahami pemula
             </p>
@@ -126,16 +176,15 @@
       </div>
     </section>
     
-    <!-- Testimonials -->
-    <section id="testimonials" class="py-20 px-8">
-      <h3 class="text-4xl font-bold text-center text-green-700">Apa Kata Mereka?</h3>
-      <p class="mt-4 text-center text-gray-600">Orang-orang yang sudah mencoba hidroponik dan berhasil!</p>
-    </section>
-    
+    <!-- Garis Divider -->
+    <div class="w-full flex justify-center my-12">
+      <div class="w-24 h-1 bg-green-500 rounded-full"></div>
+    </div>
+
     <!-- Contact Section -->
-    <section id="contact" class="py-20 bg-green-100">
-      <h3 class="text-4xl font-bold text-center text-green-700">Hubungi Kami</h3>
-      <p class="text-center text-gray-600 mt-2">Jika ada pertanyaan atau masukan, silakan hubungi kami melalui email atau telepon.</p>
+    <section id="contact" class="py-20 bg-gradient-to-t from-white to-green-50">
+      <h3 class="text-4xl md:text-4xl font-extrabold text-green-800 mb-6 tracking-tight text-center leading-snug font-serif">Hubungi Kami</h3>
+      <p class="text-lg md:text-xl text-gray-700 mb-12 max-w-3xl mx-auto text-center leading-relaxed">Jika ada pertanyaan atau masukan, silakan hubungi kami melalui email atau telepon.</p>
 
       <div class="max-w-sm mx-auto mt-6 bg-white p-6 shadow-lg rounded-xl border border-gray-300">
         <div class="flex items-center gap-3 mb-4">
@@ -156,8 +205,6 @@
           </p>
         </div>
       </div>
-
-
     </section>
 
   </div>
