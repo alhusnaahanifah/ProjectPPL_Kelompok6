@@ -1,12 +1,14 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-green-300 p-4">
     <div class="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-md">
-      <h2 class="text-3xl font-bold text-green-700 mb-6 text-center">
-        {{ isLogin ? 'Masuk ke Akun' : 'Daftar Akun Baru' }}
-      </h2>
+      <h2 class="text-3xl font-bold text-green-700 mb-6 text-center">Daftar Akun Baru</h2>
+
+      <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+        {{ errorMessage }}
+      </div>
 
       <form @submit.prevent="handleSubmit">
-        <div v-if="!isLogin" class="mb-4">
+        <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
           <input
             type="text"
@@ -43,59 +45,46 @@
           type="submit"
           class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
         >
-          {{ isLogin ? 'Masuk' : 'Daftar' }}
+          Daftar
         </button>
       </form>
 
       <p class="mt-6 text-center text-sm text-gray-600">
-        {{ isLogin ? 'Belum punya akun?' : 'Sudah punya akun?' }}
-        <Link
-            :href="isLogin ? '/signup' : '/login'"
-            class="text-green-600 hover:underline font-medium"
-        >
-            {{ isLogin ? 'Daftar di sini' : 'Masuk di sini' }}
+        Sudah punya akun?
+        <Link href="/login" method="get" preserve-state class="text-green-600 hover:underline font-medium">
+          Masuk di sini
         </Link>
-        </p>
-
+      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { ref } from 'vue'
+import { router } from '@inertiajs/vue3'
 import { Link } from '@inertiajs/vue3'
 
-const page = usePage()
-
-// Deteksi URL
-const isLogin = computed(() => page.url === '/login')
-
-// Form data
 const form = ref({
   name: '',
   email: '',
   password: '',
 })
 
-// Submit handler
-const handleSubmit = () => {
-  if (isLogin.value) {
-    router.post('/login', {
-      email: form.value.email,
-      password: form.value.password,
-    })
-  } else {
-    router.post('/signup', form.value)
-  }
-}
+const errorMessage = ref('')
 
-// Pindah ke route berbeda
-const switchPage = () => {
-  router.visit(isLogin.value ? '/signup' : '/login')
+const handleSubmit = () => {
+  router.post('/signup', form.value, {
+    onSuccess: () => {
+      errorMessage.value = ''
+      router.visit('/dashboard')
+    },
+    onError: (errors) => {
+      console.error('❌ Error:', errors)
+      errorMessage.value = 'Terjadi kesalahan saat mendaftar. Coba lagi.'
+    }
+  })
 }
 </script>
-
 
 <style scoped>
 body {
