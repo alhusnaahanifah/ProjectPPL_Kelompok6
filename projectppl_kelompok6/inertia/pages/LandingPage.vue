@@ -32,7 +32,7 @@
             </p>
             <button 
               class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
-              onclick="window.location.href='/plant-quiz'"
+              onclick="window.location.href='/login'"
             >
               Coba Kuis
             </button>
@@ -86,7 +86,7 @@
             <p class="text-gray-600 mb-4">
               Cari tahu tanaman yang cocok dengan gaya hidupmu hanya dalam 1 menit!
             </p>
-            <Link href="/plant-quiz" class="text-green-600 font-medium hover:text-green-800 transition-colors">
+            <Link href="/login" class="text-green-600 font-medium hover:text-green-800 transition-colors">
               Coba Sekarang →
             </Link>
           </div>
@@ -102,7 +102,7 @@
             <p class="text-gray-600 mb-4">
               Ikuti panduan harian untuk memulai hidroponik dari nol hingga panen pertama
             </p>
-            <Link href="/7-day-challenge" class="text-green-600 font-medium hover:text-green-800 transition-colors">
+            <Link href="/login" class="text-green-600 font-medium hover:text-green-800 transition-colors">
               Mulai Tantangan →
             </Link>
           </div>
@@ -118,7 +118,7 @@
             <p class="text-gray-600 mb-4">
               Video tutorial singkat dan infografis yang mudah dipahami pemula
             </p>
-            <Link href="/guides" class="text-green-600 font-medium hover:text-green-800 transition-colors">
+            <Link href="/login" class="text-green-600 font-medium hover:text-green-800 transition-colors">
               Lihat Panduan →
             </Link>
           </div>
