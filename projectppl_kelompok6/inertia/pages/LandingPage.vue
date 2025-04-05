@@ -30,9 +30,13 @@
             <p class="mt-4 text-lg text-gray-600">
               Temukan tanaman yang cocok untukmu dan mulai bertanam dengan mudah.
             </p>
-            <button class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700">
+            <button 
+              class="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
+              onclick="window.location.href='/plant-quiz'"
+            >
               Coba Kuis
             </button>
+
           </div>
         </div>
 
@@ -53,8 +57,6 @@
         <div class="w-1/3 h-full bg-gradient-to-b from-[#CCFFAA] to-[#1E5B53] flex items-center justify-center">
             <img src="../image/tumbuhan.png" alt="Hidroponik" class="rounded-lg max-w-full h-auto object-contain">
         </div>
-
-
     </section>
 
     
@@ -132,12 +134,32 @@
     
     <!-- Contact Section -->
     <section id="contact" class="py-20 bg-green-100">
-      <h3 class="text-4xl font-bold text-center text-green-700">Mulai Sekarang!</h3>
-      <div class="flex justify-center mt-6">
-        <input type="email" placeholder="Masukkan email" class="px-4 py-2 border border-gray-300 rounded-l-lg">
-        <button class="px-6 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700">Daftar</button>
+      <h3 class="text-4xl font-bold text-center text-green-700">Hubungi Kami</h3>
+      <p class="text-center text-gray-600 mt-2">Jika ada pertanyaan atau masukan, silakan hubungi kami melalui email atau telepon.</p>
+
+      <div class="max-w-sm mx-auto mt-6 bg-white p-6 shadow-lg rounded-xl border border-gray-300">
+        <div class="flex items-center gap-3 mb-4">
+          <svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 4a2 2 0 012-2h16a2 2 0 012 2v16a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm3 3v1h14V7H5zm0 3v8h14v-8H5z"/>
+          </svg>
+          <p class="text-gray-800 text-base font-medium">
+            <span class="text-gray-500">Email:</span> <strong>support@example.com</strong>
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.2-.2 10.05 10.05 0 003.88.77 1 1 0 011 1v3.5a1 1 0 01-1 1A19 19 0 012 4a1 1 0 011-1H6.5a1 1 0 011 1 10.05 10.05 0 00.77 3.88 1 1 0 01-.2 1.2l-2.2 2.21z"/>
+          </svg>
+          <p class="text-gray-800 text-base font-medium">
+            <span class="text-gray-500">Telepon:</span> <strong>+62 812-3456-7890</strong>
+          </p>
+        </div>
       </div>
+
+
     </section>
+
   </div>
 </template>
 
