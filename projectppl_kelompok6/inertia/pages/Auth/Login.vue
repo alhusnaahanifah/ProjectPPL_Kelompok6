@@ -6,8 +6,6 @@
       <div v-if="form.errors.email || form.errors.password" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
         {{ form.errors.email || form.errors.password }}
       </div>
-      <!-- debug -->
-      <div class="text-xs text-gray-500 mb-4">Form Data: {{ form }}</div>
 
       <form @submit="handleSubmit">
         <div class="mb-4">
@@ -33,13 +31,12 @@
           />
         </div>
 
-        <button
-          type="submit"
-          :disabled="form.processing"
-          class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+        <Link
+          href="/dash"
+          class="block text-center w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
         >
-          {{ form.processing ? 'Memproses...' : 'Masuk' }}
-        </button>
+          Masuk
+        </Link>
       </form>
 
       <p class="mt-6 text-center text-sm text-gray-600">

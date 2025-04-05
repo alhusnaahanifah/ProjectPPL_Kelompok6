@@ -61,14 +61,18 @@
     "@adonisjs/shield": "^8.1.2",
     "@adonisjs/static": "^1.1.1",
     "@adonisjs/vite": "^4.0.0",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@inertiajs/vue3": "^2.0.6",
     "@vinejs/vine": "^3.0.0",
     "@vue/server-renderer": "^3.5.13",
     "edge.js": "^6.2.1",
+    "flowbite-vue": "^0.2.0",
     "luxon": "^3.6.0",
     "mysql2": "^3.14.0",
     "reflect-metadata": "^0.2.2",
-    "vue": "^3.5.13"
+    "v-dropdown-menu": "^2.0.4",
+    "vue": "^3.5.13",
+    "vue-sidebar-menu": "^5.6.0"
   },
   "hotHook": {
     "boundaries": [

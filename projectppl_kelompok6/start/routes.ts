@@ -43,9 +43,9 @@ router.get('/signup', async ({ inertia }) => {
 router.post('/signup', [AuthController, 'signup'])
 
 
-router.get('/dashboard', async ({ auth, inertia }) => {
-  await auth.use('web').authenticate()
-  return inertia.render('Dashboard') // pastikan file Dashboard.vue ada
-})
-
-
+// router.get('/dashboard', async ({ auth, inertia }) => {
+//   await auth.use('web').authenticate()
+//   return inertia.render('Dashboard') // pastikan file Dashboard.vue ada
+// })
+import TestController from '#controllers/TestController'
+router.get('/test', 'TestController.index')
