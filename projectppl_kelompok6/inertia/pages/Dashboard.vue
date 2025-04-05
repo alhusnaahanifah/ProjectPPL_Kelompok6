@@ -1,26 +1,49 @@
 <template>
-  <div class="min-h-screen flex bg-gradient-to-br from-green-50 to-green-200">
-    <!-- MAIN CONTENT -->
-    <div class="flex-1 flex flex-col">
-      <!-- HEADER -->
-      <header class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-green-700">HidroGrow 🌿</h1>
+  <div class="min-h-screen flex flex-col bg-gradient-to-br from-green-50 to-green-200">
+    <!-- HEADER -->
+    <header class="bg-white shadow-md p-4 flex justify-between items-center relative">
+      <h1 class="text-2xl font-bold text-green-700">HidroGrow 🌿</h1>
+      <div class="relative">
         <button
-          @click="toggleSidebar"
+          @click="toggleMenu"
           class="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center gap-2 shadow-sm"
         >
           <i class="fas fa-bars"></i> Menu
         </button>
-      </header>
 
-      <!-- CONTENT -->
-      <main class="flex-grow py-10 px-6">
-        <div class="max-w-5xl mx-auto">
-          <h2 class="text-4xl font-bold text-green-800 mb-8 text-center">Selamat Datang di Dashboard HidroGrow 🌱</h2>
+        <!-- Dropdown Menu -->
+        <transition name="fade">
+          <div
+            v-if="isMenuOpen"
+            class="absolute right-0 mt-2 min-w-[8rem] bg-white rounded-lg shadow-md py-2 z-50 border border-gray-200"
+          >
+            <Link
+              href="/profile"
+              class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
+              @click="toggleMenu"
+            >
+              <i class="fas fa-user text-green-600"></i> Profil
+            </Link>
+            <button
+              @click="logout"
+              class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
+            >
+              <i class="fas fa-sign-out-alt text-green-600"></i> Keluar
+            </button>
+          </div>
+        </transition>
+      </div>
+    </header>
 
-          <p class="text-center text-gray-700 mb-10">
-            Mari mulai perjalanan hidroponikmu. Pilih fitur yang ingin kamu eksplorasi!
-          </p>
+    <!-- MAIN -->
+    <main class="flex-grow py-10 px-6">
+      <div class="max-w-5xl mx-auto">
+        <h2 class="text-4xl font-bold text-green-800 mb-8 text-center">
+          Selamat Datang di Dashboard HidroGrow 🌱
+        </h2>
+        <p class="text-center text-gray-700 mb-10">
+          Mari mulai perjalanan hidroponikmu. Pilih fitur yang ingin kamu eksplorasi!
+        </p>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Tes Kepribadian Tanaman -->
@@ -66,54 +89,12 @@
             </Link>
           </div>
         </div>
-      </main>
+    </main>
 
-      <!-- FOOTER -->
-      <footer class="bg-white py-4 text-center text-sm text-gray-500 border-t">
-        © 2025 HidroGrow. Semua hak dilindungi.
-      </footer>
-    </div>
-
-    <!-- SIDEBAR -->
-    <transition name="slide">
-      <div v-if="isSidebarOpen" class="fixed inset-0 z-50">
-        <!-- Overlay -->
-        <div 
-          class="absolute inset-0 bg-black/30"
-          @click="toggleSidebar"
-        ></div>
-        
-        <!-- Sidebar Content -->
-        <div class="absolute top-0 right-0 w-64 h-full bg-white shadow-lg flex flex-col">
-          <div class="p-4 border-b flex justify-between items-center">
-            <h2 class="text-lg font-semibold">Menu</h2>
-            <button @click="toggleSidebar" class="text-gray-500 hover:text-red-500">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-
-          <div class="flex-grow p-2">
-            <!-- Menu Items -->
-            <Link
-              href="/profile"
-              class="flex items-center p-3 rounded-lg hover:bg-green-50 transition-colors mb-2"
-              @click="toggleSidebar"
-            >
-              <i class="fas fa-user mr-3 text-green-600"></i>
-              <span>Profil</span>
-            </Link>
-
-            <button
-              @click="logout"
-              class="w-full flex items-center p-3 rounded-lg hover:bg-green-50 transition-colors text-left"
-            >
-              <i class="fas fa-sign-out-alt mr-3 text-green-600"></i>
-              <span>Keluar</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </transition>
+    <!-- FOOTER -->
+    <footer class="bg-white py-4 text-center text-sm text-gray-500 border-t">
+      © 2025 HidroGrow. Semua hak dilindungi.
+    </footer>
   </div>
 </template>
 
@@ -121,30 +102,17 @@
 import { ref } from 'vue'
 import { router, Link } from '@inertiajs/vue3'
 
-const isSidebarOpen = ref(false)
+defineOptions({
+  name: 'Dashboard'
+})
 
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value
+const isMenuOpen = ref(false)
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
 }
 
 const logout = () => {
   router.post('/logout')
 }
 </script>
-
-<style scoped>
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.3s ease;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  opacity: 0;
-}
-
-.slide-enter-from .absolute.right-0,
-.slide-leave-to .absolute.right-0 {
-  transform: translateX(100%);
-}
-</style>
