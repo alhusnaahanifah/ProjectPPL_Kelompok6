@@ -1,10 +1,16 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-green-300 p-4">
-    <div class="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-md">
-      <h2 class="text-3xl font-bold text-green-700 mb-6 text-center">Daftar Akun Baru</h2>
+  <div class="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gradient-to-b from-green-100 via-white to-green-50 p-4">
 
-      <div v-if="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
-        {{ errorMessage }}
+    <!-- Logo -->
+    <div class="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
+      <img src="../../image/logo-bawah.png" alt="logo" class="rounded-lg max-w-xs md:max-w-md object-contain z-10" />
+    </div>
+    <div class="w-full md:w-1/2 max-w-md mx-auto backdrop-blur-md bg-[#2f3828]/20 shadow-2xl rounded-3xl p-8 md:p-10">
+      <h2 class="text-3xl font-bold text-green-700 mb-6 text-center">Daftar Akun</h2>
+
+      <!-- Menampilkan error dari validasi -->
+      <div v-if="form.errors.name || form.errors.email || form.errors.password" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+        {{ form.errors.name || form.errors.email || form.errors.password }}
       </div>
 
       <form @submit.prevent="handleSubmit">
@@ -38,14 +44,16 @@
             placeholder="Masukkan password"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400"
             required
+            autocomplete="new-password"
           />
         </div>
 
         <button
           type="submit"
+          :disabled="form.processing"
           class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
         >
-          Daftar
+          {{ form.processing ? 'Memproses...' : 'Daftar' }}
         </button>
       </form>
 
@@ -60,31 +68,35 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { router } from '@inertiajs/vue3'
-import { Link } from '@inertiajs/vue3'
+import Swal from 'sweetalert2'
+import { useForm, Link, router } from '@inertiajs/vue3'
 
-const form = ref({
+const form = useForm({
   name: '',
   email: '',
   password: '',
 })
 
-const errorMessage = ref('')
-
 const handleSubmit = () => {
-  router.post('/signup', form.value, {
+  form.post('/signup', {
     onSuccess: () => {
-      errorMessage.value = ''
-      router.visit('/dashboard')
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: 'Akun berhasil dibuat. Silakan login.',
+        confirmButtonColor: '#16a34a',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        router.visit('/login')
+      })
     },
     onError: (errors) => {
-      console.error('❌ Error:', errors)
-      errorMessage.value = 'Terjadi kesalahan saat mendaftar. Coba lagi.'
+      console.error('Validasi gagal:', errors)
     }
   })
 }
 </script>
+
 
 <style scoped>
 body {

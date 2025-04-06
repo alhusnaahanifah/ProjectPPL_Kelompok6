@@ -65,11 +65,13 @@
     "@inertiajs/vue3": "^2.0.6",
     "@vinejs/vine": "^3.0.0",
     "@vue/server-renderer": "^3.5.13",
+    "aos": "^2.3.4",
     "edge.js": "^6.2.1",
     "flowbite-vue": "^0.2.0",
     "luxon": "^3.6.0",
     "mysql2": "^3.14.0",
     "reflect-metadata": "^0.2.2",
+    "sweetalert2": "^11.17.2",
     "v-dropdown-menu": "^2.0.4",
     "vue": "^3.5.13",
     "vue-sidebar-menu": "^5.6.0"

@@ -15,9 +15,9 @@ router.on('/').renderInertia('LandingPage')
 router.on('/plant-quiz').renderInertia('PlantQuiz')
 router.on('/7-day-challenge').renderInertia('SevenDayChallenge')
 router.on('/guides').renderInertia('Guides')
-router.on('/login').renderInertia('Auth/Login')
+// router.on('/login').renderInertia('Auth/Login')
 // router.on('/signup').renderInertia('AuthPages')
-router.on('/dash').renderInertia('Dashboard')
+// router.on('/dash').renderInertia('Dashboard')
 
 import AuthController from '#controllers/auth_controller'
 router.post('/login', [AuthController, 'login'])
@@ -27,9 +27,9 @@ router.post('/login', [AuthController, 'login'])
 //   })
 // })
 
-// router.get('/login', async ({ inertia }) => {
-//   return inertia.render('Auth/Login') // atau 'Auth/Login' sesuai lokasi file
-// })
+router.get('/login', async ({ inertia }) => {
+  return inertia.render('Auth/Login') // atau 'Auth/Login' sesuai lokasi file
+})
 
 
 
@@ -43,9 +43,12 @@ router.get('/signup', async ({ inertia }) => {
 router.post('/signup', [AuthController, 'signup'])
 
 
-// router.get('/dashboard', async ({ auth, inertia }) => {
-//   await auth.use('web').authenticate()
-//   return inertia.render('Dashboard') // pastikan file Dashboard.vue ada
-// })
-import TestController from '#controllers/TestController'
-router.get('/test', 'TestController.index')
+router.get('/dashboard', async ({ auth, inertia, response }) => {
+  try {
+    await auth.use('web').authenticate()
+    return inertia.render('Dashboard')
+  } catch {
+    return response.redirect('/login')
+  }
+})
+

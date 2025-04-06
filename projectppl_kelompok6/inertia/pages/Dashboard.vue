@@ -1,14 +1,21 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gradient-to-br from-green-50 to-green-200">
+  <div class="min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-white to-green-50">
     <!-- HEADER -->
-    <header class="bg-white shadow-md p-4 flex justify-between items-center relative">
-      <h1 class="text-2xl font-bold text-green-700">HidroGrow 🌿</h1>
+    <header
+      class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl box-border flex justify-between items-center px-6 py-3 z-50 
+            bg-[#2f3828]/20 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md"
+    >
+      <div class="flex items-center space-x-4">
+        <img src="../image/logo-samping.png" alt="Logo Project" class="w-24 h-auto">
+      </div>
       <div class="relative">
         <button
           @click="toggleMenu"
           class="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center gap-2 shadow-sm"
         >
-          <i class="fas fa-bars"></i> Menu
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
 
         <!-- Dropdown Menu -->
@@ -35,8 +42,9 @@
       </div>
     </header>
 
+
     <!-- MAIN -->
-    <main class="flex-grow py-10 px-6">
+    <main class="flex-grow py-10 px-6 pt-32">
       <div class="max-w-5xl mx-auto">
         <h2 class="text-4xl font-bold text-green-800 mb-8 text-center">
           Selamat Datang di Dashboard HidroGrow 🌱
@@ -113,6 +121,6 @@ const toggleMenu = () => {
 }
 
 const logout = () => {
-  router.post('/logout')
+  router.get('/logout')
 }
 </script>

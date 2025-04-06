@@ -6,6 +6,7 @@ import { createApp, h } from 'vue'
 import type { DefineComponent } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
 
