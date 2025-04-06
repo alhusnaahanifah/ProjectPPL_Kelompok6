@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto overflow-x-hidden">
     <!-- Header -->
-    <header class="fixed top-4 left-4 right-4 mx-auto max-w-5xl box-border flex justify-between items-center px-6 py-3 z-50 
-                bg-[#2f3828]/20 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md">
-      <div class="flex items-center space-x-4">
-        <img src="../image/logo-samping.png" alt="Logo Project" class="w-24 h-auto">
+    <header class="fixed top-4 left-4 right-4 mx-auto max-w-5xl box-border flex justify-between items-center px-6 py-2 z-50 
+                bg-[#2f3828]/70 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md">
+      <div class="flex items-center space-x-4 sm:space-x-4">
+        <img src="../image/plogo-samping.png" alt="Logo Project" class="w-40 h-auto">
       </div>
       <nav>
         <ul class="flex flex-wrap text-[#CCFFAA] justify-end items-center space-x-4 sm:space-x-6">

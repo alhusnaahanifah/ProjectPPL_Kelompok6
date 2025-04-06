@@ -15,11 +15,13 @@
           }"
           class="p-4 rounded-lg shadow-sm cursor-pointer text-center"
         >
-          <div class="font-bold">Hari {{ day.id }}</div>
-          <div v-if="day.id <= currentDay" class="mt-2 text-sm">{{ day.title }}</div>
+          <div class="font-bold">Hari {{ day.id }}</div><div v-if="day.id <= currentDay" class="mt-2 text-sm break-words leading-tight">
+            {{ day.title }}
+          </div>
           <div v-else class="mt-2 text-sm opacity-50">Terkunci</div>
         </div>
       </div>
+
 
       <!-- Day Detail -->
       <div v-if="selectedDay" class="mt-8 bg-white p-6 rounded-xl shadow-md">
@@ -41,6 +43,16 @@
         </button>
         <div v-else-if="selectedDay.id < currentDay" class="mt-6 text-green-600 font-semibold">
           ✔ Sudah selesai
+        </div>
+
+        <!-- Tombol kembali ke dashboard -->
+        <div class="mt-6">
+          <button 
+            @click="goToDashboard"
+            class="px-6 py-2 bg-gray-200 text-green-800 rounded-lg hover:bg-gray-300"
+          >
+            ⬅ Kembali ke Dashboard
+          </button>
         </div>
       </div>
     </div>
@@ -83,6 +95,9 @@ export default {
     completeDay() {
       this.dayCompleted = true;
       // Simpan progress ke localStorage
+    },
+    goToDashboard() {
+      this.$inertia.visit('/dashboard'); // Ganti sesuai route kamu
     }
   }
 };

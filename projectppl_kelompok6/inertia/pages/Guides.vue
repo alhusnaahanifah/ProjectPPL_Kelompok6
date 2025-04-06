@@ -77,6 +77,15 @@
         </div>
       </div>
     </div>
+    <div class="text-center mt-12">
+      <button 
+        @click="$inertia.visit('/dashboard')" 
+        class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+      >
+        ← Kembali ke Dashboard
+      </button>
+    </div>
+
   </div>
 </template>
 

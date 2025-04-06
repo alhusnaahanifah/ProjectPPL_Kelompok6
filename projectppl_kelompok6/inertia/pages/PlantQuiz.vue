@@ -33,12 +33,20 @@
         <h3 class="text-2xl font-bold text-green-700">Hasilnya...</h3>
         <img :src="result.image" class="mt-4 mx-auto h-40" />
         <p class="mt-4 text-lg">{{ result.description }}</p>
-        <button 
-          @click="restartQuiz"
-          class="mt-6 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-        >
-          Coba Lagi
-        </button>
+        <div class="mt-6 flex justify-center flex-col sm:flex-row gap-4">
+          <button 
+            @click="restartQuiz"
+            class="mt-6 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            🔄 Coba Lagi
+          </button>
+          <button 
+            @click="goToDashboard"
+            class="mt-6 px-6 py-2 bg-gray-200 text-green-800 rounded-lg hover:bg-gray-300"
+          >
+            🏠 Kembali ke Dashboard
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -111,6 +119,9 @@ export default {
       this.currentQuestion = 0;
       this.answers = [];
       this.showResult = false;
+    },
+    goToDashboard() {
+      window.location.href = '/dashboard';
     }
   }
 };

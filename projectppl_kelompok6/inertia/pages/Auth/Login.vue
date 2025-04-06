@@ -3,7 +3,7 @@
     
     <!-- Logo -->
     <div class="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
-      <img src="../../image/logo-bawah.png" alt="logo" class="rounded-lg max-w-xs md:max-w-md object-contain z-10" />
+      <img src="../../image/hlogo-bawah.png" alt="logo" class="rounded-lg max-w-xs md:max-w-md object-contain z-10" />
     </div>
 
     <!-- Login Box -->

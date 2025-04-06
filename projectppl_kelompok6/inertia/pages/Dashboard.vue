@@ -2,11 +2,11 @@
   <div class="min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-white to-green-50">
     <!-- HEADER -->
     <header
-      class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl box-border flex justify-between items-center px-6 py-3 z-50 
+      class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl box-border flex justify-between items-center px-6 py-1 z-50 
             bg-[#2f3828]/20 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md"
     >
       <div class="flex items-center space-x-4">
-        <img src="../image/logo-samping.png" alt="Logo Project" class="w-24 h-auto">
+        <img src="../image/hlogo-samping.png" alt="Logo Project" class="w-32 h-auto">
       </div>
       <div class="relative">
         <button
@@ -29,13 +29,13 @@
               class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
               @click="toggleMenu"
             >
-              <i class="fas fa-user text-green-600"></i> Profil
+              <i class="fas fa-user text-green-600"></i> 👤 Profil
             </Link>
             <button
               @click="logout"
               class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
             >
-              <i class="fas fa-sign-out-alt text-green-600"></i> Keluar
+              <i class="fas fa-sign-out-alt text-green-600"></i> ⍈ Keluar
             </button>
           </div>
         </transition>
