@@ -1,6 +1,47 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-green-100 to-white py-12">
-    <div class="max-w-3xl mx-auto px-4">
+  <div class="min-h-screen bg-gradient-to-b from-green-100 via-white to-green-50 py-12 px-4">
+  <header
+     class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl box-border flex justify-between items-center px-6 py-1 z-50 
+      bg-[#2f3828]/20 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md"
+    >
+      <div class="flex items-center space-x-4">
+        <img src="../image/hlogo-samping.png" alt="Logo Project" class="w-32 h-auto">
+      </div>
+      <div class="relative">
+        <button
+          @click="toggleMenu"
+          class="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-2 rounded-lg flex items-center gap-2 shadow-sm"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <transition name="fade">
+          <div
+            v-if="isMenuOpen"
+            class="absolute right-0 mt-2 min-w-[8rem] bg-white rounded-lg shadow-md py-2 z-50 border border-gray-200"
+          >
+            <Link
+              href="/profile"
+              class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
+              @click="toggleMenu"
+            >
+              <i class="fas fa-user text-green-600"></i> 👤 Profil
+            </Link>
+            <button
+              @click="logout"
+              class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
+            >
+              <i class="fas fa-sign-out-alt text-green-600"></i> ⍈ Keluar
+            </button>
+          </div>
+        </transition>
+      </div>
+    </header>
+    <div class="h-20"></div>
+    <div class="flex-1 max-w-3xl mx-auto px-4">
       <h2 class="text-3xl font-bold text-green-700 text-center">Tantangan 7 Hari Menanam</h2>
 
       <!-- Day Cards -->

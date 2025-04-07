@@ -86,15 +86,12 @@
             @click="goToDashboard"
             class="mt-3 px-3 py-2 bg-gray-200 text-green-800 rounded-lg hover:bg-green-500"
           >
-            🏠 Kembali ke Dashboard
+            ⬅ Kembali ke Dashboard
           </button>
         </div>
       </div>
     </div>
     </div>
-    <footer class="bg-[#2f3828]/20 backdrop-blur-md border border-white/30 rounded-xl text-[#32690e] text-center text-sm py-4 shadow-md">
-      © 2025 HidroGrow. Semua hak dilindungi.
-    </footer>
   </div>
 </template>
 
