@@ -272,3 +272,26 @@ textarea {
   resize: vertical;
 }
 </style>
+
+<script setup>
+
+import { ref } from 'vue'
+import { router, Link, usePage } from '@inertiajs/vue3'
+
+defineOptions({
+  name: 'PlantQuiz'
+})
+
+const page = usePage()
+const user = page.props.user || {}  // user dari controller
+
+const isMenuOpen = ref(false)
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+}
+
+const logout = () => {
+  router.get('/logout')
+}
+</script>

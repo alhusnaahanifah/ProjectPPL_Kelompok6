@@ -336,4 +336,23 @@ function saveProgress(newProgress) {
   progress.value = newProgress;
   localStorage.setItem('sevenDayProgress', newProgress.toString());
 }
+import { router, Link, usePage } from '@inertiajs/vue3'
+
+defineOptions({
+  name: 'PlantQuiz'
+})
+
+const page = usePage()
+const user = page.props.user || {}  // user dari controller
+
+const isMenuOpen = ref(false)
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+}
+
+const logout = () => {
+  router.get('/logout')
+}
 </script>
+
