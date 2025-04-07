@@ -9,7 +9,7 @@
       <div class="mt-6 bg-gray-200 rounded-full h-2">
         <div 
           class="bg-green-600 h-2 rounded-full" 
-          :style="{ width: `${(currentQuestion / questions.length) * 100}%` }"
+          :style="{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }"
         ></div>
       </div>
 
@@ -42,7 +42,7 @@
           </button>
           <button 
             @click="goToDashboard"
-            class="mt-6 px-6 py-2 bg-gray-200 text-green-800 rounded-lg hover:bg-gray-300"
+            class="mt-6 px-6 py-2 bg-gray-200 text-green-800 rounded-lg hover:bg-green-500"
           >
             🏠 Kembali ke Dashboard
           </button>

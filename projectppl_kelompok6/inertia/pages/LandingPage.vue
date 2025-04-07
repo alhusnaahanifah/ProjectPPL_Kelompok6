@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto overflow-x-hidden">
+  <div class="min-h-screen bg-cover bg-center">
     <!-- Header -->
     <header class="fixed top-4 left-4 right-4 mx-auto max-w-5xl box-border flex justify-between items-center px-6 py-2 z-50 
                 bg-[#2f3828]/70 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md">
@@ -42,8 +42,8 @@
       </div>
 
       <!-- Gambar -->
-      <div class="z-10 text-left p-8 rounded-2xl shadow-lg">
-        <img src="../image/tumbuhan.png" alt="Hidroponik" class="rounded-lg max-w-full h-auto object-contain z-10">
+      <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl shadow-2xl">
+        <img src="../image/tumbuhan.png" alt="Hidroponik" class="rounded-lg max-w-full h-auto object-contain" />
       </div>
     </section>
 
