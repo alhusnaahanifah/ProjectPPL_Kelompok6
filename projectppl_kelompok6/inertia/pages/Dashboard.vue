@@ -100,9 +100,9 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white py-4 text-center text-sm text-gray-500 border-t">
-      © 2025 HidroGrow. Semua hak dilindungi.
-    </footer>
+    <footer class="mt-20 bg-[#2f3828]/20 backdrop-blur-md border border-white/30 rounded-xl text-[#32690e] text-center text-sm py-4 shadow-md">
+        © 2025 HidroGrow. Semua hak dilindungi.
+      </footer>
   </div>
 </template>
 
