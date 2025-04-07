@@ -47,7 +47,7 @@
     <main class="flex-grow py-10 px-6 pt-32">
       <div class="max-w-5xl mx-auto">
         <h2 class="text-4xl font-bold text-green-800 mb-8 text-center">
-          Selamat Datang di Dashboard HidroGrow 🌱
+          Selamat Datang {{ user.fullName }} 🌱
         </h2>
         <p class="text-center text-gray-700 mb-10">
           Mari mulai perjalanan hidroponikmu. Pilih fitur yang ingin kamu eksplorasi!
@@ -108,11 +108,14 @@
 
 <script setup>
 import { ref } from 'vue'
-import { router, Link } from '@inertiajs/vue3'
+import { router, Link, usePage } from '@inertiajs/vue3'
 
 defineOptions({
   name: 'Dashboard'
 })
+
+const page = usePage()
+const user = page.props.user || {}  // user dari controller
 
 const isMenuOpen = ref(false)
 

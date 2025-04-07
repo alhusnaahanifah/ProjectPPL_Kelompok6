@@ -1,22 +1,34 @@
-// ✅ Benar
 import type { HttpContext } from '@adonisjs/core/http'
 import hash from '@adonisjs/core/services/hash'
+import { getMongoDb } from '#start/mongodb'
+import { ObjectId } from 'mongodb'
 
 export default class ProfileController {
-  public async update({ request, auth, response }: HttpContext) {
-    const user = auth.user!
+  public async update({ request, response, session }: HttpContext) {
+    const sessionUser = session.get('user')
+
+    if (!sessionUser) {
+      return response.redirect('/login')
+    }
+
+    const userId = sessionUser._id
+
     const fullName = request.input('fullName')
     const email = request.input('email')
     const password = request.input('password')
 
-    user.fullName = fullName
-    user.email = email
+    const db = getMongoDb()
+    const updateData: any = { fullName, email }
+
     if (password) {
-      user.password = await hash.use('scrypt').make(password)
-    }
+      updateData.password = await hash.use('scrypt').make(password)
+    }    
 
-    await user.save()
+    await db.collection('users').updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: updateData }
+    )
 
-    return response.redirect('/profile') // atau response.redirect().toRoute('profile')
+    return response.redirect('/profile')
   }
 }

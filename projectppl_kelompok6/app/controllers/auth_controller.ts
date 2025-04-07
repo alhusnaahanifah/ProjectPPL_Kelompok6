@@ -1,69 +1,87 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import hash from '@adonisjs/core/services/hash'
-import User from '#models/user'
+import { getMongoDb } from '#start/mongodb'
 
 export default class AuthController {
-
-  public async login({ request, auth, response, session }: HttpContext) {
+  public async login({ request, response, session }: HttpContext) {
     const email = request.input('email').toLowerCase()
     const password = request.input('password')
 
-    const user = await User.query().where('email', email).first()
+    const db = getMongoDb()
+    const user = await db.collection('users').findOne({ email })
 
     if (!user) {
-      session.flash('errors', { email: 'Email tidak ditemukan' })
-      return response.redirect().back()
+      return response.status(422).send({
+        errors: {
+          email: 'Email tidak ditemukan'
+        }
+      })
     }
 
     const isPasswordValid = await hash.verify(user.password, password)
 
     if (!isPasswordValid) {
-      session.flash('errors', { password: 'Password salah' })
-      return response.redirect().back()
+      return response.status(422).send({
+        errors: {
+          password: 'Password salah'
+        }
+      })
     }
 
-    await auth.use('web').login(user)
+    // Set user ke session
+    session.put('user', {
+      id: user._id.toString(),
+      fullName: user.fullName,
+      email: user.email
+    })
 
-    return response.redirect('/dashboard') // ✅ redirect inertia-friendly
-  } 
+    return response.redirect('/dashboard')
+  }
 
-
-  async logout({ response, auth }: HttpContext) {
-    await auth.use('web').logout()
+  public async logout({ response, session }: HttpContext) {
+    session.forget('user')
     return response.redirect('/login')
   }
 
-  public async signup({ request, auth, response }: HttpContext) {
+  public async signup({ request, response, session }: HttpContext) {
     const name = request.input('name')
     const email = request.input('email')
     const password = request.input('password')
 
-    // Validasi sederhana
     if (!name || !email || !password) {
-      return response.badRequest({ message: 'Semua field harus diisi' })
-    }
-
-    // Cek jika email sudah digunakan
-    const existingUser = await User.findBy('email', email)
-    if (existingUser) {
-      return response.badRequest({ message: 'Email sudah terdaftar' })
-    }
-
-    try {
-      // Buat user baru
-      const user = await User.create({
-        fullName: name,
-        email,
-        password: await hash.use('scrypt').make(password), // ✅ pastikan password di-hash
+      return response.status(422).send({
+        errors: {
+          name: !name ? 'Nama harus diisi' : undefined,
+          email: !email ? 'Email harus diisi' : undefined,
+          password: !password ? 'Password harus diisi' : undefined,
+        }
       })
-
-      // Auto login setelah daftar (opsional)
-      await auth.use('web').login(user)
-
-      return response.redirect('/login') // Inertia akan handle redirect
-    } catch (error) {
-      console.error('Signup error:', error)
-      return response.badRequest({ message: 'Gagal mendaftar. Coba lagi nanti.' })
     }
+
+    const db = getMongoDb()
+    const existingUser = await db.collection('users').findOne({ email })
+    if (existingUser) {
+      return response.status(422).send({
+        errors: {
+          email: 'Email sudah terdaftar'
+        }
+      })
+    }
+
+    const hashedPassword = await hash.use('scrypt').make(password)
+
+    const result = await db.collection('users').insertOne({
+      fullName: name,
+      email,
+      password: hashedPassword,
+    })
+
+    session.put('user', {
+      id: result.insertedId.toString(),
+      fullName: name,
+      email,
+    })
+
+    return response.redirect('/login')
   }
 }

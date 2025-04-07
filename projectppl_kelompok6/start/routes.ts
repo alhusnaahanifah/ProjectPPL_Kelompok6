@@ -44,39 +44,49 @@ router.get('/signup', async ({ inertia }) => {
 router.post('/signup', [AuthController, 'signup'])
 
 
-router.get('/dashboard', async ({ auth, inertia, response }) => {
-  try {
-    await auth.use('web').authenticate()
-    return inertia.render('Dashboard')
-  } catch {
+router.get('/dashboard', async ({ session, inertia, response }) => {
+  const user = session.get('user')
+
+  if (!user) {
     return response.redirect('/login')
   }
+
+  return inertia.render('Dashboard', { user })
 })
+
 
 import { middleware } from '#start/kernel'
 
-router.get('/profile', async ({ auth, inertia }) => {
-    const user = auth.user!
+router.get('/profile', async ({ session, inertia, response }) => {
+  const user = session.get('user')
 
-    return inertia.render('Profile', {
-      user: {
-        fullName: user.fullName,
-        email: user.email,
-      },
-    })
+  if (!user) {
+    return response.redirect('/login')
+  }
+
+  return inertia.render('Profile', {
+    user: {
+      fullName: user.fullName,
+      email: user.email,
+    },
   })
+})
+
   .use(middleware.auth())// ✅ ini betul
 
 import ProfileController from '#controllers/profiles_controller'
 
-router
-  .post('/profile/update', [ProfileController, 'update'])
+router.post('/profile/update', [ProfileController, 'update'])
+
   .use(middleware.auth())
 
-router
-  .get('/profile/edit', async ({ auth, inertia }) => {
-    const user = auth.user!
-
+  router.get('/profile/edit', async ({ session, inertia, response }) => {
+    const user = session.get('user')
+  
+    if (!user) {
+      return response.redirect('/login')
+    }
+  
     return inertia.render('ProfileEdit', {
       user: {
         fullName: user.fullName,
@@ -84,6 +94,7 @@ router
       },
     })
   })
+  
   .middleware([middleware.auth()])
 
 

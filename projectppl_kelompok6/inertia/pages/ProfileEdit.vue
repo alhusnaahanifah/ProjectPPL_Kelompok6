@@ -63,6 +63,10 @@ const form = reactive({
 })
 
 const updateProfile = () => {
-  router.post('/profile/update', form)
+  router.post('/profile/update', form, {
+    preserveScroll: true,
+    onFinish: () => console.log('Profile updated!')
+  })
+
 }
 </script>
