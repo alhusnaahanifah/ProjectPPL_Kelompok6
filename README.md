@@ -2,6 +2,9 @@
 
 **HidroGrow** adalah aplikasi web edukatif berbasis hidroponik yang bertujuan mengajak pengguna mulai menanam dengan cara menyenangkan dan interaktif. Dibangun menggunakan **AdonisJS** sebagai backend dan **Vue 3 + Inertia.js** sebagai frontend SPA (Single Page Application).
 
+![image](https://github.com/user-attachments/assets/3dd757a1-b0d0-406d-b60a-4951aef6ee02)
+
+
 ---
 
 ## ✨ Fitur Utama
@@ -50,22 +53,9 @@ Salin file `.env.example` lalu sesuaikan:
 
 ```bash
 cp .env.example .env
-node ace generate:key
 ```
 
-### 4. Migrasi Database
-
-```bash
-node ace migration:run
-```
-
-### 5. Build Frontend
-
-```bash
-npm run build
-```
-
-### 6. Jalankan Server
+### 4. Jalankan Server
 
 ```bash
 node ace serve --watch
