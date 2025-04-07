@@ -53,48 +53,38 @@ router.get('/dashboard', async ({ auth, inertia, response }) => {
   }
 })
 
-router.get('/profile', async ({ auth, inertia, response }) => {
-  try {
-    await auth.use('web').authenticate()
-    return inertia.render('Profile', {
-      user: auth.user,
-    })
-  } catch {
-    return response.redirect('/login')
-  }
-})
+import { middleware } from '#start/kernel'
 
-router.post('/profile/update', async ({ auth, request, response }) => {
-  try {
-    await auth.use('web').authenticate()
+router.get('/profile', async ({ auth, inertia }) => {
     const user = auth.user!
 
-    const { fullName, email, password } = request.only(['fullName', 'email', 'password'])
-
-    user.fullName = fullName
-    user.email = email
-    if (password) {
-      user.password = await hash.use('scrypt').make(password)
-    }
-
-    await user.save()
-
-    return response.redirect().back()
-  } catch {
-    return response.redirect('/profile') // ✅ Inertia-compatible
-  }
-})
-
-router.get('/profile/edit', async ({ auth, inertia, response }) => {
-  try {
-    await auth.use('web').authenticate()
-    return inertia.render('ProfileEdit', {
-      user: auth.user,
+    return inertia.render('Profile', {
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+      },
     })
-  } catch {
-    return response.redirect('/profile')
-  }
-})
+  })
+  .use(middleware.auth())// ✅ ini betul
+
+import ProfileController from '#controllers/profiles_controller'
+
+router
+  .post('/profile/update', [ProfileController, 'update'])
+  .use(middleware.auth())
+
+router
+  .get('/profile/edit', async ({ auth, inertia }) => {
+    const user = auth.user!
+
+    return inertia.render('ProfileEdit', {
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+      },
+    })
+  })
+  .middleware([middleware.auth()])
 
 
 

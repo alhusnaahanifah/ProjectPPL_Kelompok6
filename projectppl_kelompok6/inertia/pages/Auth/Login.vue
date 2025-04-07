@@ -81,6 +81,7 @@ const handleSubmit = (event) => {
       router.visit('/dashboard')
     },
     onError: () => {
+      console.log('Form errors:', form.errors)
       // Cek jika ada error di form.errors, lalu tampilkan Swal
       if (form.errors.email || form.errors.password) {
         Swal.fire({
