@@ -34,7 +34,7 @@
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/username/hidrogrow.git
+git clone https://github.com/alhusnaahanifah/ProjectPPL_Kelompok6.git
 cd hidrogrow
 ```
 
@@ -78,6 +78,7 @@ Buka `http://localhost:3333` di browser untuk mengakses aplikasi.
 ## 🧑‍💻 Kontributor
 
 - [@alhusnaahanifah](https://github.com/alhusnaahanifah)
+- [@NurulNashriyyah](https://github.com/NurulNashriyyah)
 
 ---
 
