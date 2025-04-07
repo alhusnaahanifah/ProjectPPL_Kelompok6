@@ -8,10 +8,10 @@
       </div>
       <nav>
         <ul class="flex flex-wrap text-[#CCFFAA] justify-end items-center space-x-4 sm:space-x-6">
-          <li><a href="#about" class="hover:text-green-300">About</a></li>
-          <li><a href="#features" class="hover:text-green-300">Features</a></li>
-          <li><a href="#contact" class="hover:text-green-300">Contact</a></li>
-          <li><a href="/login" class="hover:text-green-300">Login</a></li>
+          <li><a href="#about" class="hover:text-green-300">Tentang</a></li>
+          <li><a href="#features" class="hover:text-green-300">Fitur</a></li>
+          <li><a href="#contact" class="hover:text-green-300">Kontak</a></li>
+          <li><a href="/login" class="hover:text-green-300">Masuk</a></li>
         </ul>
       </nav>
     </header>
@@ -52,7 +52,7 @@
       <div class="max-w-6xl mx-auto text-center">
         <p class="text-base md:text-lg text-gray-700 mb-12 max-w-3xl mx-auto leading-relaxed">
           Banyak orang ingin mulai menanam tapi bingung harus mulai dari mana. HidroGrow hadir untuk mengubah itu—
-          <span class="text-green-700 font-semibold">dengan panduan praktis, kuis interaktif, dan tantangan seru</span>,
+          <span class="text-green-700 font-semibold">dengan panduan praktis, dan tantangan seru</span>,
           kami membuat kegiatan menanam terasa personal, ringan, dan bisa dilakukan siapa saja di mana saja.
         </p>
 
@@ -93,7 +93,7 @@
     <section id="features" class="py-20 bg-green-50">
       <div class="container mx-auto px-4">
         <h3 class="text-4xl font-extrabold text-green-800 mb-6 tracking-tight text-center leading-snug font-serif">Fitur Utama</h3>
-        <p class="text-lg text-gray-700 mb-12 max-w-3xl mx-auto text-center leading-relaxed">Temukan cara mudah memulai hidroponik dengan fitur-fitur unggulan kami</p>
+        <p class="text-lg text-gray-700 mb-12 max-w-3xl mx-auto text-center leading-relaxed">Temukan cara mudah memulai menanam dengan fitur-fitur unggulan kami</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 text-center">

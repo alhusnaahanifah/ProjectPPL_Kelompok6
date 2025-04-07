@@ -40,7 +40,7 @@ export default class AuthController {
 
   public async logout({ response, session }: HttpContext) {
     session.forget('user')
-    return response.redirect('/login')
+    return response.redirect('/')
   }
 
   public async signup({ request, response, session }: HttpContext) {
