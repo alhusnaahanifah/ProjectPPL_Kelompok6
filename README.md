@@ -81,6 +81,3 @@ Buka `http://localhost:3333` di browser untuk mengakses aplikasi.
 - [@NurulNashriyyah](https://github.com/NurulNashriyyah)
 
 ---
-
-Terima kasih telah menggunakan HidroGrow! 🌿 Semoga aplikasimu bisa menginspirasi lebih banyak orang untuk mulai menanam dan peduli lingkungan.
-```
