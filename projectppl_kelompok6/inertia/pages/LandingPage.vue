@@ -23,10 +23,10 @@
       <!-- Konten -->
       <div class="w-full md:w-2/3 h-2/3 md:h-full relative flex items-center justify-center">
         <div class="relative mx-4 md:mx-12 max-w-2xl">
-          <h3 class="text-3xl md:text-6xl font-extrabold text-[#CCFFAA] mb-6 tracking-tight leading-snug font-serif">
+          <h3 class="text-3xl md:text-6xl font-extrabold text-[#CCFFAA] mb-6 tracking-tight leading-snug font-serif transition duration-300 transform hover:scale-105">
             HidroGrow
           </h3>
-          <h3 class="text-xl md:text-3xl font-extrabold text-[#CCFFAA] mb-6 tracking-tight leading-snug font-serif">
+          <h3 class="text-xl md:text-3xl font-extrabold text-[#CCFFAA] mb-6 tracking-tight leading-snug font-serif transition duration-300 transform hover:scale-105">
             "Satu Tanaman, Satu Langkah untuk Masa Depan"
           </h3>
           <button 
@@ -42,7 +42,7 @@
       </div>
 
       <!-- Gambar -->
-      <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl shadow-2xl">
+      <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl shadow-2xl transition duration-300 transform hover:scale-105">
         <img src="../image/tumbuhan.png" alt="Hidroponik" class="rounded-lg max-w-full h-auto object-contain" />
       </div>
     </section>
@@ -56,7 +56,7 @@
           kami membuat kegiatan menanam terasa personal, ringan, dan bisa dilakukan siapa saja di mana saja.
         </p>
 
-        <div class="grid md:grid-cols-3 gap-6 text-left">
+        <div class="grid md:grid-cols-3 gap-6 text-left transition duration-300 transform hover:scale-105">
           <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition duration-300 text-center">
             <div class="text-4xl mb-3 text-green-600">🌱</div>
             <h4 class="text-xl font-semibold text-green-800 mb-2">Menanam Tidak Harus Sulit</h4>
@@ -96,7 +96,7 @@
         <p class="text-lg text-gray-700 mb-12 max-w-3xl mx-auto text-center leading-relaxed">Temukan cara mudah memulai menanam dengan fitur-fitur unggulan kami</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 text-center">
+          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 text-center">
             <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
               <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -107,7 +107,7 @@
             <a href="/login" class="text-green-600 font-medium hover:text-green-800">Coba Sekarang →</a>
           </div>
 
-          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 text-center">
+          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 text-center">
             <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
               <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -118,7 +118,7 @@
             <a href="/login" class="text-green-600 font-medium hover:text-green-800">Mulai Tantangan →</a>
           </div>
 
-          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 text-center">
+          <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105 text-center">
             <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
               <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -142,12 +142,12 @@
       <h3 class="text-4xl font-extrabold text-green-800 mb-6 text-center font-serif">Hubungi Kami</h3>
       <p class="text-lg text-gray-700 mb-12 max-w-3xl mx-auto text-center">Jika ada pertanyaan atau masukan, silakan hubungi kami melalui email atau telepon.</p>
 
-      <div class="max-w-sm mx-auto bg-white p-6 shadow-lg rounded-xl border border-gray-300">
+      <div class="max-w-sm mx-auto bg-white p-6 shadow-lg rounded-xl border border-gray-300 transition duration-300 transform hover:scale-105">
         <div class="flex items-center gap-3 mb-4">
           <svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
             <path d="M2 4a2 2 0 012-2h16a2 2 0 012 2v16a2 2 0 01-2 2H4a2 2 0 01-2-2V4zm3 3v1h14V7H5zm0 3v8h14v-8H5z"/>
           </svg>
-          <p class="text-gray-800 text-base font-medium"><span class="text-gray-500">Email:</span> <strong>HidroGrow@gmail.com</strong></p>
+          <p class="text-gray-800 text-base font-medium"><span class="text-gray-500">Email:</span> <strong>hidrogrow@gmail.com</strong></p>
         </div>
         <div class="flex items-center gap-3">
           <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
