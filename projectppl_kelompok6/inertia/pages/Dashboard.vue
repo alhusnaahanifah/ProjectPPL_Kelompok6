@@ -74,8 +74,8 @@
 
             <!-- Tantangan 7 Hari -->
             <Link
+              href="/7-step-challenge"
               class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 p-6 text-center cursor-pointer block"
-              href="/7-day-challenge"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 text-green-600" fill="none"
                    viewBox="0 0 24 24" stroke="currentColor">
