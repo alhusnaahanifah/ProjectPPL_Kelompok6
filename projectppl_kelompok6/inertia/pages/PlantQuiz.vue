@@ -7,6 +7,10 @@
       <div class="flex items-center space-x-4">
         <img src="../image/hlogo-samping.png" alt="Logo Project" class="w-32 h-auto">
       </div>
+      <Link href="/dashboard" class="flex items-center gap-1 text-[#597036] hover:text-white">
+        <i class="fas fa-home"></i>
+        <span class="hidden sm:inline">Dashboard</span>
+      </Link>
       <div class="relative">
         <button
           @click="toggleMenu"
@@ -28,13 +32,13 @@
               class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
               @click="toggleMenu"
             >
-              <i class="fas fa-user text-green-600"></i> 👤 Profil
+              <i class="fas fa-user text-[#597036]"></i> Profil
             </Link>
             <button
               @click="logout"
               class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
             >
-              <i class="fas fa-sign-out-alt text-green-600"></i> ⍈ Keluar
+              <i class="fas fa-sign-out-alt text-[#597036]"></i> Keluar
             </button>
           </div>
         </transition>
@@ -81,12 +85,6 @@
             class="mt-3 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
           >
             🔄 Coba Lagi
-          </button>
-          <button 
-            @click="goToDashboard"
-            class="mt-3 px-3 py-2 bg-gray-200 text-green-800 rounded-lg hover:bg-green-500"
-          >
-            ⬅ Kembali ke Dashboard
           </button>
         </div>
       </div>

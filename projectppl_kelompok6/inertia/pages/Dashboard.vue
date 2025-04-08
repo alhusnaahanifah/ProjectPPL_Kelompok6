@@ -33,13 +33,13 @@
               class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
               @click="toggleMenu"
             >
-              <i class="fas fa-user text-green-600"></i> Profil
+              <i class="fas fa-user text-[#597036]"></i> Profil
             </Link>
             <button
               @click="logout"
               class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
             >
-              <i class="fas fa-sign-out-alt text-green-600"></i> Keluar
+              <i class="fas fa-sign-out-alt text-[#597036]"></i> Keluar
             </button>
           </div>
         </transition>
@@ -61,7 +61,7 @@
             <!-- Tes Kepribadian Tanaman -->
             <Link
               href="/plant-quiz"
-              class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 text-center cursor-pointer block"
+              class="bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center cursor-pointer block transition duration-300 transform hover:scale-105"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 text-green-600" fill="none"
                    viewBox="0 0 24 24" stroke="currentColor">
@@ -74,8 +74,8 @@
 
             <!-- Tantangan 7 Hari -->
             <Link
-              href="/7-step-challenge"
-              class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 text-center cursor-pointer block"
+              class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 p-6 text-center cursor-pointer block"
+              href="/7-day-challenge"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 text-green-600" fill="none"
                    viewBox="0 0 24 24" stroke="currentColor">
@@ -89,7 +89,7 @@
             <!-- Panduan Praktis -->
             <Link
               href="/guides"
-              class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-6 text-center cursor-pointer block"
+              class="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 p-6 text-center cursor-pointer block"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mx-auto mb-4 text-green-600" fill="none"
                    viewBox="0 0 24 24" stroke="currentColor">
