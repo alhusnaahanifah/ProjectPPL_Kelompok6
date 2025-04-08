@@ -1,8 +1,8 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-green-100 via-white to-green-50 py-12 px-4">
-  <header
-     class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl box-border flex justify-between items-center px-6 py-1 z-50 
-      bg-[#2f3828]/20 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md"
+    <header
+      class="fixed top-4 left-1/2 transform -translate-x-1/2 w-[calc(100%-2rem)] max-w-5xl box-border flex justify-between items-center px-6 py-1 z-50
+        bg-[#2f3828]/20 text-white backdrop-blur-md border border-white/30 rounded-full shadow-md"
     >
       <div class="flex items-center space-x-4">
         <img src="../image/hlogo-samping.png" alt="Logo Project" class="w-32 h-auto">
@@ -16,8 +16,6 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-
-        <!-- Dropdown Menu -->
         <transition name="fade">
           <div
             v-if="isMenuOpen"
@@ -40,319 +38,296 @@
         </transition>
       </div>
     </header>
+
     <div class="h-20"></div>
-    <div class="flex-1 max-w-3xl mx-auto px-4">
-      <h2 class="text-3xl font-bold text-green-700 text-center">Tantangan 7 Hari Menanam</h2>
+    <div class="flex-1 max-w-4xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-green-700 text-center">7 Langkah Tantangan Menanam</h2>
 
-      <!-- Day Cards -->
-      <div class="mt-8 grid gap-6 md:grid-cols-7">
+      <!-- Step Cards -->
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
         <div 
-          v-for="day in days" 
-          :key="day.id"
-          @click="selectDay(day)"
+          v-for="step in steps" 
+          :key="step.id"
           :class="{
-            'bg-green-600 text-white': selectedDay && selectedDay.id === day.id,
-            'bg-white border border-green-300': !selectedDay || selectedDay.id !== day.id
+            'bg-green-600 text-white': currentStep && currentStep.id === step.id,
+            'bg-white border border-green-300 opacity-50': step.locked && (!currentStep || currentStep.id !== step.id),
+            'bg-white border border-green-300': !step.locked && (!currentStep || currentStep.id !== step.id)
           }"
-          class="p-4 rounded-lg shadow-sm cursor-pointer text-center"
+          @click="selectStep(step)"
+          class="p-4 rounded-lg shadow-sm cursor-pointer text-center relative"
         >
-          <div class="font-bold">Hari {{ day.id }}</div>
-          <div v-if="day.id <= currentDay" class="mt-2 text-sm break-words leading-tight">
-            {{ day.title }}
-          </div>
-          <div v-else class="mt-2 text-sm opacity-50">Terkunci</div>
-
-          <!-- Edit / Delete (CRUD) -->
-          <div class="mt-2 flex justify-center gap-2 text-xs">
-            <button @click.stop="editDay(day)" class="text-blue-600 hover:underline">Edit</button>
-            <button @click.stop="deleteDay(day.id)" class="text-red-600 hover:underline">Hapus</button>
+          <div class="font-bold text-lg">Langkah {{ step.id }}</div>
+          <div class="mt-2 text-sm">{{ step.title }}</div>
+          <div class="absolute top-2 right-2">
+            <span v-if="step.locked" class="text-red-600 font-bold">🔒</span>
+            <span v-else class="text-green-600 font-bold">🔓</span>
           </div>
         </div>
       </div>
 
-      <!-- Day Detail -->
-      <div v-if="selectedDay" class="mt-8 bg-white p-6 rounded-xl shadow-md">
-        <h3 class="text-xl font-bold">{{ selectedDay.title }}</h3>
-        <img :src="selectedDay.image" class="mt-4 mx-auto rounded-lg max-h-48" />
-        <p class="mt-4">{{ selectedDay.description }}</p>
-        <div v-if="selectedDay.tips" class="mt-4 p-3 bg-green-50 rounded-lg">
-          <h4 class="font-semibold">Tips Hari Ini:</h4>
-          <ul class="list-disc pl-5 mt-2">
-            <li v-for="(tip, index) in selectedDay.tips" :key="index">{{ tip }}</li>
-          </ul>
-        </div>
-        <button 
-          v-if="selectedDay.id === currentDay && !dayCompleted"
-          @click="completeDay"
-          class="mt-6 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-        >
-          Tandai Selesai
-        </button>
-        <div v-else-if="selectedDay.id < currentDay" class="mt-6 text-green-600 font-semibold">
-          ✔ Sudah selesai
-        </div>
-        <!-- Tambah di bawah -->
-        <button 
-          v-if="currentDay < 7"
-          @click="forceNextDay"
-          class="mt-4 px-4 py-1 text-sm text-blue-600 underline"
-        >
-          ⏩ Debug: Lanjut Hari Berikutnya
-        </button>
+      <!-- Step Detail -->
+      <div v-if="currentStep" class="mt-10 bg-white p-6 rounded-xl shadow-md">
+        <h3 class="text-xl font-bold mb-4">Langkah {{ currentStep.id }}: {{ currentStep.title }}</h3>
 
-        <!-- Tombol kembali ke dashboard -->
+        <div class="space-y-6">
+          <div v-for="challenge in currentStep.challenges" :key="challenge.id" class="border border-green-200 rounded-lg p-4">
+            <h4 class="font-semibold text-green-700 text-lg">{{ challenge.title }}</h4>
+            <p class="mt-1 text-gray-700">{{ challenge.description }}</p>
+            <div v-if="challenge.tips && challenge.tips.length" class="mt-3 text-sm bg-green-50 p-3 rounded">
+              <h5 class="font-semibold">Tips:</h5>
+              <ul class="list-disc pl-5 mt-1">
+                <li v-for="(tip, index) in challenge.tips" :key="index">{{ tip }}</li>
+              </ul>
+            </div>
+            <div class="mt-3 flex gap-2">
+              <button
+                @click="toggleChallengeComplete(currentStep.id, challenge.id)"
+                class="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700"
+                v-if="!challenge.completed"
+              >
+                Tandai Selesai
+              </button>
+              <span v-else class="text-green-600 font-semibold">✔ Selesai</span>
+            </div>
+            <div v-if="challenge.completed" class="mt-4">
+              <h5 class="font-semibold">Catatan:</h5>
+              <textarea v-model="challenge.note" class="border w-full p-2 rounded mt-1"></textarea>
+              <div class="mt-2 flex gap-2">
+                <button @click="saveNote(currentStep.id, challenge.id)" class="bg-blue-600 text-white px-3 py-1 rounded">Simpan</button>
+                <button @click="clearNote(currentStep.id, challenge.id)" class="bg-gray-400 text-white px-3 py-1 rounded">Hapus</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="mt-6">
-          <button 
-            @click="goToDashboard"
-            class="px-6 py-2 bg-gray-300 text-green-800 rounded-lg hover:bg-gray-400"
-          >
-            ⬅ Kembali ke Dashboard
-          </button>
-        </div>
-      </div>
-
-      <!-- Form Tambah/Edit Hari -->
-      <div class="mt-12 bg-white p-6 rounded-xl shadow-md">
-        <h3 class="text-xl font-bold mb-4">{{ editMode ? 'Edit Hari Tantangan' : 'Tambah Hari Tantangan' }}</h3>
-
-        <div class="grid gap-4">
-          <input v-model="newDay.title" type="text" placeholder="Judul Hari" class="border p-2 rounded w-full" />
-          <input v-model="newDay.image" type="text" placeholder="URL Gambar" class="border p-2 rounded w-full" />
-          <textarea v-model="newDay.description" placeholder="Deskripsi" class="border p-2 rounded w-full"></textarea>
-          <input v-model="newDay.tipsString" type="text" placeholder="Tips (pisahkan dengan koma)" class="border p-2 rounded w-full" />
-        </div>
-
-        <div class="mt-4 flex gap-2">
-          <button @click="saveDay" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            {{ editMode ? 'Update' : 'Simpan' }}
-          </button>
-          <button v-if="editMode" @click="cancelEdit" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Batal</button>
+          <button @click="forceNextStep" class="text-blue-600 underline text-sm">⏩ Debug: Buka Langkah Berikutnya</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'SevenDayChallenge',
-  data() {
-    return {
-      currentDay: 1,
-      dayCompleted: false,
-      selectedDay: null,
-      lastCompletedDate: null,
-      isSimulated: true,
-      days: [],
-      newDay: {
-        id: null,
-        title: '',
-        image: '',
-        description: '',
-        tips: [],
-        tipsString: ''
-      },
-      editMode: false
-    };
-  },
-  created() {
-    this.loadProgress();
-  },
-  methods: {
-    selectDay(day) {
-      if (day.id <= this.currentDay) {
-        this.selectedDay = day;
-        this.checkIfDayCompleted();
-      }
-    },
-    completeDay() {
-      const today = new Date();
-      this.dayCompleted = true;
-      localStorage.setItem('lastCompletedDate', today.toISOString());
-      localStorage.setItem('dayCompleted', 'true');
-    },
-    checkIfDayCompleted() {
-      const storedDay = parseInt(localStorage.getItem('currentDay')) || 1;
-      const lastCompleted = localStorage.getItem('lastCompletedDate');
-      const completedFlag = localStorage.getItem('dayCompleted') === 'true';
-
-      const now = new Date();
-      const last = lastCompleted ? new Date(lastCompleted) : null;
-
-      const afterMidnight = now.getHours() > 0 || (now.getHours() === 0 && now.getMinutes() >= 1);
-      const isNewDay = this.isSimulated || (last && now.toDateString() !== last.toDateString() && afterMidnight);
-
-
-      if (isNewDay && completedFlag && storedDay < 7) {
-        this.currentDay = storedDay + 1;
-        localStorage.setItem('currentDay', this.currentDay);
-        localStorage.setItem('dayCompleted', 'false');
-        this.dayCompleted = false;
-      } else {
-        this.currentDay = storedDay;
-        this.dayCompleted = !isNewDay && completedFlag;
-      }
-    },
-    forceNextDay() {
-      this.currentDay += 1;
-      this.dayCompleted = false;
-      this.selectedDay = this.days[this.currentDay - 1];
-      localStorage.setItem('currentDay', this.currentDay);
-      localStorage.setItem('dayCompleted', 'false');
-      localStorage.setItem('lastCompletedDate', new Date().toISOString());
-    },
-    loadProgress() {
-      const storedDay = parseInt(localStorage.getItem('currentDay')) || 1;
-      const lastCompleted = localStorage.getItem('lastCompletedDate');
-      const storedDays = JSON.parse(localStorage.getItem('days'));
-      this.days = storedDays || this.defaultDays();
-      this.currentDay = storedDay;
-      this.lastCompletedDate = lastCompleted;
-      this.selectedDay = this.days[storedDay - 1] || null;
-      this.checkIfDayCompleted();
-    },
-    saveDay() {
-      const tipsArray = this.newDay.tipsString?.split(',').map(t => t.trim()).filter(Boolean);
-
-      if (this.editMode) {
-        const index = this.days.findIndex(d => d.id === this.newDay.id);
-        if (index !== -1) {
-          this.days[index] = { ...this.newDay, tips: tipsArray };
-        }
-      } else {
-        const newId = this.days.length ? Math.max(...this.days.map(d => d.id)) + 1 : 1;
-        this.days.push({ ...this.newDay, id: newId, tips: tipsArray });
-      }
-
-      this.resetForm();
-      this.saveToStorage();
-    },
-    editDay(day) {
-      this.editMode = true;
-      this.newDay = {
-        ...day,
-        tipsString: day.tips?.join(', ') || ''
-      };
-    },
-    deleteDay(id) {
-      this.days = this.days.filter(day => day.id !== id);
-      if (this.selectedDay && this.selectedDay.id === id) {
-        this.selectedDay = null;
-      }
-      this.saveToStorage();
-    },
-    cancelEdit() {
-      this.resetForm();
-    },
-    resetForm() {
-      this.editMode = false;
-      this.newDay = {
-        id: null,
-        title: '',
-        image: '',
-        description: '',
-        tips: [],
-        tipsString: ''
-      };
-    },
-    saveToStorage() {
-      localStorage.setItem('days', JSON.stringify(this.days));
-    },
-    defaultDays() {
-      return [
-        {
-          id: 1,
-          title: "Pilih Tanamanmu",
-          image: "https://source.unsplash.com/400x300/?plant",
-          description: "Berdasarkan hasil kuis atau preferensimu, pilih tanaman yang akan kamu tanam selama 7 hari ke depan.",
-          tips: ["Gunakan rekomendasi dari kuis kepribadian", "Pertimbangkan ruang dan waktu perawatan yang tersedia"]
-        },
-        {
-          id: 2,
-          title: "Siapkan Media Tanam",
-          image: "https://source.unsplash.com/400x300/?hydroponics,tools",
-          description: "Waktunya menyiapkan media tanam seperti rockwool, netpot, atau spons hidroponik.",
-          tips: ["Potong media tanam sesuai ukuran netpot", "Basahi media tanam agar tetap lembap"]
-        },
-        {
-          id: 3,
-          title: "Semai Benih",
-          image: "https://source.unsplash.com/400x300/?seeds,planting",
-          description: "Letakkan benih tanaman di media tanam dan pastikan mendapatkan kelembapan yang cukup.",
-          tips: ["Gunakan pinset untuk meletakkan benih", "Tutup benih dengan plastik transparan hingga tumbuh"]
-        },
-        {
-          id: 4,
-          title: "Pindahkan ke Sistem",
-          image: "https://source.unsplash.com/400x300/?hydroponic,setup",
-          description: "Setelah benih berkecambah, pindahkan ke sistem hidroponik seperti NFT atau wick system.",
-          tips: ["Pastikan akar sudah cukup panjang", "Gunakan air bersih dan cek pH larutan"]
-        },
-        {
-          id: 5,
-          title: "Rawat Tanamanmu",
-          image: "https://source.unsplash.com/400x300/?watering,plantcare",
-          description: "Pantau pertumbuhan tanaman dan pastikan nutrisinya cukup.",
-          tips: ["Cek air dan larutan nutrisi setiap hari", "Pastikan pencahayaan cukup (natural atau lampu growlight)"]
-        },
-        {
-          id: 6,
-          title: "Cegah Hama dan Penyakit",
-          image: "https://source.unsplash.com/400x300/?plant,pest",
-          description: "Periksa tanaman dari hama atau jamur, dan bersihkan daun jika ada tanda-tanda penyakit.",
-          tips: ["Gunakan pestisida alami jika perlu", "Jaga lingkungan sekitar tetap bersih dan kering"]
-        },
-        {
-          id: 7,
-          title: "Panen & Evaluasi",
-          image: "https://source.unsplash.com/400x300/?harvest,lettuce",
-          description: "Selamat! Hari ini waktunya panen. Evaluasi hasilnya dan rencanakan penanaman berikutnya!",
-          tips: ["Panen dengan hati-hati agar akar tidak rusak", "Bagikan hasil tanammu ke media sosial 😄"]
-        }
-      ];
-    },
-    goToDashboard() {
-      this.$inertia.visit('/dashboard');
-    }
-  }
-};
-</script>
-
-
 <script setup>
 import { ref, onMounted } from 'vue';
 
-const progress = ref(0);
+const isMenuOpen = ref(false);
+const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
+const currentStep = ref(null);
+
+const steps = ref([
+  {
+    id: 1,
+    title: 'Persiapan Alat dan Bahan',
+    locked: false,
+    challenges: [
+      {
+        id: 1,
+        title: 'Siapkan Pot',
+        description: 'Cari pot atau wadah untuk menanam.',
+        tips: ['Gunakan pot berlubang di bagian bawah', 'Bisa pakai barang bekas seperti botol plastik'],
+        completed: false,
+        note: ''
+      },
+      {
+        id: 2,
+        title: 'Siapkan Media Tanam',
+        description: 'Gunakan tanah subur atau media tanam siap pakai.',
+        tips: ['Campur dengan kompos agar lebih subur'],
+        completed: false,
+        note: ''
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: 'Pemilihan Bibit',
+    locked: true,
+    challenges: [
+      {
+        id: 1,
+        title: 'Pilih Bibit Sesuai Iklim',
+        description: 'Pilih bibit yang cocok dengan kondisi lingkunganmu.',
+        tips: ['Cek bibit di toko pertanian terdekat'],
+        completed: false,
+        note: ''
+      },
+      {
+        id: 2,
+        title: 'Periksa Kualitas Bibit',
+        description: 'Pastikan bibit sehat dan bebas dari hama.',
+        tips: ['Bibit yang baik biasanya tidak layu dan warnanya segar'],
+        completed: false,
+        note: ''
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: 'Penanaman',
+    locked: true,
+    challenges: [
+      {
+        id: 1,
+        title: 'Buat Lubang Tanam',
+        description: 'Lubangi media tanam sesuai ukuran bibit.',
+        tips: ['Jangan terlalu dalam', 'Sesuai dengan panjang akar'],
+        completed: false,
+        note: ''
+      },
+      {
+        id: 2,
+        title: 'Tanam Bibit',
+        description: 'Letakkan bibit dan tutup dengan tanah secara hati-hati.',
+        tips: ['Tekan perlahan agar akar menempel', 'Siram sedikit air setelah menanam'],
+        completed: false,
+        note: ''
+      }
+    ]
+  },
+  {
+    id: 4,
+    title: 'Penyiraman',
+    locked: true,
+    challenges: [
+      {
+        id: 1,
+        title: 'Jadwal Penyiraman',
+        description: 'Buat jadwal rutin untuk menyiram tanaman.',
+        tips: ['Pagi atau sore hari adalah waktu terbaik'],
+        completed: false,
+        note: ''
+      },
+      {
+        id: 2,
+        title: 'Gunakan Air Bersih',
+        description: 'Pastikan air tidak tercemar bahan kimia.',
+        tips: ['Air hujan bisa jadi pilihan baik'],
+        completed: false,
+        note: ''
+      }
+    ]
+  },
+  {
+    id: 5,
+    title: 'Pemupukan',
+    locked: true,
+    challenges: [
+      {
+        id: 1,
+        title: 'Pilih Pupuk yang Sesuai',
+        description: 'Gunakan pupuk organik atau kimia sesuai kebutuhan.',
+        tips: ['Pupuk organik lebih ramah lingkungan'],
+        completed: false,
+        note: ''
+      },
+      {
+        id: 2,
+        title: 'Pupuk dengan Takaran Tepat',
+        description: 'Jangan berlebihan dalam memberi pupuk.',
+        tips: ['Ikuti petunjuk pada kemasan pupuk'],
+        completed: false,
+        note: ''
+      }
+    ]
+  },
+  {
+    id: 6,
+    title: 'Perawatan Rutin',
+    locked: true,
+    challenges: [
+      {
+        id: 1,
+        title: 'Cek Hama dan Penyakit',
+        description: 'Periksa tanaman secara berkala.',
+        tips: ['Gunakan pestisida alami jika perlu'],
+        completed: false,
+        note: ''
+      },
+      {
+        id: 2,
+        title: 'Potong Daun Layu',
+        description: 'Pangkas daun yang kering atau rusak.',
+        tips: ['Gunakan gunting tajam dan bersih'],
+        completed: false,
+        note: ''
+      }
+    ]
+  },
+  {
+    id: 7,
+    title: 'Panen dan Refleksi',
+    locked: true,
+    challenges: [
+      {
+        id: 1,
+        title: 'Panen dengan Hati-hati',
+        description: 'Petik tanaman saat sudah matang.',
+        tips: ['Gunakan alat yang bersih dan tajam'],
+        completed: false,
+        note: ''
+      },
+      {
+        id: 2,
+        title: 'Catat Hasil dan Pembelajaran',
+        description: 'Tuliskan pengalamanmu selama menanam.',
+        tips: ['Apa yang berhasil dan apa yang bisa ditingkatkan?'],
+        completed: false,
+        note: ''
+      }
+    ]
+  }
+]);
+
+
+const selectStep = (step) => {
+  if (!step.locked) currentStep.value = step;
+};
+
+const toggleChallengeComplete = (stepId, challengeId) => {
+  const step = steps.value.find(s => s.id === stepId);
+  const challenge = step.challenges.find(c => c.id === challengeId);
+  challenge.completed = true;
+  checkStepCompletion(stepId);
+};
+
+const saveNote = (stepId, challengeId) => {
+  const step = steps.value.find(s => s.id === stepId);
+  const challenge = step.challenges.find(c => c.id === challengeId);
+  alert('Catatan disimpan: ' + challenge.note);
+};
+
+const clearNote = (stepId, challengeId) => {
+  const step = steps.value.find(s => s.id === stepId);
+  const challenge = step.challenges.find(c => c.id === challengeId);
+  challenge.note = '';
+};
+
+const checkStepCompletion = (stepId) => {
+  const step = steps.value.find(s => s.id === stepId);
+  const allDone = step.challenges.every(c => c.completed);
+  if (allDone) {
+    const nextStep = steps.value.find(s => s.id === stepId + 1);
+    if (nextStep) nextStep.locked = false;
+  }
+};
+
+const forceNextStep = () => {
+  const current = currentStep.value;
+  const next = steps.value.find(s => s.id === current.id + 1);
+  if (next) next.locked = false;
+};
 
 onMounted(() => {
-  // Ini akan dipanggil hanya di sisi browser
-  const saved = localStorage.getItem('sevenDayProgress');
-  if (saved) {
-    progress.value = parseInt(saved, 10);
-  }
+  currentStep.value = steps.value.find(s => !s.locked);
 });
-
-function saveProgress(newProgress) {
-  progress.value = newProgress;
-  localStorage.setItem('sevenDayProgress', newProgress.toString());
-}
-import { router, Link, usePage } from '@inertiajs/vue3'
-
-defineOptions({
-  name: 'PlantQuiz'
-})
-
-const page = usePage()
-const user = page.props.user || {}  // user dari controller
-
-const isMenuOpen = ref(false)
-
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
-}
-
-const logout = () => {
-  router.get('/logout')
-}
 </script>
 
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
