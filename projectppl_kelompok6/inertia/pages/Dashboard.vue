@@ -82,7 +82,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M12 3v1m6.364 1.636l-.707.707M21 12h-1M17.657 17.657l-.707-.707M12 21v-1M6.343 17.657l.707-.707M3 12h1M6.343 6.343l.707.707M12 8a4 4 0 110 8 4 4 0 010-8z"/>
               </svg>
-              <h3 class="text-xl font-semibold text-green-700 mb-2">Tantangan 7 Hari</h3>
+              <h3 class="text-xl font-semibold text-green-700 mb-2">Tantangan 7 Langkah</h3>
               <p class="text-gray-600">Ikuti tantangan untuk membangun kebiasaan menanam secara menyenangkan.</p>
             </Link>
 

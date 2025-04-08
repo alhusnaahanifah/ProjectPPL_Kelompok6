@@ -113,8 +113,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h4 class="text-xl font-semibold text-green-800 mb-2">Tantangan 7 Hari</h4>
-            <p class="text-gray-600 mb-4">Ikuti panduan harian untuk memulai hidroponik dari nol hingga panen pertama</p>
+            <h4 class="text-xl font-semibold text-green-800 mb-2">Tantangan 7 Langkah</h4>
+            <p class="text-gray-600 mb-4">Ikuti panduan setiap langkah untuk memulai hidroponik dari nol hingga panen pertama</p>
             <a href="/login" class="text-green-600 font-medium hover:text-green-800">Mulai Tantangan →</a>
           </div>
 
