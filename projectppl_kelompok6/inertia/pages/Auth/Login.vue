@@ -3,16 +3,14 @@
     
     <!-- Logo -->
     <div class="w-full md:w-1/2 flex justify-center mb-10 md:mb-0">
-      <img src="../../image/hlogo-bawah.png" alt="logo" class="rounded-lg max-w-xs md:max-w-md object-contain z-10" />
+      <a href="/">
+        <img src="../../image/hlogo-bawah.png" alt="logo" class="rounded-lg max-w-xs md:max-w-md object-contain z-10" />
+      </a>
     </div>
 
     <!-- Login Box -->
     <div class="w-full md:w-1/2 max-w-md mx-auto backdrop-blur-md bg-[#2f3828]/20 shadow-2xl rounded-3xl p-8 md:p-10">
       <h2 class="text-3xl font-bold text-green-700 mb-6 text-center">Masuk</h2>
-
-      <div v-if="form.errors.email || form.errors.password" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
-        {{ form.errors.email || form.errors.password }}
-      </div>
 
       <form @submit="handleSubmit">
         <div class="mb-4">
@@ -55,20 +53,13 @@
               </svg>
             </span>
           </button>
-          <ul class="text-sm text-gray-600 space-y-1 mb-4 mt-2">
-            <li :class="passwordRules.length ? 'text-green-600' : ''">✔ Minimal 8 karakter</li>
-            <li :class="passwordRules.uppercase ? 'text-green-600' : ''">✔ Huruf besar</li>
-            <li :class="passwordRules.number ? 'text-green-600' : ''">✔ Angka</li>
-            <li :class="passwordRules.symbol ? 'text-green-600' : ''">✔ Simbol</li>
-          </ul>
-
         </div>
 
 
         <button
           type="submit"
           :disabled="form.processing"
-          class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+          class="w-full mt-10 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
         >
           {{ form.processing ? 'Memproses...' : 'Masuk' }}
         </button>
@@ -121,15 +112,26 @@ const handleSubmit = (event) => {
   }
 
   form.post('/login', {
+    preserveScroll: true,
+    preserveState: true,
     onSuccess: () => {
       router.visit('/dashboard')
     },
-    onError: () => {
-      if (form.errors.email || form.errors.password) {
+    onError: (errors) => {
+      console.log('Ini error:', errors)
+
+      if (errors.email || errors.password) {
         Swal.fire({
           icon: 'error',
           title: 'Gagal Masuk',
-          text: form.errors.email || form.errors.password,
+          text: errors.email || errors.password,
+          confirmButtonColor: '#16a34a',
+        })
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Terjadi Kesalahan',
+          text: 'Gagal masuk. Coba lagi.',
           confirmButtonColor: '#16a34a',
         })
       }

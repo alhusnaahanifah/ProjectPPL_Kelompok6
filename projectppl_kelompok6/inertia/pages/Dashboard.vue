@@ -9,11 +9,6 @@
         <img src="../image/hlogo-samping.png" alt="Logo Project" class="w-32 h-auto">
       </div>
       <Link href="/dashboard" class="flex items-center gap-1 text-[#597036] hover:text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round" 
-                d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H4.5A.75.75 0 013.75 21V9.75z" />
-        </svg>
         <i class="fas fa-home"></i>
         <span class="hidden sm:inline">Dashboard</span>
       </Link>
@@ -38,13 +33,13 @@
               class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
               @click="toggleMenu"
             >
-              <i class="fas fa-user text-green-600"></i> 👤 Profil
+              <i class="fas fa-user text-green-600"></i> Profil
             </Link>
             <button
               @click="logout"
               class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-green-50 transition-colors whitespace-nowrap"
             >
-              <i class="fas fa-sign-out-alt text-green-600"></i> ⍈ Keluar
+              <i class="fas fa-sign-out-alt text-green-600"></i> Keluar
             </button>
           </div>
         </transition>
