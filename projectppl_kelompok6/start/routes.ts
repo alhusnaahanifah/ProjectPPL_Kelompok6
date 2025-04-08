@@ -14,7 +14,7 @@ import hash from '@adonisjs/core/services/hash'
 // Benar:
 router.on('/').renderInertia('LandingPage')
 router.on('/plant-quiz').renderInertia('PlantQuiz')
-router.on('/7-day-challenge').renderInertia('SevenDayChallenge')
+router.on('/7-step-challenge').renderInertia('SevenStepChallenge')
 router.on('/guides').renderInertia('Guides')
 // router.on('/login').renderInertia('Auth/Login')
 // router.on('/signup').renderInertia('AuthPages')
