@@ -96,6 +96,8 @@
 </template>
 
 <script>
+
+import defaultImage from '../image/tumbuhan.png'
 export default {
   name: 'PlantQuiz',
   data() {
@@ -129,11 +131,11 @@ export default {
       ],
       results: {
         busy_indoor_leafy: {
-          image: "../image/tumbuhan.png",
+          image: defaultImage,
           description: "Kamu cocok dengan sayur Sawi! Tanaman ini tahan lama dan hanya butuh perawatan minimal."
         },
         free_outdoor_flower: {
-          image: "../image/tumbuhan.png",
+          image: defaultImage,
           description: "Cobalah menanam sayur Sawi! Cocok untukmu yang punya waktu luang dan suka warna cerah."
         }
         // Tambahkan kombinasi hasil lainnya...
@@ -144,8 +146,8 @@ export default {
     result() {
       const key = this.answers.join('_');
       return this.results[key] || {
-        image: "https://example.com/default-plant.jpg",
-        description: "Kamu cocok dengan tanaman serbaguna seperti Kaktus!"
+        image: defaultImage,
+        description: "Kamu cocok dengan tanaman sayuran seperti Sawi!"
       };
     }
   },
