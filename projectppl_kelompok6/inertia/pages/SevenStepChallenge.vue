@@ -110,10 +110,6 @@
                 </div>
               </div>
             </div>
-
-            <div class="mt-6">
-              <button @click="forceNextStep" class="text-blue-600 underline text-sm">⏩ Debug: Buka Langkah Berikutnya</button>
-            </div>
           </div>
         </div>
       </div>
@@ -325,12 +321,6 @@ const checkStepCompletion = (stepId) => {
     const nextStep = steps.value.find(s => s.id === stepId + 1);
     if (nextStep) nextStep.locked = false;
   }
-};
-
-const forceNextStep = () => {
-  const current = currentStep.value;
-  const next = steps.value.find(s => s.id === current.id + 1);
-  if (next) next.locked = false;
 };
 
 onMounted(() => {
