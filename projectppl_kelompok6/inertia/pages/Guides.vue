@@ -123,145 +123,210 @@
         </div>
 
         <!-- Komunitas -->
-        <div v-else-if="activeTab === 'community'" class="space-y-6">
+        <div v-else-if="activeTab === 'community'" class="space-y-8">
           <!-- Header Komunitas -->
-          <div class="text-center">
-            <h3 class="text-xl font-semibold text-green-700">Berbagi Pengalaman Berkebun</h3>
-            <p class="text-gray-600 mt-2">Lihat dan bagikan pengalaman berkebun dengan komunitas</p>
+          <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full mb-4 shadow-lg">
+              <i class="fas fa-users text-white text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">Komunitas Berkebun</h3>
+            <p class="text-gray-600 max-w-2xl mx-auto">Berbagi pengalaman, tips, dan inspirasi berkebun bersama komunitas yang peduli lingkungan</p>
+          </div>
+
+          <!-- Form Tambah Pengalaman -->
+          <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-green-100">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-semibold shadow-md">
+                  {{ user.name ? user.name.charAt(0).toUpperCase() : 'U' }}
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">{{ editId ? 'Edit Pengalaman' : 'Bagikan Pengalaman Berkebun' }}</h4>
+                  <p class="text-sm text-gray-600">Ceritakan perjalanan berkebun Anda kepada komunitas</p>
+                </div>
+              </div>
+            </div>
+
+            <form @submit.prevent="addExperience" class="p-6 space-y-6">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">
+                  <i class="fas fa-pen-fancy text-green-600 mr-2"></i>
+                  Ceritakan Pengalaman Anda
+                </label>
+                <div class="relative">
+                  <textarea 
+                    v-model="newExperience.story" 
+                    placeholder="Bagikan tips, tantangan, atau keberhasilan berkebun Anda. Misalnya: bagaimana cara mengatasi hama, hasil panen yang memuaskan, atau eksperimen dengan tanaman baru..." 
+                    rows="4"
+                    class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 resize-none transition-all duration-200 placeholder-gray-400" 
+                    required
+                  ></textarea>
+                  <div class="absolute bottom-3 right-3 text-xs text-gray-400">
+                    {{ newExperience.story.length }}/500
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-3">
+                  <i class="fas fa-camera text-green-600 mr-2"></i>
+                  Foto Pendukung (Opsional)
+                </label>
+                
+                <div v-if="!newExperience.photo" 
+                     class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-green-400 hover:bg-green-50 transition-all duration-200 cursor-pointer group"
+                     @click="$refs.fileInput.click()">
+                  <input 
+                    type="file" 
+                    @change="handleFileUpload" 
+                    accept="image/*" 
+                    class="hidden" 
+                    ref="fileInput"
+                  />
+                  <div class="space-y-3">
+                    <div class="w-12 h-12 bg-gray-100 group-hover:bg-green-100 rounded-full flex items-center justify-center mx-auto transition-colors">
+                      <i class="fas fa-cloud-upload-alt text-gray-400 group-hover:text-green-500 text-xl transition-colors"></i>
+                    </div>
+                    <div>
+                      <p class="text-gray-600 font-medium">Klik untuk mengunggah foto</p>
+                      <p class="text-sm text-gray-400 mt-1">PNG, JPG hingga 5MB</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-else class="relative">
+                  <div class="relative rounded-xl overflow-hidden">
+                    <img :src="newExperience.photo" class="w-full h-48 object-cover" />
+                    <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center opacity-0 hover:opacity-100">
+                      <button 
+                        type="button" 
+                        @click="removePhoto"
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-colors"
+                      >
+                        <i class="fas fa-trash mr-2"></i>Hapus Foto
+                      </button>
+                    </div>
+                  </div>
+                  <button 
+                    type="button" 
+                    @click="$refs.fileInput.click()"
+                    class="absolute top-3 right-3 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium shadow-md transition-all"
+                  >
+                    <i class="fas fa-camera mr-1"></i>Ganti
+                  </button>
+                  <input 
+                    type="file" 
+                    @change="handleFileUpload" 
+                    accept="image/*" 
+                    class="hidden" 
+                    ref="fileInput"
+                  />
+                </div>
+              </div>
+
+              <div class="flex gap-3 pt-2">
+                <button 
+                  v-if="editId"
+                  type="button"
+                  @click="cancelEdit"
+                  class="flex-1 px-6 py-3 border-2 border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium"
+                >
+                  <i class="fas fa-times mr-2"></i>Batal
+                </button>
+                <button 
+                  type="submit"
+                  class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  <i class="fas fa-share-alt mr-2"></i>
+                  {{ editId ? 'Update Pengalaman' : 'Bagikan Pengalaman' }}
+                </button>
+              </div>
+            </form>
           </div>
 
           <!-- Daftar Pengalaman -->
-          <div v-if="experiences.length > 0" class="grid md:grid-cols-2 gap-6">
-            <div 
-              v-for="exp in experiences" 
-              :key="exp.id"
-              class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-            >
-              <img v-if="exp.photo" :src="exp.photo" class="w-full h-48 object-cover" />
-              <div class="p-4">
-                <div class="flex items-center gap-2 mb-3">
-                  <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                    {{ exp.username.charAt(0).toUpperCase() }}
-                  </div>
-                  <div>
-                    <p class="text-sm font-medium text-gray-900">{{ exp.username }}</p>
-                    <p class="text-xs text-gray-500">2 jam yang lalu</p>
+          <div v-if="experiences.length > 0" class="space-y-6">
+            <div class="flex items-center justify-between">
+              <h4 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-comments text-green-600"></i>
+                Pengalaman Komunitas
+              </h4>
+              <span class="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                {{ experiences.length }} cerita
+              </span>
+            </div>
+
+            <div class="grid gap-6">
+              <div 
+                v-for="exp in experiences" 
+                :key="exp.id"
+                class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 hover:border-green-200"
+              >
+                <!-- Header Postingan -->
+                <div class="p-6 pb-4">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-semibold shadow-md">
+                        {{ exp.username.charAt(0).toUpperCase() }}
+                      </div>
+                      <div>
+                        <p class="font-semibold text-gray-900">{{ exp.username }}</p>
+                        <p class="text-sm text-gray-500 flex items-center gap-1">
+                          <i class="fas fa-clock text-xs"></i>
+                          {{ dayjs(exp.createdAt).fromNow() }}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <!-- Actions untuk pemilik postingan -->
+                    <div v-if="exp.user_id === user.id" class="relative">
+                      <button 
+                        @click="togglePostMenu(exp.id)"
+                        class="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                      >
+                        <i class="fas fa-ellipsis-h"></i>
+                      </button>
+                      
+                      <div v-if="activePostMenu === exp.id" 
+                           class="absolute right-0 top-full mt-1 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-10 min-w-[120px]">
+                        <button 
+                          @click="startEditExperience(exp)" 
+                          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors flex items-center gap-2"
+                        >
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button 
+                          @click="deleteExperience(exp.id)" 
+                          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center gap-2"
+                        >
+                          <i class="fas fa-trash"></i> Hapus
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <p class="text-gray-700 leading-relaxed">{{ exp.story }}</p>
 
-                <!-- Actions untuk pemilik postingan -->
-                <div v-if="exp.user_id === user.id" class="mt-4 flex justify-end gap-2 pt-3 border-t border-gray-100">
-                  <button 
-                    @click="startEditExperience(exp)" 
-                    class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1"
-                  >
-                    <i class="fas fa-edit"></i> Edit
-                  </button>
-                  <button 
-                    @click="deleteExperience(exp.id)" 
-                    class="text-red-600 hover:text-red-800 text-sm font-medium flex items-center gap-1"
-                  >
-                    <i class="fas fa-trash"></i> Hapus
-                  </button>
+                <!-- Konten Postingan -->
+                <div class="px-6 pb-4">
+                  <p class="text-gray-700 leading-relaxed">{{ exp.story }}</p>
+                </div>
+
+                <!-- Foto jika ada -->
+                <div v-if="exp.photo" class="px-6 pb-4">
+                  <img :src="exp.photo" class="w-full h-64 object-cover rounded-xl" />
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Empty State -->
-          <div v-else class="text-center py-12">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <i class="fas fa-seedling text-green-600 text-2xl"></i>
+          <div v-else class="text-center py-16">
+            <div class="w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <i class="fas fa-seedling text-green-600 text-3xl"></i>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada pengalaman yang dibagikan</h3>
-            <p class="text-gray-600">Jadilah yang pertama membagikan pengalaman berkebun Anda!</p>
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">Mulai Percakapan Pertama</h3>
+            <p class="text-gray-600 max-w-md mx-auto">Belum ada yang berbagi pengalaman. Jadilah yang pertama membagikan cerita berkebun Anda dan menginspirasi yang lain!</p>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Floating Action Button (hanya muncul di tab komunitas) -->
-    <button
-      v-if="activeTab === 'community'"
-      @click="showCreateForm = true"
-      class="fixed bottom-6 right-6 w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-40"
-    >
-      <i class="fas fa-plus text-xl"></i>
-    </button>
-
-    <!-- Modal Form Tambah Pengalaman -->
-    <div 
-      v-if="showCreateForm" 
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      @click.self="closeCreateForm"
-    >
-      <div class="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div class="p-6">
-          <div class="flex justify-between items-center mb-6">
-            <h3 class="text-lg font-semibold text-gray-900">
-              {{ editId ? 'Edit Pengalaman' : 'Bagikan Pengalaman' }}
-            </h3>
-            <button 
-              @click="closeCreateForm" 
-              class="text-gray-400 hover:text-gray-600"
-            >
-              <i class="fas fa-times text-xl"></i>
-            </button>
-          </div>
-
-          <form @submit.prevent="addExperience" class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Cerita Pengalaman</label>
-              <textarea 
-                v-model="newExperience.story" 
-                placeholder="Bagikan pengalaman berkebun Anda..." 
-                rows="4"
-                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none" 
-                required
-              ></textarea>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Foto (Opsional)</label>
-              <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-green-400 transition-colors">
-                <input 
-                  type="file" 
-                  @change="handleFileUpload" 
-                  accept="image/*" 
-                  class="hidden" 
-                  ref="fileInput"
-                />
-                <button 
-                  type="button" 
-                  @click="$refs.fileInput.click()"
-                  class="text-green-600 hover:text-green-700 font-medium"
-                >
-                  <i class="fas fa-camera mr-2"></i>
-                  {{ newExperience.photo ? 'Ganti Foto' : 'Pilih Foto' }}
-                </button>
-                <div v-if="newExperience.photo" class="mt-3">
-                  <img :src="newExperience.photo" class="w-full h-32 object-cover rounded-lg" />
-                </div>
-              </div>
-            </div>
-
-            <div class="flex gap-3 pt-4">
-              <button 
-                type="button"
-                @click="closeCreateForm"
-                class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Batal
-              </button>
-              <button 
-                type="submit"
-                class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors font-medium"
-              >
-                {{ editId ? 'Update' : 'Bagikan' }}
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>
@@ -271,7 +336,13 @@
 <script setup>
 import { ref } from 'vue'
 import { router, Link, usePage } from '@inertiajs/vue3'
-import { onMounted } from 'vue'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/id'
+
+dayjs.extend(relativeTime)
+dayjs.locale('id') // Gunakan locale Bahasa Indonesia
+
 
 defineOptions({
   name: 'Guides'
@@ -283,7 +354,7 @@ const user = page.props.user || {}
 const isMenuOpen = ref(false)
 const activeTab = ref('infographic')
 const expandedFaqs = ref([])
-const showCreateForm = ref(false)
+const activePostMenu = ref(null)
 
 const tabs = [
   { id: 'infographic', label: 'Infografis' },
@@ -323,21 +394,33 @@ const experiences = ref(page.props.experiences || [
   {
     id: 1,
     username: "Ali",
-    story: "Saya mulai menanam sayur organik di balkon rumah.",
-    photo: null
+    story: "Saya mulai menanam sayur organik di balkon rumah. Hasilnya sangat memuaskan dan keluarga jadi lebih sehat!",
+    photo: null,
+    user_id: 1
+  },
+  {
+    id: 2,
+    username: "Sari",
+    story: "Tips dari saya: gunakan pupuk organik dari sisa dapur. Tanaman jadi subur dan ramah lingkungan!",
+    photo: "https://placehold.co/600x400/green/white?text=Foto+Tanaman",
+    user_id: 2
   }
 ])
 
 const newExperience = ref({
-  username: '',
   story: '',
-  photo: null
+  photo: null,
+  photoFile: null
 })
 
 const editId = ref(null)
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
+}
+
+const togglePostMenu = (postId) => {
+  activePostMenu.value = activePostMenu.value === postId ? null : postId
 }
 
 const logout = () => {
@@ -360,10 +443,14 @@ const handleFileUpload = (event) => {
   }
 }
 
-const closeCreateForm = () => {
-  showCreateForm.value = false
+const removePhoto = () => {
+  newExperience.value.photo = null
+  newExperience.value.photoFile = null
+}
+
+const cancelEdit = () => {
   editId.value = null
-  newExperience.value = { username: '', story: '', photo: null, photoFile: null }
+  newExperience.value = { story: '', photo: null, photoFile: null }
 }
 
 const addExperience = () => {
@@ -374,22 +461,19 @@ const addExperience = () => {
   }
 
   if (editId.value) {
-    // Untuk edit, gunakan route khusus POST dengan flag edit
     form.append('_method', 'PUT')
     
-    // Option 1: Gunakan Inertia router.put langsung
     router.put(`/guides/${editId.value}`, form, {
       forceFormData: true,
       onSuccess: () => {
-        closeCreateForm()
+        cancelEdit()
       },
       onError: (errors) => {
         console.error('Error updating experience:', errors)
-        // Fallback: coba dengan POST ke route edit khusus
         router.post(`/guides/${editId.value}/edit`, form, {
           forceFormData: true,
           onSuccess: () => {
-            closeCreateForm()
+            cancelEdit()
           },
           onError: (fallbackErrors) => {
             console.error('Fallback edit also failed:', fallbackErrors)
@@ -399,11 +483,10 @@ const addExperience = () => {
       }
     })
   } else {
-    // Untuk create baru
     router.post('/guides', form, {
       forceFormData: true,
       onSuccess: () => {
-        closeCreateForm()
+        newExperience.value = { story: '', photo: null, photoFile: null }
       },
       onError: (errors) => {
         console.error('Error creating experience:', errors)
@@ -417,7 +500,7 @@ const deleteExperience = (id) => {
   if (confirm('Apakah Anda yakin ingin menghapus pengalaman ini?')) {
     router.delete(`/guides/${id}`, {
       onSuccess: () => {
-        // Server akan render ulang
+        activePostMenu.value = null
       }
     })
   }
@@ -425,12 +508,15 @@ const deleteExperience = (id) => {
 
 const startEditExperience = (exp) => {
   newExperience.value = {
-    username: exp.username,
     story: exp.story,
-    photo: exp.photo
+    photo: exp.photo,
+    photoFile: null
   }
   editId.value = exp.id
-  showCreateForm.value = true
+  activePostMenu.value = null
+  
+  // Scroll to form
+  document.querySelector('form').scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
 </script>

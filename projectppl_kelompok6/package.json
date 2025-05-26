@@ -67,6 +67,7 @@
     "@vinejs/vine": "^3.0.0",
     "@vue/server-renderer": "^3.5.13",
     "aos": "^2.3.4",
+    "dayjs": "^1.11.13",
     "edge.js": "^6.2.1",
     "flowbite-vue": "^0.2.0",
     "luxon": "^3.6.0",
