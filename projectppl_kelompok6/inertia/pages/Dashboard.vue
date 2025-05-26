@@ -117,7 +117,9 @@ import { router, Link, usePage } from '@inertiajs/vue3'
 defineOptions({
   name: 'Dashboard'
 })
-
+const checkUser = () => {
+  console.log('User sebelum navigate:', user);
+};
 const page = usePage()
 const user = page.props.user || {}  // user dari controller
 

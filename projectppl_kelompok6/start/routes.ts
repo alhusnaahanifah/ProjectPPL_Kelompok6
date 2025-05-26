@@ -9,11 +9,11 @@
 
 // start/routes.ts
 import router from '@adonisjs/core/services/router'
-import hash from '@adonisjs/core/services/hash'
+// import hash from '@adonisjs/core/services/hash'
 
 // Benar:
 router.on('/').renderInertia('LandingPage')
-router.on('/plant-quiz').renderInertia('PlantQuiz')
+// router.on('/plant-quiz').renderInertia('PlantQuiz')
 // router.on('/7-step-challenge').renderInertia('SevenStepChallenge')
 // router.on('/guides').renderInertia('Guides')
 // router.on('/login').renderInertia('Auth/Login')
@@ -32,7 +32,11 @@ router.get('/login', async ({ inertia }) => {
   return inertia.render('Auth/Login') // atau 'Auth/Login' sesuai lokasi file
 })
 
+import QuizController from '#controllers/quiz_controller'
 
+router.get('plant-quiz', [QuizController, 'index']).use(middleware.auth())
+router.get('plant-quiz/data', [QuizController, 'getData'])
+router.post('plant-quiz/calculate', [QuizController, 'calculateResult'])
 
 router.get('/logout', [AuthController, 'logout'])
 
