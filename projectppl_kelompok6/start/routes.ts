@@ -14,7 +14,7 @@ import router from '@adonisjs/core/services/router'
 // Benar:
 router.on('/').renderInertia('LandingPage')
 // router.on('/plant-quiz').renderInertia('PlantQuiz')
-router.on('/7-step-challenge').renderInertia('SevenStepChallenge')
+// router.on('/7-step-challenge').renderInertia('SevenStepChallenge')
 // router.on('/guides').renderInertia('Guides')
 // router.on('/login').renderInertia('Auth/Login')
 // router.on('/signup').renderInertia('AuthPages')
@@ -102,6 +102,7 @@ router.post('/profile/update', [ProfileController, 'update'])
   .middleware([middleware.auth()])
 
 import ExperienceController from '#controllers/experience_controller'
+import PlantController from '#controllers/plant_controller'
 
 router.get('/guides', [ExperienceController, 'index'])
 // POST guides (harus login dulu)
@@ -111,6 +112,9 @@ router.post('/guides', [ExperienceController, 'store']).use(middleware.auth())
 router.delete('/guides/:id', [ExperienceController, 'delete']).use(middleware.auth())
 router.post('/guides/:id/edit',[ExperienceController, 'edit']) 
 router.put('/guides/:id', [ExperienceController, 'update']) 
+
+router.get('/plants', [PlantController, 'index']) 
+router.get('/plants/:id', [PlantController, 'show']) 
 
 
 
