@@ -377,7 +377,7 @@ const videos = ref([
     id: "abc123",
     title: "Cara Setup Hidroponik Sederhana",
     embedUrl: "https://www.youtube.com/embed/PxmZ-_YP1dM?si=oWTzOslUhY5JrD4n",
-    duration: "1:30",
+    duration: "9:02",
     views: "10K ditonton"
   }
 ])
