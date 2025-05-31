@@ -40,7 +40,6 @@ router.post('plant-quiz/calculate', [QuizController, 'calculateResult'])
 
 router.get('/logout', [AuthController, 'logout'])
 
-
 router.get('/signup', async ({ inertia }) => {
     return inertia.render('Auth/Signup') // gunakan page yang sama (AuthPages.vue)
   })
