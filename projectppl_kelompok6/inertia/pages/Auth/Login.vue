@@ -114,9 +114,6 @@ const handleSubmit = (event) => {
   form.post('/login', {
     preserveScroll: true,
     preserveState: true,
-    onSuccess: () => {
-      router.visit('/dashboard')
-    },
     onError: (errors) => {
       console.log('Ini error:', errors)
 
@@ -137,6 +134,8 @@ const handleSubmit = (event) => {
       }
     },
   })
+
+
 }
 
 

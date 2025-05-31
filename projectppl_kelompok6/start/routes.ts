@@ -9,56 +9,55 @@
 
 // start/routes.ts
 import router from '@adonisjs/core/services/router'
-// import hash from '@adonisjs/core/services/hash'
-
-// Benar:
-router.on('/').renderInertia('LandingPage')
-// router.on('/plant-quiz').renderInertia('PlantQuiz')
-// router.on('/7-step-challenge').renderInertia('SevenStepChallenge')
-// router.on('/guides').renderInertia('Guides')
-// router.on('/login').renderInertia('Auth/Login')
-// router.on('/signup').renderInertia('AuthPages')
-// router.on('/dash').renderInertia('Dashboard')
-
+import { middleware } from '#start/kernel'
 import AuthController from '#controllers/auth_controller'
-router.post('/login', [AuthController, 'login'])
-// router.get('/login', async ({ inertia }) => {
-//   return inertia.render('Auth/Login', {
-//     isLogin: true,
-//   })
-// })
-
-router.get('/login', async ({ inertia }) => {
-  return inertia.render('Auth/Login') // atau 'Auth/Login' sesuai lokasi file
-})
-
 import QuizController from '#controllers/quiz_controller'
+import ProfileController from '#controllers/profiles_controller'
+import ExperienceController from '#controllers/experience_controller'
+import PlantController from '#controllers/plant_controller'
 
-router.get('plant-quiz', [QuizController, 'index']).use(middleware.auth())
-router.get('plant-quiz/data', [QuizController, 'getData'])
-router.post('plant-quiz/calculate', [QuizController, 'calculateResult'])
+// landing pages
+router.on('/').renderInertia('LandingPage')
+
+// login page
+router.post('/login', [AuthController, 'login'])
+router.get('/login', async ({ inertia }) => {
+  return inertia.render('Auth/Login') 
+})
 
 router.get('/logout', [AuthController, 'logout'])
 
+//sign up page
 router.get('/signup', async ({ inertia }) => {
-    return inertia.render('Auth/Signup') // gunakan page yang sama (AuthPages.vue)
+    return inertia.render('Auth/Signup') 
   })
   
 router.post('/signup', [AuthController, 'signup'])
 
-
-router.get('/dashboard', async ({ session, inertia, response }) => {
+//dashboard user biasa 
+router.get('/dashboard', async ({ session, inertia }) => {
   const user = session.get('user')
-
-  if (!user) {
-    return response.redirect('/login')
-  }
-
   return inertia.render('Dashboard', { user })
-})
+}).use([
+  middleware.auth(),
+  middleware.role(['user']) // hanya untuk role 'user'
+])
 
 
-import { middleware } from '#start/kernel'
+// dashboard admin
+router.get('/DashboardAdmin', async ({ session, inertia }) => {
+  const user = session.get('user')
+  return inertia.render('DashboardAdmin', { user })
+}).use([
+  middleware.auth(),
+  middleware.role(['admin']) // hanya untuk role 'admin'
+])
+
+// Plant Quiz page
+router.get('plant-quiz', [QuizController, 'index']).use([middleware.auth(), middleware.role(['user'])])
+router.get('plant-quiz/data', [QuizController, 'getData'])
+router.post('plant-quiz/calculate', [QuizController, 'calculateResult'])
+
 
 router.get('/profile', async ({ session, inertia, response }) => {
   const user = session.get('user')
@@ -73,48 +72,38 @@ router.get('/profile', async ({ session, inertia, response }) => {
       email: user.email,
     },
   })
-})
+}).use([middleware.auth(), middleware.role(['user'])])
 
-  .use(middleware.auth())// ✅ ini betul
 
-import ProfileController from '#controllers/profiles_controller'
+router.post('/profile/update', [ProfileController, 'update']).use([middleware.auth(), middleware.role(['user'])])
 
-router.post('/profile/update', [ProfileController, 'update'])
+router.get('/profile/edit', async ({ session, inertia, response }) => {
+  const user = session.get('user')
 
-  .use(middleware.auth())
+  if (!user) {
+    return response.redirect('/login')
+  }
 
-  router.get('/profile/edit', async ({ session, inertia, response }) => {
-    const user = session.get('user')
-  
-    if (!user) {
-      return response.redirect('/login')
-    }
-  
-    return inertia.render('ProfileEdit', {
-      user: {
-        fullName: user.fullName,
-        email: user.email,
-      },
-    })
+  return inertia.render('ProfileEdit', {
+    user: {
+      fullName: user.fullName,
+      email: user.email,
+    },
   })
-  
-  .middleware([middleware.auth()])
+}).use([middleware.auth(), middleware.role(['user'])])
 
-import ExperienceController from '#controllers/experience_controller'
-import PlantController from '#controllers/plant_controller'
-
-router.get('/guides', [ExperienceController, 'index'])
+router.get('/guides', [ExperienceController, 'index']).use([middleware.auth(), middleware.role(['user'])])
 // POST guides (harus login dulu)
-router.post('/guides', [ExperienceController, 'store']).use(middleware.auth())
+router.post('/guides', [ExperienceController, 'store']).use([middleware.auth(), middleware.role(['user'])])
 
 // DELETE guides/:id (harus login dulu)
-router.delete('/guides/:id', [ExperienceController, 'delete']).use(middleware.auth())
-router.post('/guides/:id/edit',[ExperienceController, 'edit']) 
-router.put('/guides/:id', [ExperienceController, 'update']) 
+router.delete('/guides/:id', [ExperienceController, 'delete']).use([middleware.auth(), middleware.role(['user'])])
+router.post('/guides/:id/edit',[ExperienceController, 'edit']).use([middleware.auth(), middleware.role(['user'])]) 
+router.put('/guides/:id', [ExperienceController, 'update']) .use([middleware.auth(), middleware.role(['user'])])
 
-router.get('/plants', [PlantController, 'index']) 
-router.get('/plants/:id', [PlantController, 'show']) 
+router.get('/plants', [PlantController, 'index']).use([middleware.auth(), middleware.role(['user'])]) 
+router.get('/plants/:id', [PlantController, 'show']).use([middleware.auth(), middleware.role(['user'])]) 
 
 
-router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/complete', [PlantController, 'completeChallenge']).use(middleware.auth());
-router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/note', [PlantController, 'saveNote']).use(middleware.auth());
+router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/complete', [PlantController, 'completeChallenge']).use([middleware.auth(), middleware.role(['user'])])
+router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/note', [PlantController, 'saveNote']).use([middleware.auth(), middleware.role(['user'])])
