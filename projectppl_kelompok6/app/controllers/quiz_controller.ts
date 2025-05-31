@@ -83,6 +83,7 @@ export default class QuizController {
             const pertanyaanDocs = await db.collection('pertanyaan').find().toArray();
             const jawabanDocs = await db.collection('jawaban').find().toArray();
 
+            // Buat pemetaan ID pertanyaan ke teks pertanyaan
             const pertanyaanMap: Record<string, string> = {};
             pertanyaanDocs.forEach((p) => {
                 pertanyaanMap[p._id.toString()] = p.Pertanyaan;
@@ -90,6 +91,9 @@ export default class QuizController {
 
             let maxScore = 0;
             let bestMatches: Array<{ tumbuhan: string; score: number; totalQuestions: number }> = [];
+
+            // **Nama pertanyaan khusus yang harus diproses berbeda**
+            const pertanyaanIndoor = "Apakah Anda lebih suka menanam tanaman di dalam ruangan (indoor)?";
 
             // Proses setiap tanaman
             for (const jawabanDoc of jawabanDocs) {
@@ -99,8 +103,20 @@ export default class QuizController {
                 answers.forEach(({ questionId, answer }) => {
                     const pertanyaanText = pertanyaanMap[questionId];
 
-                    if (pertanyaanText in plantAnswers && plantAnswers[pertanyaanText] === answer) {
-                        score++;
+                    // **Logika khusus untuk pertanyaan "Indoor"**
+                    if (pertanyaanText === pertanyaanIndoor) {
+                        if (answer === "Tidak") {
+                            // Jika pengguna menjawab "Tidak", semua tanaman dapat poin tambahan
+                            score++;
+                        } else if (answer === "Ya" && plantAnswers[pertanyaanText] === "Ya") {
+                            // Jika pengguna menjawab "Ya", hanya tanaman yang "Ya" mendapatkan poin
+                            score++;
+                        }
+                    } else {
+                        // **Logika perhitungan biasa**
+                        if (pertanyaanText in plantAnswers && plantAnswers[pertanyaanText] === answer) {
+                            score++;
+                        }
                     }
                 });
 
