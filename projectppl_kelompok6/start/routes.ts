@@ -119,6 +119,3 @@ router.get('/plants/:id', [PlantController, 'show'])
 
 router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/complete', [PlantController, 'completeChallenge']).use(middleware.auth());
 router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/note', [PlantController, 'saveNote']).use(middleware.auth());
-
-
-

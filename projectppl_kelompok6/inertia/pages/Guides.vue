@@ -312,9 +312,20 @@
                 </div>
 
                 <!-- Foto jika ada -->
-                <div v-if="exp.photo" class="px-6 pb-4">
-                  <img :src="exp.photo" class="w-full h-64 object-cover rounded-xl" />
-                </div>
+                <!-- Foto jika ada - dengan fitur modal -->
+                <div v-if="exp.photo" class="px-8 pb-8">
+                  <div class="relative group cursor-pointer" @click="openImageModal(exp.photo)">
+                    <img 
+                      :src="exp.photo" 
+                      class="w-full h-80 object-cover rounded-2xl shadow-lg transition-all duration-500 group-hover:shadow-2xl group-hover:scale-[1.02]" 
+                    />
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 rounded-2xl flex items-center justify-center">
+                      <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl text-gray-800 font-medium shadow-lg">
+                        <i class="fas fa-search-plus mr-2"></i>Klik untuk memperbesar
+                      </div>
+                    </div>
+                  </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -329,6 +340,35 @@
           </div>
         </div>
       </div>
+      <!-- Modal untuk melihat gambar -->
+    <transition 
+      enter-active-class="transition-all duration-300 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-all duration-200 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div 
+        v-if="imageModal.show" 
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        @click="closeImageModal"
+      >
+        <div class="relative max-w-4xl max-h-full">
+          <button 
+            @click="closeImageModal"
+            class="absolute -top-4 -right-4 w-12 h-12 bg-white/90 hover:bg-white text-gray-800 rounded-full flex items-center justify-center shadow-2xl transition-all duration-200 hover:scale-110 z-10"
+          >
+            <i class="fas fa-times text-xl"></i>
+          </button>
+          <img 
+            :src="imageModal.src" 
+            class="max-w-full max-h-full rounded-2xl shadow-2xl"
+            @click.stop
+          />
+        </div>
+      </div>
+    </transition>
     </div>
   </div>
 </template>
@@ -355,6 +395,12 @@ const isMenuOpen = ref(false)
 const activeTab = ref('infographic')
 const expandedFaqs = ref([])
 const activePostMenu = ref(null)
+
+// Modal untuk gambar
+const imageModal = ref({
+  show: false,
+  src: ''
+})
 
 const tabs = [
   { id: 'infographic', label: 'Infografis' },
@@ -389,6 +435,21 @@ const faqs = ref([
     answer: "Lidah mertua atau Peace Lily bisa jadi pilihan..."
   }
 ])
+
+// Fungsi untuk modal gambar
+const openImageModal = (src) => {
+  imageModal.value = {
+    show: true,
+    src: src
+  }
+}
+
+const closeImageModal = () => {
+  imageModal.value = {
+    show: false,
+    src: ''
+  }
+}
 
 const experiences = ref(page.props.experiences || [
   {
@@ -466,6 +527,11 @@ const addExperience = () => {
     router.put(`/guides/${editId.value}`, form, {
       forceFormData: true,
       onSuccess: () => {
+        const idx = experiences.value.findIndex(exp => exp.id === editId.value)
+        if (idx !== -1) {
+          experiences.value[idx].story = newExperience.value.story
+          experiences.value[idx].photo = newExperience.value.photo
+        }
         cancelEdit()
       },
       onError: (errors) => {
@@ -485,7 +551,9 @@ const addExperience = () => {
   } else {
     router.post('/guides', form, {
       forceFormData: true,
-      onSuccess: () => {
+      onSuccess: (page) => {
+        const newExp = page.props.experiences?.slice(-1)[0] // ambil data terbaru
+        if (newExp) experiences.value.push(newExp)
         newExperience.value = { story: '', photo: null, photoFile: null }
       },
       onError: (errors) => {
@@ -500,6 +568,7 @@ const deleteExperience = (id) => {
   if (confirm('Apakah Anda yakin ingin menghapus pengalaman ini?')) {
     router.delete(`/guides/${id}`, {
       onSuccess: () => {
+        experiences.value = experiences.value.filter(exp => exp.id !== id)
         activePostMenu.value = null
       }
     })
