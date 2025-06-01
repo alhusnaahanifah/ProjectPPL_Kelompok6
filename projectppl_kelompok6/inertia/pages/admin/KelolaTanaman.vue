@@ -54,8 +54,8 @@
       </nav>
 
       <!-- Admin Profile Section -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20">
-        <div class="flex items-center space-x-3 mb-3">
+      <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/20">
+        <div class="flex items-center space-x-3 mb-4">
           <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
             <i class="fas fa-user-shield text-white"></i>
           </div>
@@ -66,7 +66,7 @@
         </div>
         <button
           @click="logout"
-          class="w-60 flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           <i class="fas fa-sign-out-alt"></i>
           <span>Keluar</span> 
