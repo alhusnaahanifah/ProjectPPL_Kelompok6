@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex bg-gradient-to-br from-green-50 via-white to-green-100">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl">
+    <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl fixed h-full overflow-y-auto">
       <!-- Logo Section -->
       <div class="p-6 border-b border-white/20">
         <div class="flex items-center space-x-3">
@@ -16,26 +16,15 @@
       <nav class="mt-6 px-4">
         <ul class="space-y-2">
           <li>
-            <a
-              href="#"
-              @click="setActiveMenu('dashboard')"
-              :class="[
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                activeMenu === 'dashboard' 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]"
-            >
+            <Link href="/DashboardAdmin"
+              :class="getSidebarItemClass('/DashboardAdmin')">
               <i class="fas fa-tachometer-alt w-5"></i>
               <span>Dashboard</span>
-            </a>
+            </Link>
           </li>
           <li>
             <Link href="/admin/users"
-              :class="[
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                isActive('/admin/users') ? 'bg-green-600 text-white shadow-lg' : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]">
+              :class="getSidebarItemClass('/admin/users')">
               <i class="fas fa-users w-5"></i>
               <span>Kelola Pengguna</span>
             </Link>
@@ -48,21 +37,15 @@
             </Link>
           </li>
           <li>
-            <Link
-              href="/admin/panduan"
-              @click="setActiveMenu('guides')"
-              :class="[
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                activeMenu === 'guides' 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]">
+            <Link href="/admin/panduan"
+              :class="getSidebarItemClass('/admin/panduan')">
               <i class="fas fa-book-open w-5"></i>
               <span>Kelola Panduan</span>
-          </Link>
+            </Link>
           </li>
           <li>
-            <Link href="/admin/quiz" :class="getSidebarItemClass('/admin/quiz')">
+            <Link href="/admin/quiz"
+              :class="getSidebarItemClass('/admin/quiz')">
               <i class="fas fa-question-circle w-5"></i>
               <span>Kelola Quiz</span>
             </Link>
@@ -92,7 +75,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-auto">
+    <main class="flex-1 overflow-auto ml-64">
       <!-- Top Header -->
       <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
         <div class="flex items-center justify-between">
@@ -229,18 +212,32 @@ const props = defineProps({
 const page = usePage()
 const currentUrl = computed(() => page.url.value)
 
-const isActive = (path) => {
-  return typeof currentUrl.value === 'string' && currentUrl.value.startsWith(path)
+// Updated getSidebarItemClass method with the new styling from ManagePanduan
+const getSidebarItemClass = (path) => {
+  const page = usePage()
+  const currentPath = page.url
+  
+  // Add null/undefined check
+  if (!currentPath) {
+    return [
+      'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+      'text-gray-300 hover:bg-white/10 hover:text-white'
+    ]
+  }
+  
+  const isActive = currentPath === path || currentPath.startsWith(path + '/')
+  
+  return [
+    'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+    isActive
+      ? 'bg-green-500/20 text-green-300 border-l-4 border-green-400'
+      : 'text-gray-300 hover:bg-white/10 hover:text-white'
+  ]
 }
 
-const getSidebarItemClass = (path) => {
-  const isActive = currentUrl.value === path
-  return [
-    'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-    isActive 
-      ? 'bg-green-600 text-white shadow-lg' 
-      : 'text-green-100 hover:bg-white/10 hover:text-white'
-  ]
+// Keep existing methods for backward compatibility
+const isActive = (path) => {
+  return typeof currentUrl.value === 'string' && currentUrl.value.startsWith(path)
 }
 
 const activeMenu = ref('dashboard')

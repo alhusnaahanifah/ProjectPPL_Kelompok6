@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex bg-gradient-to-br from-green-50 via-white to-green-100">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl">
+    <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl fixed h-full overflow-y-auto">
       <!-- Logo Section -->
       <div class="p-6 border-b border-white/20">
         <div class="flex items-center space-x-3">
@@ -50,20 +50,6 @@
               <span>Kelola Quiz</span>
             </Link>
           </li>
-          <li>
-            <Link href="/admin/reports"
-              :class="getSidebarItemClass('/admin/reports')">
-              <i class="fas fa-chart-bar w-5"></i>
-              <span>Laporan</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/admin/settings"
-              :class="getSidebarItemClass('/admin/settings')">
-              <i class="fas fa-cog w-5"></i>
-              <span>Pengaturan</span>
-            </Link>
-          </li>
         </ul>
       </nav>
 
@@ -89,7 +75,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-auto">
+    <main class="flex-1 overflow-auto ml-64">
       <!-- Top Header -->
       <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
         <div class="flex items-center justify-between">

@@ -16,31 +16,36 @@
       <nav class="mt-6 px-4">
         <ul class="space-y-2">
           <li>
-            <Link href="/DashboardAdmin" :class="getSidebarItemClass('/admin/dashboard')">
+            <Link href="/DashboardAdmin"
+              :class="getSidebarItemClass('/DashboardAdmin')">
               <i class="fas fa-tachometer-alt w-5"></i>
               <span>Dashboard</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/users" :class="getSidebarItemClass('/admin/users')">
+            <Link href="/admin/users"
+              :class="getSidebarItemClass('/admin/users')">
               <i class="fas fa-users w-5"></i>
               <span>Kelola Pengguna</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/plants" :class="getSidebarItemClass('/admin/plants')">
+            <Link href="/admin/plants"
+              :class="getSidebarItemClass('/admin/plants')">
               <i class="fas fa-seedling w-5"></i>
               <span>Kelola Tanaman</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/guides" :class="getSidebarItemClass('/admin/guides')">
+            <Link href="/admin/panduan"
+              :class="getSidebarItemClass('/admin/panduan')">
               <i class="fas fa-book-open w-5"></i>
               <span>Kelola Panduan</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/quiz" :class="getSidebarItemClass('/admin/quiz')">
+            <Link href="/admin/quiz"
+              :class="getSidebarItemClass('/admin/quiz')">
               <i class="fas fa-question-circle w-5"></i>
               <span>Kelola Quiz</span>
             </Link>
@@ -64,7 +69,7 @@
           class="w-60 flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           <i class="fas fa-sign-out-alt"></i>
-          <span>Keluar</span>
+          <span>Keluar</span> 
         </button>
       </div>
     </aside>
@@ -427,9 +432,8 @@ const props = defineProps({
   }
 })
 
-
 const page = usePage()
-const currentUrl = computed(() => page.url)
+const currentUrl = computed(() => page.url.value)
 
 // Modal states
 const showAddModal = ref(false)
@@ -451,14 +455,26 @@ const plantsList = computed(() => {
   return props.plants || []
 })
 
-// Methods
+// Updated getSidebarItemClass method - sama seperti yang di Dashboard
 const getSidebarItemClass = (path) => {
-  const isActive = currentUrl.value === path
+  const page = usePage()
+  const currentPath = page.url
+  
+  // Add null/undefined check
+  if (!currentPath) {
+    return [
+      'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+      'text-gray-300 hover:bg-white/10 hover:text-white'
+    ]
+  }
+  
+  const isActive = currentPath === path || currentPath.startsWith(path + '/')
+  
   return [
-    'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-    isActive 
-      ? 'bg-green-600 text-white shadow-lg' 
-      : 'text-green-100 hover:bg-white/10 hover:text-white'
+    'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+    isActive
+      ? 'bg-green-500/20 text-green-300 border-l-4 border-green-400'
+      : 'text-gray-300 hover:bg-white/10 hover:text-white'
   ]
 }
 
@@ -530,7 +546,6 @@ const removeStep = (stepIndex) => {
   plantForm.value.steps.splice(stepIndex, 1)
 }
 
-
 const addChallenge = (stepIndex) => {
   plantForm.value.steps[stepIndex].challenges.push({
     title: '',
@@ -539,21 +554,17 @@ const addChallenge = (stepIndex) => {
   })
 }
 
-
 const removeChallenge = (stepIndex, challengeIndex) => {
   plantForm.value.steps[stepIndex].challenges.splice(challengeIndex, 1)
 }
-
 
 const addTip = (stepIndex, challengeIndex) => {
   plantForm.value.steps[stepIndex].challenges[challengeIndex].tips.push('')
 }
 
-
 const removeTip = (stepIndex, challengeIndex, tipIndex) => {
   plantForm.value.steps[stepIndex].challenges[challengeIndex].tips.splice(tipIndex, 1)
 }
-
 
 const viewPlantDetail = (plant) => {
   selectedPlant.value = plant
@@ -577,7 +588,6 @@ const closeDetailModal = () => {
   selectedPlant.value = null
 }
 
-
 const addPlant = () => {
   const newName = plantForm.value.plant.trim().toLowerCase()
 
@@ -591,7 +601,7 @@ const addPlant = () => {
   }
 
   router.post('/admin/plants', plantForm.value, {
-    preserveState: false, // optional: kalau kamu mau reload list tanaman
+    preserveState: false,
     onSuccess: () => {
       closeModal()
       router.reload({ only: ['plants'] })
@@ -602,7 +612,6 @@ const addPlant = () => {
     }
   })
 }
-
 
 const addStep = () => {
   plantForm.value.steps.push({
@@ -616,7 +625,7 @@ const updatePlant = () => {
   if (editingPlant.value) {
     const plantId = editingPlant.value._id || editingPlant.value.id
     router.put(`/admin/plants/${plantId}`, plantForm.value, {
-      preserveState: false, // << ini penting agar halaman direfresh
+      preserveState: false,
       onSuccess: () => {
         closeModal()
         router.reload({ only: ['plants'] })
@@ -649,3 +658,23 @@ const logout = () => {
   router.get('/logout')
 }
 </script>
+
+<style scoped>
+/* Custom scrollbar untuk sidebar */
+aside::-webkit-scrollbar {
+  width: 4px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+</style>
