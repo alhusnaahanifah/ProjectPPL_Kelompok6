@@ -1,12 +1,12 @@
 <template>
   <div class="min-h-screen flex bg-gradient-to-br from-green-50 via-white to-green-100">
     <!-- Sidebar -->
-     <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl">
+    <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl fixed h-full overflow-y-auto">
       <!-- Logo Section -->
       <div class="p-6 border-b border-white/20">
         <div class="flex items-center space-x-3">
           <div>
-             <img src="../../image/plogo-samping.png" alt="Logo Project" class="w-40 h-auto">
+            <img src="../../image/plogo-samping.png" alt="Logo Project" class="w-40 h-auto">
             <p class="text-green-200 text-sm pl-12">Admin Panel</p>
           </div>
         </div>
@@ -17,7 +17,7 @@
         <ul class="space-y-2">
           <li>
             <Link href="/DashboardAdmin"
-              :class="getSidebarItemClass('/admin/dashboard')">
+              :class="getSidebarItemClass('/DashboardAdmin')">
               <i class="fas fa-tachometer-alt w-5"></i>
               <span>Dashboard</span>
             </Link>
@@ -37,8 +37,8 @@
             </Link>
           </li>
           <li>
-            <Link href="/admin/guides"
-              :class="getSidebarItemClass('/admin/guides')">
+            <Link href="/admin/panduan"
+              :class="getSidebarItemClass('/admin/panduan')">
               <i class="fas fa-book-open w-5"></i>
               <span>Kelola Panduan</span>
             </Link>
@@ -54,8 +54,8 @@
       </nav>
 
       <!-- Admin Profile Section -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20">
-        <div class="flex items-center space-x-3 mb-3">
+      <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/20">
+        <div class="flex items-center space-x-3 mb-4">
           <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
             <i class="fas fa-user-shield text-white"></i>
           </div>
@@ -66,7 +66,7 @@
         </div>
         <button
           @click="logout"
-          class="w-60 flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           <i class="fas fa-sign-out-alt"></i>
           <span>Keluar</span> 
@@ -75,7 +75,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-auto">
+    <main class="flex-1 overflow-auto ml-64">
       <!-- Top Header -->
       <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
         <div class="flex items-center justify-between">
@@ -269,17 +269,30 @@ const usersList = computed(() => {
 })
 
 const page = usePage()
-const currentUrl = computed(() => page.url)
+const currentUrl = computed(() => page.url.value)
 const showDeleteModal = ref(false)
 const userToDelete = ref(null)
 
+// Updated getSidebarItemClass method - sama seperti yang di Dashboard
 const getSidebarItemClass = (path) => {
-  const isActive = currentUrl.value === path
+  const page = usePage()
+  const currentPath = page.url
+  
+  // Add null/undefined check
+  if (!currentPath) {
+    return [
+      'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+      'text-gray-300 hover:bg-white/10 hover:text-white'
+    ]
+  }
+  
+  const isActive = currentPath === path || currentPath.startsWith(path + '/')
+  
   return [
-    'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-    isActive 
-      ? 'bg-green-600 text-white shadow-lg' 
-      : 'text-green-100 hover:bg-white/10 hover:text-white'
+    'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+    isActive
+      ? 'bg-green-500/20 text-green-300 border-l-4 border-green-400'
+      : 'text-gray-300 hover:bg-white/10 hover:text-white'
   ]
 }
 
@@ -337,7 +350,6 @@ const deleteUser = () => {
       },
       onError: (errors) => {
         console.error('Error deleting user:', errors)
-        // Optional: show error message to user
         alert('Gagal menghapus pengguna. Silakan coba lagi.')
       }
     })
@@ -348,3 +360,23 @@ const logout = () => {
   router.get('/logout')
 }
 </script>
+
+<style scoped>
+/* Custom scrollbar untuk sidebar */
+aside::-webkit-scrollbar {
+  width: 4px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+</style>

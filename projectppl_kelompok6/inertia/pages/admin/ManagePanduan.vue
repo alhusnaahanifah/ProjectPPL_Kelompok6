@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex bg-gradient-to-br from-green-50 via-white to-green-100">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl">
+    <aside class="w-64 bg-gradient-to-b from-[#2f3828] to-[#1a2014] text-white shadow-2xl fixed h-full overflow-y-auto">
       <!-- Logo Section -->
       <div class="p-6 border-b border-white/20">
         <div class="flex items-center space-x-3">
@@ -50,26 +50,12 @@
               <span>Kelola Quiz</span>
             </Link>
           </li>
-          <li>
-            <Link href="/admin/reports"
-              :class="getSidebarItemClass('/admin/reports')">
-              <i class="fas fa-chart-bar w-5"></i>
-              <span>Laporan</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/admin/settings"
-              :class="getSidebarItemClass('/admin/settings')">
-              <i class="fas fa-cog w-5"></i>
-              <span>Pengaturan</span>
-            </Link>
-          </li>
         </ul>
       </nav>
 
       <!-- Admin Profile Section -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20">
-        <div class="flex items-center space-x-3 mb-3">
+      <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/20">
+        <div class="flex items-center space-x-3 mb-4">
           <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
             <i class="fas fa-user-shield text-white"></i>
           </div>
@@ -80,7 +66,7 @@
         </div>
         <button
           @click="logout"
-          class="w-60 flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           <i class="fas fa-sign-out-alt"></i>
           <span>Keluar</span> 
@@ -89,7 +75,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-auto">
+    <main class="flex-1 overflow-auto ml-64">
       <!-- Top Header -->
       <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
         <div class="flex items-center justify-between">
