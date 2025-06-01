@@ -49,14 +49,6 @@
     <div class="max-w-4xl mx-auto">
       <h2 class="text-3xl font-bold text-green-700 text-center">Panduan Praktis</h2>
 
-      <!-- Debug info - akan dihapus setelah testing -->
-      <div class="mt-4 p-4 bg-yellow-100 rounded-lg text-sm">
-        <p><strong>Debug Info:</strong></p>
-        <p>Infographics: {{ infographics?.length || 0 }} items</p>
-        <p>Videos: {{ videos?.length || 0 }} items</p>
-        <p>FAQs: {{ faqs?.length || 0 }} items</p>
-      </div>
-
       <!-- Tabs -->
       <div class="mt-8 flex border-b border-gray-200">
         <button 
@@ -650,20 +642,35 @@ const addExperience = () => {
     router.put(`/guides/${editId.value}`, form, {
       forceFormData: true,
       onSuccess: () => {
-        // Refresh halaman untuk reload data terbaru
-        router.get('/guides')
+        const idx = experiences.value.findIndex(exp => exp.id === editId.value)
+        if (idx !== -1) {
+          experiences.value[idx].story = newExperience.value.story
+          experiences.value[idx].photo = newExperience.value.photo
+        }
+        cancelEdit()
       },
       onError: (errors) => {
         console.error('Error updating experience:', errors)
-        alert('Gagal mengupdate pengalaman. Silakan coba lagi.')
+        router.post(`/guides/${editId.value}/edit`, form, {
+          forceFormData: true,
+          onSuccess: () => {
+            cancelEdit()
+          },
+          onError: (fallbackErrors) => {
+            console.error('Fallback edit also failed:', fallbackErrors)
+            alert('Gagal mengupdate pengalaman. Silakan coba lagi.')
+          }
+        })
       }
     })
   } else {
     router.post('/guides', form, {
       forceFormData: true,
-      onSuccess: () => {
-        // Refresh halaman untuk reload data terbaru
-        router.get('/guides')
+      onSuccess: (page) => {
+        const newExp = page.props.experiences?.slice(-1)[0] // ambil data terbaru
+        if (newExp) experiences.value.push(newExp)
+        newExperience.value = { story: '', photo: null, photoFile: null }
+        router.reload()
       },
       onError: (errors) => {
         console.error('Error creating experience:', errors)
@@ -677,8 +684,8 @@ const deleteExperience = (id) => {
   if (confirm('Apakah Anda yakin ingin menghapus pengalaman ini?')) {
     router.delete(`/guides/${id}`, {
       onSuccess: () => {
-        // Refresh halaman untuk reload data terbaru
-        router.get('/guides')
+        experiences.value = experiences.value.filter(exp => exp.id !== id)
+        activePostMenu.value = null
       }
     })
   }

@@ -16,6 +16,7 @@ import ProfileController from '#controllers/profiles_controller'
 import PlantController from '#controllers/plant_controller'
 import GuidesController from '#controllers/guides_controller'
 import AdminController from '#controllers/admin_controller'
+import AdminQuizsController from '#controllers/admin_quizs_controller'
 
 // landing pages
 router.on('/').renderInertia('LandingPage')
@@ -116,3 +117,17 @@ router.delete('/admin/plants/:id', [AdminController, 'deletePlant']).as('admin.p
 
 // Routes for users managemen
 router.delete('/admin/users/:id', [AdminController, 'deleteUser']).as('admin.users.destroy').use([middleware.auth(), middleware.role(['admin'])])
+
+
+router.group(() => {
+  router.get('/admin/quiz', [AdminQuizsController, 'index'])
+
+  router.post('/admin/quiz/pertanyaan', [AdminQuizsController, 'storePertanyaan'])
+  router.put('/admin/quiz/pertanyaan/:id', [AdminQuizsController, 'updatePertanyaan'])
+  router.delete('/admin/quiz/pertanyaan/:id', [AdminQuizsController, 'deletePertanyaan'])
+
+  router.post('/admin/quiz/jawaban', [AdminQuizsController, 'storeJawaban'])
+  router.get('/admin/quiz/jawaban/:tumbuhan', [AdminQuizsController, 'showJawabanByTumbuhan'])
+  router.put('/admin/quiz/jawaban/:tumbuhan', [AdminQuizsController, 'updateJawaban'])
+  router.delete('/admin/quiz/jawaban/:tumbuhan', [AdminQuizsController, 'deleteJawaban'])
+}).use([middleware.auth(), middleware.role(['admin'])])

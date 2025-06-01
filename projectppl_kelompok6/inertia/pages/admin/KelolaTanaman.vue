@@ -45,18 +45,6 @@
               <span>Kelola Quiz</span>
             </Link>
           </li>
-          <li>
-            <Link href="/admin/reports" :class="getSidebarItemClass('/admin/reports')">
-              <i class="fas fa-chart-bar w-5"></i>
-              <span>Laporan</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/admin/settings" :class="getSidebarItemClass('/admin/settings')">
-              <i class="fas fa-cog w-5"></i>
-              <span>Pengaturan</span>
-            </Link>
-          </li>
         </ul>
       </nav>
 
@@ -93,7 +81,7 @@
           <div class="flex items-center space-x-4">
             <!-- Add Plant Button -->
             <button
-              @click="showAddModal = true"
+              @click="openAddModal"
               class="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
             >
               <i class="fas fa-plus"></i>
@@ -245,17 +233,6 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                 placeholder="Contoh: Bayam, Kangkung, Selada"
               >
-            </div>
-
-            <!-- Deskripsi Tanaman -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
-              <textarea
-                v-model="plantForm.description"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                rows="3"
-                placeholder="Deskripsikan tanaman ini secara singkat..."
-              ></textarea>
             </div>
 
             <!-- Langkah Penanaman -->
@@ -450,6 +427,7 @@ const props = defineProps({
   }
 })
 
+
 const page = usePage()
 const currentUrl = computed(() => page.url)
 
@@ -519,6 +497,26 @@ const getCompletionPercentage = (plant) => {
   return (unlockedSteps / plant.steps.length) * 100
 }
 
+const openAddModal = () => {
+  plantForm.value = {
+    plant: '',
+    steps: [
+      {
+        title: '',
+        locked: false,
+        challenges: [
+          {
+            title: '',
+            description: '',
+            tips: ['']
+          }
+        ]
+      }
+    ]
+  }
+  showAddModal.value = true
+}
+
 const editPlant = (plant) => {
   editingPlant.value = plant
   plantForm.value = {
@@ -527,6 +525,35 @@ const editPlant = (plant) => {
   }
   showEditModal.value = true
 }
+
+const removeStep = (stepIndex) => {
+  plantForm.value.steps.splice(stepIndex, 1)
+}
+
+
+const addChallenge = (stepIndex) => {
+  plantForm.value.steps[stepIndex].challenges.push({
+    title: '',
+    description: '',
+    tips: ['']
+  })
+}
+
+
+const removeChallenge = (stepIndex, challengeIndex) => {
+  plantForm.value.steps[stepIndex].challenges.splice(challengeIndex, 1)
+}
+
+
+const addTip = (stepIndex, challengeIndex) => {
+  plantForm.value.steps[stepIndex].challenges[challengeIndex].tips.push('')
+}
+
+
+const removeTip = (stepIndex, challengeIndex, tipIndex) => {
+  plantForm.value.steps[stepIndex].challenges[challengeIndex].tips.splice(tipIndex, 1)
+}
+
 
 const viewPlantDetail = (plant) => {
   selectedPlant.value = plant
@@ -550,235 +577,24 @@ const closeDetailModal = () => {
   selectedPlant.value = null
 }
 
-const addPlant = () => {
-  const plantName = plantForm.value.plant
 
-  const plantData = {
-    plant: plantName,
-    steps: [
-      {
-        id: 1,
-        title: "Persiapan Media dan Benih",
-        locked: false,
-        challenges: [
-          {
-            id: 1,
-            title: "Gunakan Tray Semai",
-            description: "Siapkan tray semai dan isi dengan rockwool basah.",
-            tips: [
-              "Potong rockwool dalam bentuk kotak kecil",
-              "Lembapkan dengan air bersih"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          },
-          {
-            id: 2,
-            title: "Pilih Benih Brokoli Unggul",
-            description: "Gunakan benih brokoli dari produsen terpercaya.",
-            tips: [
-              "Benih berwarna coklat gelap",
-              "Bebas dari jamur atau hama"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "Penyemaian Benih",
-        locked: true,
-        challenges: [
-          {
-            id: 1,
-            title: "Tabur Benih ke Media",
-            description: "Letakkan benih satu per satu di rockwool.",
-            tips: [
-              "Gunakan pinset untuk akurasi",
-              "Tutup tipis dengan tisu lembap"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          },
-          {
-            id: 2,
-            title: "Tempatkan di Tempat Gelap",
-            description: "Biarkan benih berkecambah selama 2-3 hari.",
-            tips: [
-              "Jangan siram berlebihan",
-              "Pantau setiap hari"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Pemindahan ke Sistem Hidroponik",
-        locked: true,
-        challenges: [
-          {
-            id: 1,
-            title: "Tunggu 2-3 Daun Sejati",
-            description: "Pindahkan bibit jika sudah cukup besar.",
-            tips: [
-              "Pastikan akar sudah muncul",
-              "Pilih bibit sehat dan tegak"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          },
-          {
-            id: 2,
-            title: "Masukkan ke Netpot",
-            description: "Gunakan sistem DFT atau NFT untuk brokoli.",
-            tips: [
-              "Pastikan akar menyentuh nutrisi",
-              "Gunakan spons atau busa pelindung"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          }
-        ]
-      },
-      {
-        id: 4,
-        title: "Perawatan Intensif",
-        locked: true,
-        challenges: [
-          {
-            id: 1,
-            title: "Cek Suhu dan pH",
-            description: "Suhu ideal 18–22°C dan pH 6.0–6.5.",
-            tips: [
-              "Gunakan termometer dan pH meter",
-              "Atur ruangan jika terlalu panas"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          },
-          {
-            id: 2,
-            title: "Bersihkan Alat Secara Berkala",
-            description: "Hindari lumut dan endapan dalam pipa.",
-            tips: [
-              "Gunakan larutan cuka atau sabun cair",
-              "Lakukan seminggu sekali"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          }
-        ]
-      },
-      {
-        id: 5,
-        title: "Pemupukan",
-        locked: true,
-        challenges: [
-          {
-            id: 1,
-            title: "Gunakan AB Mix Sayuran Buah",
-            description: "Tambahkan nutrisi secara berkala.",
-            tips: [
-              "Ikuti takaran dari produsen",
-              "Ganti larutan tiap 7–10 hari"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          },
-          {
-            id: 2,
-            title: "Berikan Mikronutrien",
-            description: "Tambahkan Fe, Zn, Mg jika diperlukan.",
-            tips: [
-              "Amati gejala kekurangan nutrisi",
-              "Konsultasikan pada ahli jika ragu"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          }
-        ]
-      },
-      {
-        id: 6,
-        title: "Panen",
-        locked: true,
-        challenges: [
-          {
-            id: 1,
-            title: "Panen Saat Kuntum Padat",
-            description: "Panen saat kepala brokoli berukuran penuh.",
-            tips: [
-              "Gunakan pisau bersih dan tajam",
-              "Potong batang utama"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          },
-          {
-            id: 2,
-            title: "Segera Simpan Dingin",
-            description: "Masukkan brokoli ke lemari es atau pendingin.",
-            tips: [
-              "Jangan dicuci sebelum disimpan",
-              "Gunakan kantong plastik berlubang"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          }
-        ]
-      },
-      {
-        id: 7,
-        title: "Evaluasi",
-        locked: true,
-        challenges: [
-          {
-            id: 1,
-            title: "Catat Hasil Panen",
-            description: "Tulis berat, bentuk, dan warna brokoli hasil panen.",
-            tips: [
-              "Gunakan timbangan digital",
-              "Bandingkan dengan standar mutu"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          },
-          {
-            id: 2,
-            title: "Refleksi dan Pembelajaran",
-            description: "Catat hal-hal yang berhasil dan perlu diperbaiki.",
-            tips: [
-              "Gunakan jurnal tanam",
-              "Diskusikan dengan sesama petani"
-            ],
-            completed: false,
-            completedAt: null,
-            note: ""
-          }
-        ]
-      }
-    ]
+const addPlant = () => {
+  const newName = plantForm.value.plant.trim().toLowerCase()
+
+  const isDuplicate = plantsList.value.some(plant =>
+    plant.plant.trim().toLowerCase() === newName
+  )
+
+  if (isDuplicate) {
+    alert('Nama tanaman sudah ada!')
+    return
   }
 
-  router.post('/admin/plants', plantData, {
+  router.post('/admin/plants', plantForm.value, {
+    preserveState: false, // optional: kalau kamu mau reload list tanaman
     onSuccess: () => {
       closeModal()
+      router.reload({ only: ['plants'] })
     },
     onError: (errors) => {
       console.error('Error adding plant:', errors)
@@ -788,12 +604,22 @@ const addPlant = () => {
 }
 
 
+const addStep = () => {
+  plantForm.value.steps.push({
+    title: '',
+    locked: false,
+    challenges: []
+  })
+}
+
 const updatePlant = () => {
   if (editingPlant.value) {
     const plantId = editingPlant.value._id || editingPlant.value.id
     router.put(`/admin/plants/${plantId}`, plantForm.value, {
+      preserveState: false, // << ini penting agar halaman direfresh
       onSuccess: () => {
         closeModal()
+        router.reload({ only: ['plants'] })
       },
       onError: (errors) => {
         console.error('Error updating plant:', errors)

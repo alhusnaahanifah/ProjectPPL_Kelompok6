@@ -41,19 +41,11 @@
             </Link>
           </li>
           <li>
-            <a
-              href="#"
-              @click="setActiveMenu('plants')"
-              :class="[
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                activeMenu === 'plants' 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]"
-            >
+            <Link href="/admin/plants"
+              :class="getSidebarItemClass('/admin/plants')">
               <i class="fas fa-seedling w-5"></i>
               <span>Kelola Tanaman</span>
-            </a>
+            </Link>
           </li>
           <li>
             <a
@@ -71,49 +63,10 @@
             </a>
           </li>
           <li>
-            <a
-              href="#"
-              @click="setActiveMenu('quiz')"
-              :class="[
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                activeMenu === 'quiz' 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]"
-            >
+            <Link href="/admin/quiz" :class="getSidebarItemClass('/admin/quiz')">
               <i class="fas fa-question-circle w-5"></i>
               <span>Kelola Quiz</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              @click="setActiveMenu('reports')"
-              :class="[
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                activeMenu === 'reports' 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]"
-            >
-              <i class="fas fa-chart-bar w-5"></i>
-              <span>Laporan</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              @click="setActiveMenu('settings')"
-              :class="[
-                'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-                activeMenu === 'settings' 
-                  ? 'bg-green-600 text-white shadow-lg' 
-                  : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]"
-            >
-              <i class="fas fa-cog w-5"></i>
-              <span>Pengaturan</span>
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -279,6 +232,16 @@ const currentUrl = computed(() => page.url.value)
 
 const isActive = (path) => {
   return typeof currentUrl.value === 'string' && currentUrl.value.startsWith(path)
+}
+
+const getSidebarItemClass = (path) => {
+  const isActive = currentUrl.value === path
+  return [
+    'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
+    isActive 
+      ? 'bg-green-600 text-white shadow-lg' 
+      : 'text-green-100 hover:bg-white/10 hover:text-white'
+  ]
 }
 
 const activeMenu = ref('dashboard')

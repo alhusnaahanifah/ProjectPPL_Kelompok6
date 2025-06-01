@@ -182,7 +182,7 @@ export default class AdminController {
       )
 
       if (result.modifiedCount === 1) {
-        return response.status(200).json({ message: 'Tanaman berhasil diupdate' })
+        return response.redirect().back()
       } else {
         return response.status(404).json({ message: 'Tanaman tidak ditemukan atau tidak ada perubahan' })
       }

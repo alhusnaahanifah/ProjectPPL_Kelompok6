@@ -50,20 +50,6 @@
               <span>Kelola Quiz</span>
             </Link>
           </li>
-          <li>
-            <Link href="/admin/reports"
-              :class="getSidebarItemClass('/admin/reports')">
-              <i class="fas fa-chart-bar w-5"></i>
-              <span>Laporan</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/admin/settings"
-              :class="getSidebarItemClass('/admin/settings')">
-              <i class="fas fa-cog w-5"></i>
-              <span>Pengaturan</span>
-            </Link>
-          </li>
         </ul>
       </nav>
 

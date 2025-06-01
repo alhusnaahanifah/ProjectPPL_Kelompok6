@@ -107,7 +107,6 @@ export default class GuidesController {
       photo: photoUrl,
       createdAt: new Date()
     })
-
     return response.redirect().back()
   }
 
