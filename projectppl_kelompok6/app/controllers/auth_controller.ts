@@ -28,15 +28,18 @@ export default class AuthController {
       })
     }
 
-    // Set user ke session
+    // Simpan user ke session
     session.put('user', {
       id: user._id.toString(),
       fullName: user.fullName,
-      email: user.email
+      email: user.email,
+      role: user.role
     })
 
-    return response.redirect('/dashboard')
+    // Redirect sesuai role
+   return response.redirect(user.role === 'admin' ? '/DashboardAdmin' : '/dashboard')
   }
+
 
   public async logout({ response, session }: HttpContext) {
     session.forget('user')
@@ -74,12 +77,14 @@ export default class AuthController {
       fullName: name,
       email,
       password: hashedPassword,
+      role: 'user',
     })
 
     session.put('user', {
       id: result.insertedId.toString(),
       fullName: name,
       email,
+      role: 'user',
     })
 
     return response.redirect('/login')
