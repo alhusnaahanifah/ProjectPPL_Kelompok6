@@ -171,7 +171,6 @@ export default class AdminQuizsController {
         if (newTumbuhan && newTumbuhan !== tumbuhan) {
             // PERBAIKAN: Validasi nama tumbuhan baru tidak duplikat
             const existingPlant = await db.collection('jawaban').findOne({ 
-                Tumbuhan: newTumbuhan,
                 Tumbuhan: { $ne: decodeURIComponent(tumbuhan) } // exclude current plant
             })
             
