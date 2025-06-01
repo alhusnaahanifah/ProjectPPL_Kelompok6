@@ -13,8 +13,8 @@ import { middleware } from '#start/kernel'
 import AuthController from '#controllers/auth_controller'
 import QuizController from '#controllers/quiz_controller'
 import ProfileController from '#controllers/profiles_controller'
-import ExperienceController from '#controllers/experience_controller'
 import PlantController from '#controllers/plant_controller'
+import GuidesController from '#controllers/guides_controller'
 import AdminController from '#controllers/admin_controller'
 
 // landing pages
@@ -86,17 +86,20 @@ router.get('/profile/edit', async ({ session, inertia, response }) => {
   })
 }).use([middleware.auth(), middleware.role(['user'])])
 
-router.get('/guides', [ExperienceController, 'index']).use([middleware.auth(), middleware.role(['user'])])
-// POST guides (harus login dulu)
-router.post('/guides', [ExperienceController, 'store']).use([middleware.auth(), middleware.role(['user'])])
+router.get('/info', [GuidesController, 'info']).as('guides.info').use(middleware.auth())
 
-// DELETE guides/:id (harus login dulu)
-router.delete('/guides/:id', [ExperienceController, 'delete']).use([middleware.auth(), middleware.role(['user'])])
-router.post('/guides/:id/edit',[ExperienceController, 'edit']).use([middleware.auth(), middleware.role(['user'])]) 
-router.put('/guides/:id', [ExperienceController, 'update']).use([middleware.auth(), middleware.role(['user'])])
+// Community routes - handles experiences (tab 4)
+router.get('/guides', [GuidesController, 'index'])
 
-router.get('/plants', [PlantController, 'index']).use([middleware.auth(), middleware.role(['user'])]) 
-router.get('/plants/:id', [PlantController, 'show']).use([middleware.auth(), middleware.role(['user'])]) 
+// Community CRUD operations
+router.post('/guides', [GuidesController, 'store']).use(middleware.auth())
+router.put('/guides/:id', [GuidesController, 'update']).use(middleware.auth())
+router.delete('/guides/:id', [GuidesController, 'delete']).use(middleware.auth())
+
+router.post('/guides/:id/edit',[GuidesController, 'edit'])
+
+router.get('/plants', [PlantController, 'index']) 
+router.get('/plants/:id', [PlantController, 'show']) 
 
 
 router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/complete', [PlantController, 'completeChallenge']).use([middleware.auth(), middleware.role(['user'])])
