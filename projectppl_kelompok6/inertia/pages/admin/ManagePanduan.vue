@@ -1107,10 +1107,6 @@ const handleImageError = (event: Event) => {
   target.src = '/images/placeholder-image.jpg' // Fallback image
 }
 
-const logout = async () => {
-  await router.post('/logout')
-}
-
 // Initialize data on component mount
 onMounted(() => {
   // Initialize local data with props data (with proper null checks)
@@ -1127,4 +1123,7 @@ onMounted(() => {
     experiences.value = [...props.experiences]
   }
 })
+const logout = () => {
+  router.get('/logout')
+}
 </script>

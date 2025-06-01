@@ -154,3 +154,4 @@ router.group(() => {
   router.put('/admin/quiz/jawaban/:tumbuhan', [AdminQuizsController, 'updateJawaban'])
   router.delete('/admin/quiz/jawaban/:tumbuhan', [AdminQuizsController, 'deleteJawaban'])
 }).use([middleware.auth(), middleware.role(['admin'])])
+

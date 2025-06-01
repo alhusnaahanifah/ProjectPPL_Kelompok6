@@ -151,40 +151,6 @@
               </div>
             </div>
           </div>
-
-          <!-- Recent Activity -->
-          <div class="bg-white rounded-xl shadow-md p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivitas Terbaru</h3>
-            <div class="space-y-4">
-              <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                  <i class="fas fa-user-plus text-white"></i>
-                </div>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-gray-800">Pengguna baru mendaftar</p>
-                  <p class="text-xs text-gray-600">John Doe bergabung 5 menit yang lalu</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                  <i class="fas fa-seedling text-white"></i>
-                </div>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-gray-800">Tanaman baru ditambahkan</p>
-                  <p class="text-xs text-gray-600">Selada Hijau ditambahkan ke katalog</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
-                  <i class="fas fa-book text-white"></i>
-                </div>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-gray-800">Panduan baru dipublikasi</p>
-                  <p class="text-xs text-gray-600">"Cara Merawat Tanaman Hidroponik" telah dipublikasi</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Other Menu Content -->

@@ -69,7 +69,7 @@
           class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           <i class="fas fa-sign-out-alt"></i>
-          <span>Keluar</span> 
+          <span>Keluar</span>
         </button>
       </div>
     </aside>
@@ -534,12 +534,53 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { router, usePage, Link } from '@inertiajs/vue3'
 
-// ===== DATA PROPS =====
-const page = usePage()
-const { user, pertanyaan, jawaban } = usePage().props
-const currentUrl = computed(() => page.url.value)
+// ===== PROPS =====
+const props = defineProps({
+ user: {
+   type: Object,
+   required: true
+ },
+ pertanyaan: {
+   type: Array,
+   default: () => []
+ },
+ jawaban: {
+   type: Array,
+   default: () => []
+ }
+})
 
-// ===== SIDEBAR ITEM CLASS - CONSISTENT WITH TEMPLATE =====
+// ===== REACTIVE DATA =====
+const page = usePage()
+const currentUrl = computed(() => page.url)
+
+// Modal states
+const showAddQuestionModal = ref(false)
+const showAddPlantModal = ref(false)
+const showDetailModal = ref(false)
+const showEditQuestionModal = ref(false)
+const showDeleteModal = ref(false)
+
+// Form data
+const newPertanyaan = ref('')
+const editQuestionText = ref('')
+const searchTumbuhan = ref('')
+const searchNotFound = ref(false)
+const jawabanForm = ref({
+ Tumbuhan: '',
+ answers: {}
+})
+
+// Selected items
+const selectedPlant = ref(null)
+const selectedQuestion = ref(null)
+
+// Delete management
+const deleteType = ref('')
+const deleteTarget = ref(null)
+const deleteMessage = ref('')
+
+// ===== COMPUTED PROPERTIES =====
 const getSidebarItemClass = (path) => {
   const page = usePage()
   const currentPath = page.url
@@ -562,59 +603,34 @@ const getSidebarItemClass = (path) => {
   ]
 }
 
-// ===== MODAL STATES =====
-const showAddQuestionModal = ref(false)
-const showAddPlantModal = ref(false)
-const showDetailModal = ref(false)
-const showEditQuestionModal = ref(false)
-const showDeleteModal = ref(false)
-
-// ===== FORM DATA =====
-const newPertanyaan = ref('')
-const editQuestionText = ref('')
-const searchTumbuhan = ref('')
-const searchNotFound = ref(false)
-const jawabanForm = ref({
-  Tumbuhan: '',
-  answers: {}
-})
-
-// ===== SELECTED ITEMS =====
-const selectedPlant = ref(null)
-const selectedQuestion = ref(null)
-
-// ===== DELETE MANAGEMENT =====
-const deleteType = ref('')
-const deleteTarget = ref(null)
-const deleteMessage = ref('')
-
-// ===== COMPUTED PROPERTIES =====
 const getCompletionPercentage = computed(() => {
-  if (pertanyaan.length === 0 || jawaban.length === 0) return 0
-  
-  let totalAnswered = 0
-  let totalQuestions = pertanyaan.length * jawaban.length
-  
-  jawaban.forEach(j => {
-    pertanyaan.forEach(q => {
-      if (j[q.text] && j[q.text] !== '') {
-        totalAnswered++
-      }
-    })
-  })
-  
-  return totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0
+ if (props.pertanyaan.length === 0 || props.jawaban.length === 0) return 0
+ 
+ const totalExpected = props.pertanyaan.length * props.jawaban.length
+ let totalAnswered = 0
+ 
+ props.jawaban.forEach(plant => {
+   const answers = getAnswersOnly(plant)
+   totalAnswered += Object.values(answers).filter(answer => answer !== 'Belum diisi' && answer !== '').length
+ })
+ 
+ return Math.round((totalAnswered / totalExpected) * 100)
 })
 
 // ===== HELPER FUNCTIONS =====
 const getAnswersOnly = (plant) => {
   const result = {}
-  pertanyaan.forEach(q => {
-    const matchedKey = Object.keys(plant).find(key => 
-      key.trim().toLowerCase() === q.text.trim().toLowerCase()
-    )
-    result[q.text] = matchedKey ? plant[matchedKey] : 'Belum diisi'
+  
+  // Exclude field-field yang bukan jawaban
+  const excludeFields = ['id', 'tumbuhan', 'createdAt', 'updatedAt', '_id', 'Tumbuhan']
+  
+  // Ambil semua field kecuali yang di-exclude
+  Object.keys(plant).forEach(key => {
+    if (!excludeFields.includes(key)) {
+      result[key] = plant[key] || 'Belum diisi'
+    }
   })
+  
   return result
 }
 
@@ -629,244 +645,295 @@ const countNoAnswers = (plant) => {
 }
 
 const getCurrentDate = () => {
-  return new Date().toLocaleDateString('id-ID', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
-
-const initializeAnswerForm = () => {
-  jawabanForm.value = {
-    Tumbuhan: '',
-    answers: {}
-  }
-  pertanyaan.forEach((q) => {
-    jawabanForm.value.answers[q.text] = ''
-  })
+ return new Date().toLocaleDateString('id-ID', {
+   weekday: 'long',
+   year: 'numeric',
+   month: 'long',
+   day: 'numeric'
+ })
 }
 
 // ===== QUESTION MANAGEMENT =====
 const openAddQuestionModal = () => {
-  showAddQuestionModal.value = true
-  newPertanyaan.value = ''
+ showAddQuestionModal.value = true
+ newPertanyaan.value = ''
 }
 
 const closeAddQuestionModal = () => {
-  showAddQuestionModal.value = false
+ showAddQuestionModal.value = false
 }
 
 const addQuestion = () => {
-  if (!newPertanyaan.value.trim()) {
-    alert('Pertanyaan tidak boleh kosong!')
-    return
-  }
+ if (!newPertanyaan.value.trim()) {
+   alert('Pertanyaan tidak boleh kosong!')
+   return
+ }
 
-  router.post('/admin/quiz/pertanyaan', { 
-    pertanyaan: newPertanyaan.value.trim() 
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      closeAddQuestionModal()
-      router.reload({ only: ['pertanyaan'] })
-    },
-    onError: () => {
-      alert('Gagal menyimpan pertanyaan!')
-    }
-  })
+ router.post('/admin/quiz/pertanyaan', { 
+   pertanyaan: newPertanyaan.value.trim() 
+ }, {
+   preserveScroll: true,
+   onSuccess: () => {
+     closeAddQuestionModal()
+     router.reload()
+   },
+   onError: () => {
+     alert('Gagal menyimpan pertanyaan!')
+   }
+ })
 }
 
 const editQuestion = (question) => {
-  selectedQuestion.value = question
-  editQuestionText.value = question.text
-  showEditQuestionModal.value = true
+ selectedQuestion.value = question
+ editQuestionText.value = question.text
+ showEditQuestionModal.value = true
 }
 
 const closeEditQuestionModal = () => {
-  showEditQuestionModal.value = false
-  selectedQuestion.value = null
+ showEditQuestionModal.value = false
+ selectedQuestion.value = null
 }
 
 const updateQuestion = () => {
-  if (!selectedQuestion.value || !editQuestionText.value.trim()) {
-    alert('Pertanyaan tidak boleh kosong!')
-    return
-  }
-  
-  router.put(`/admin/quiz/pertanyaan/${selectedQuestion.value.id}`, { 
-    pertanyaan: editQuestionText.value.trim() 
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      closeEditQuestionModal()
-      router.reload({ only: ['pertanyaan'] })
-    },
-    onError: () => {
-      alert('Gagal mengupdate pertanyaan!')
-    }
-  })
+ if (!selectedQuestion.value || !editQuestionText.value.trim()) {
+   alert('Pertanyaan tidak boleh kosong!')
+   return
+ }
+ 
+ router.put(`/admin/quiz/pertanyaan/${selectedQuestion.value.id}`, { 
+   pertanyaan: editQuestionText.value.trim() 
+ }, {
+   preserveScroll: true,
+   onSuccess: () => {
+     closeEditQuestionModal()
+     router.reload()
+   },
+   onError: () => {
+     alert('Gagal mengupdate pertanyaan!')
+   }
+ })
 }
 
 // ===== PLANT MANAGEMENT =====
 const openAddPlantModal = () => {
-  showAddPlantModal.value = true
-  initializeAnswerForm()
-  selectedPlant.value = null
+ showAddPlantModal.value = true
+ initializeAnswerForm()
+ selectedPlant.value = null
 }
 
 const closeAddPlantModal = () => {
-  showAddPlantModal.value = false
+ showAddPlantModal.value = false
 }
 
 const addPlantAnswer = () => {
-  if (!jawabanForm.value.Tumbuhan.trim()) {
-    alert('Nama tumbuhan tidak boleh kosong!')
-    return
-  }
+ if (!jawabanForm.value.Tumbuhan.trim()) {
+   alert('Nama tumbuhan tidak boleh kosong!')
+   return
+ }
 
-  const isComplete = pertanyaan.every(q => jawabanForm.value.answers[q.text] !== '')
-  if (!isComplete) {
-    alert('Harap lengkapi semua jawaban!')
-    return
-  }
+ const isComplete = props.pertanyaan.every(q => jawabanForm.value.answers[q.text] !== '')
+ if (!isComplete) {
+   alert('Harap lengkapi semua jawaban!')
+   return
+ }
 
-  const method = selectedPlant.value ? 'put' : 'post'
-  const url = selectedPlant.value 
-    ? `/admin/quiz/jawaban/${encodeURIComponent(selectedPlant.value.tumbuhan)}`
-    : '/admin/quiz/jawaban'
+ const method = selectedPlant.value ? 'put' : 'post'
+ const url = selectedPlant.value 
+   ? `/admin/quiz/jawaban/${encodeURIComponent(selectedPlant.value.tumbuhan)}`
+   : '/admin/quiz/jawaban'
 
-  router[method](url, {
-    Tumbuhan: jawabanForm.value.Tumbuhan.trim(),
-    answers: jawabanForm.value.answers,
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      closeAddPlantModal()
-      router.reload({ only: ['jawaban'] })
-    },
-    onError: () => {
-      alert(selectedPlant.value ? 'Gagal mengupdate jawaban!' : 'Gagal menyimpan jawaban!')
-    }
-  })
+ router[method](url, {
+   Tumbuhan: jawabanForm.value.Tumbuhan.trim(),
+   answers: jawabanForm.value.answers,
+ }, {
+   preserveScroll: true,
+   onSuccess: () => {
+     closeAddPlantModal()
+     router.reload()
+   },
+   onError: () => {
+     alert(selectedPlant.value ? 'Gagal mengupdate jawaban!' : 'Gagal menyimpan jawaban!')
+   }
+ })
 }
 
 const viewPlantDetail = (plant) => {
-  selectedPlant.value = plant
-  showDetailModal.value = true
+ selectedPlant.value = plant
+ showDetailModal.value = true
 }
 
 const editPlantAnswer = (plant) => {
   selectedPlant.value = plant
   jawabanForm.value = {
     Tumbuhan: plant.tumbuhan,
-    answers: getAnswersOnly(plant)
+    answers: {}
   }
+  
+  // Isi jawaban berdasarkan pertanyaan yang ada
+  props.pertanyaan.forEach(q => {
+    // Cari jawaban dari plant data
+    const answerKey = Object.keys(plant).find(key => 
+      key === q.text && !['id', 'tumbuhan', 'createdAt', 'updatedAt', '_id', 'Tumbuhan'].includes(key)
+    )
+    jawabanForm.value.answers[q.text] = answerKey ? plant[answerKey] : ''
+  })
+  
   showAddPlantModal.value = true
 }
 
 const closeDetailModal = () => {
-  showDetailModal.value = false
-  selectedPlant.value = null
+ showDetailModal.value = false
+ selectedPlant.value = null
 }
 
 // ===== SEARCH FUNCTIONALITY =====
-const hasilJawaban = ref(null)
-
 const cariJawaban = async () => {
   if (!searchTumbuhan.value.trim()) {
-    alert('Masukkan nama tumbuhan untuk dicari!')
+    // Jika search kosong, reload semua data
+    router.reload()
     return
   }
 
   searchNotFound.value = false
-  hasilJawaban.value = null
 
   try {
-    const response = await fetch(`/admin/quiz/jawaban/${encodeURIComponent(searchTumbuhan.value.trim())}`)
-    if (!response.ok) throw new Error('Tidak ditemukan')
+    // Gunakan endpoint search yang baru
+    const response = await fetch(`/admin/quiz/search/${encodeURIComponent(searchTumbuhan.value.trim())}`)
     
-    const data = await response.json()
-    hasilJawaban.value = data
-    searchNotFound.value = false
+    if (!response.ok) {
+      throw new Error('Tidak ditemukan')
+    }
+    
+    const searchResults = await response.json()
+    
+    // Update jawaban dengan hasil pencarian
+    // Note: Ini akan mengubah props.jawaban secara reaktif
+    // Alternatif yang lebih baik adalah menggunakan computed property
+    filteredJawaban.value = searchResults
+    
   } catch (error) {
-    hasilJawaban.value = null
     searchNotFound.value = true
+    filteredJawaban.value = []
     setTimeout(() => {
       searchNotFound.value = false
     }, 3000)
   }
 }
+const filteredJawaban = ref([])
+
+const displayedJawaban = computed(() => {
+  return filteredJawaban.value.length > 0 || searchTumbuhan.value.trim() 
+    ? filteredJawaban.value 
+    : props.jawaban
+})
+
+const initializeAnswerForm = () => {
+  jawabanForm.value = {
+    Tumbuhan: '',
+    answers: {}
+  }
+  
+  // Buat jawaban berdasarkan pertanyaan yang ada
+  props.pertanyaan.forEach((q) => {
+    jawabanForm.value.answers[q.text] = ''
+  })
+}
 
 const clearSearch = () => {
   searchTumbuhan.value = ''
   searchNotFound.value = false
-  hasilJawaban.value = null
+  filteredJawaban.value = []
 }
 
 // ===== DELETE MANAGEMENT =====
 const confirmDeleteQuestion = (question) => {
-  deleteType.value = 'question'
-  deleteTarget.value = question
-  deleteMessage.value = `Yakin ingin menghapus pertanyaan "${question.text}"? Data jawaban terkait juga akan terpengaruh.`
-  showDeleteModal.value = true
+ deleteType.value = 'question'
+ deleteTarget.value = question
+ deleteMessage.value = `Yakin ingin menghapus pertanyaan "${question.text}"? Data jawaban terkait juga akan terpengaruh.`
+ showDeleteModal.value = true
 }
 
 const confirmDeletePlant = (plant) => {
-  deleteType.value = 'plant'
-  deleteTarget.value = plant
-  deleteMessage.value = `Yakin ingin menghapus data tanaman "${plant.tumbuhan}"?`
-  showDeleteModal.value = true
+ deleteType.value = 'plant'
+ deleteTarget.value = plant
+ deleteMessage.value = `Yakin ingin menghapus data tanaman "${plant.tumbuhan}"?`
+ showDeleteModal.value = true
 }
 
 const closeDeleteModal = () => {
-  showDeleteModal.value = false
-  deleteType.value = ''
-  deleteTarget.value = null
-  deleteMessage.value = ''
+ showDeleteModal.value = false
+ deleteType.value = ''
+ deleteTarget.value = null
+ deleteMessage.value = ''
 }
 
 const confirmDelete = () => {
-  if (!deleteTarget.value) return
+ if (!deleteTarget.value) return
 
-  const url = deleteType.value === 'question'
-    ? `/admin/quiz/pertanyaan/${deleteTarget.value.id}`
-    : `/admin/quiz/jawaban/${encodeURIComponent(deleteTarget.value.tumbuhan)}`
+ const url = deleteType.value === 'question'
+   ? `/admin/quiz/pertanyaan/${deleteTarget.value.id}`
+   : `/admin/quiz/jawaban/${encodeURIComponent(deleteTarget.value.tumbuhan)}`
 
-  router.delete(url, {
-    preserveScroll: true,
-    onSuccess: () => {
-      closeDeleteModal()
-      router.reload({ only: deleteType.value === 'question' ? ['pertanyaan', 'jawaban'] : ['jawaban'] })
-    },
-    onError: () => {
-      alert(`Gagal menghapus ${deleteType.value === 'question' ? 'pertanyaan' : 'data tanaman'}!`)
-    }
-  })
-}
-
-// ===== AUTH =====
-const logout = () => {
-  router.get('/logout')
+ router.delete(url, {
+   preserveScroll: true,
+   onSuccess: () => {
+     closeDeleteModal()
+     router.reload()
+   },
+   onError: () => {
+     alert(`Gagal menghapus ${deleteType.value === 'question' ? 'pertanyaan' : 'data tanaman'}!`)
+   }
+ })
 }
 
 // ===== WATCHERS =====
-watch(() => pertanyaan, (newPertanyaan) => {
-  // Update form jawaban ketika ada perubahan pertanyaan
-  if (showAddPlantModal.value) {
-    initializeAnswerForm()
-    if (selectedPlant.value) {
-      jawabanForm.value.Tumbuhan = selectedPlant.value.tumbuhan
-      newPertanyaan.forEach(q => {
-        const answers = getAnswersOnly(selectedPlant.value)
-        jawabanForm.value.answers[q.text] = answers[q.text] || ''
-      })
-    }
-  }
+watch(() => props.pertanyaan, (newPertanyaan) => {
+ // Update form jawaban ketika ada perubahan pertanyaan
+ if (showAddPlantModal.value) {
+   initializeAnswerForm()
+   if (selectedPlant.value) {
+     jawabanForm.value.Tumbuhan = selectedPlant.value.tumbuhan
+     newPertanyaan.forEach(q => {
+       const answers = getAnswersOnly(selectedPlant.value)
+       jawabanForm.value.answers[q.text] = answers[q.text] || ''
+     })
+   }
+ }
 }, { deep: true, immediate: true })
 
 // ===== LIFECYCLE =====
 onMounted(() => {
   initializeAnswerForm()
+  // Initialize filtered jawaban dengan semua data
+  filteredJawaban.value = [...props.jawaban]
 })
+watch(() => props.jawaban, (newJawaban) => {
+  if (!searchTumbuhan.value.trim()) {
+    filteredJawaban.value = [...newJawaban]
+  }
+}, { deep: true, immediate: true })
+
+const logout = () => {
+  router.get('/logout')
+}
 </script>
+
+<style scoped>
+/* Custom scrollbar untuk sidebar */
+aside::-webkit-scrollbar {
+  width: 4px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+</style>
