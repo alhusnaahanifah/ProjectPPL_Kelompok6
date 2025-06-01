@@ -80,19 +80,22 @@ export default class AdminQuizsController {
   // GET /admin/quiz/jawaban/:tumbuhan
     public async showJawabanByTumbuhan({ params, response }: HttpContext) {
         const { tumbuhan } = params
-
         const db = getMongoDb()
-        const doc = await db.collection('jawaban').findOne({ Tumbuhan: tumbuhan })
+
+        // Decode URI component untuk handle spasi dll
+        const decodedTumbuhan = decodeURIComponent(tumbuhan)
+        
+        const doc = await db.collection('jawaban').findOne({ 
+        Tumbuhan: decodedTumbuhan 
+        })
 
         if (!doc) {
-            return response.notFound({ message: 'Jawaban tidak ditemukan untuk tumbuhan ini' })
+            return response.notFound({ message: 'Jawaban tidak ditemukan' })
         }
 
         return response.json({
-            tumbuhan: doc.Tumbuhan,
-            answers: Object.fromEntries(
-            Object.entries(doc).filter(([key]) => key !== '_id' && key !== 'Tumbuhan')
-            ),
+            ...doc,
+            tumbuhan: doc.Tumbuhan // Tambahkan field alias untuk konsistensi
         })
     }
 

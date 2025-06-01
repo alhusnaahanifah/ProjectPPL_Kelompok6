@@ -76,16 +76,24 @@
         <div class="flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-bold text-gray-800">Kelola Quiz</h1>
-            <p class="text-gray-600 mt-1">Kelola pertanyan dan jawaban tanaman hidroponik HidroGrow</p>
+            <p class="text-gray-600 mt-1">Kelola pertanyaan dan jawaban tanaman hidroponik HidroGrow</p>
           </div>
           <div class="flex items-center space-x-4">
             <!-- Add Question Button -->
             <button
-              @click="openAddModal"
-              class="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+              @click="openAddQuestionModal"
+              class="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
             >
               <i class="fas fa-plus"></i>
               <span>Tambah Pertanyaan</span>
+            </button>
+            <!-- Add Plant Answer Button -->
+            <button
+              @click="openAddPlantModal"
+              class="flex items-center space-x-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            >
+              <i class="fas fa-seedling"></i>
+              <span>Tambah Tanaman</span>
             </button>
             <!-- Notification Bell -->
             <button class="relative p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">
@@ -102,748 +110,533 @@
       </header>
 
       <!-- Content Area -->
-      <div class="p-6 space-y-6">
+      <div class="p-6">
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-600 text-sm">Total Pertanyaan</p>
-                <p class="text-2xl font-bold text-gray-800">{{ pertanyaan.length }}</p>
-              </div>
-              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div class="flex items-center">
+              <div class="p-2 bg-blue-100 rounded-lg">
                 <i class="fas fa-question-circle text-blue-600 text-xl"></i>
               </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Pertanyaan</p>
+                <p class="text-2xl font-bold text-gray-900">{{ pertanyaan.length }}</p>
+              </div>
             </div>
           </div>
-          <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-600 text-sm">Data Tanaman</p>
-                <p class="text-2xl font-bold text-gray-800">{{ jawaban.length }}</p>
-              </div>
-              <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+          <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div class="flex items-center">
+              <div class="p-2 bg-green-100 rounded-lg">
                 <i class="fas fa-seedling text-green-600 text-xl"></i>
               </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Data Tanaman</p>
+                <p class="text-2xl font-bold text-gray-900">{{ jawaban.length }}</p>
+              </div>
             </div>
           </div>
-          <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-gray-600 text-sm">Kelengkapan Data</p>
-                <p class="text-2xl font-bold text-gray-800">{{ getCompletionPercentage }}%</p>
-              </div>
-              <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+          <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div class="flex items-center">
+              <div class="p-2 bg-purple-100 rounded-lg">
                 <i class="fas fa-chart-line text-purple-600 text-xl"></i>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Kelengkapan Data</p>
+                <p class="text-2xl font-bold text-gray-900">{{ getCompletionPercentage }}%</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Section: Manajemen Pertanyaan -->
-        <section class="bg-white rounded-xl shadow-md overflow-hidden">
-          <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 text-white">
-            <h2 class="text-xl font-semibold flex items-center">
-              <i class="fas fa-question-circle mr-3"></i>
-              Manajemen Pertanyaan
-            </h2>
+        <!-- Questions Grid -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Daftar Pertanyaan</h3>
           </div>
           
-          <div class="p-6 space-y-6">
-            <!-- Form Tambah Pertanyaan -->
-            <div class="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-6 border border-gray-200">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <i class="fas fa-plus-circle text-blue-500 mr-2"></i>
-                Tambah Pertanyaan Baru
-              </h3>
-              <form @submit.prevent="submitPertanyaan" class="flex gap-3">
-                <input
-                  v-model="newPertanyaan"
-                  type="text"
-                  class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Contoh: Apakah tanaman ini memiliki bunga?"
-                  required
-                />
-                <button 
-                  type="submit" 
-                  class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md"
-                >
-                  <i class="fas fa-save mr-2"></i>
-                  Simpan
-                </button>
-              </form>
-            </div>
-
-            <!-- Daftar Pertanyaan -->
-            <div>
-              <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <i class="fas fa-list text-gray-600 mr-2"></i>
-                Daftar Pertanyaan ({{ pertanyaan.length }})
-              </h3>
-              
-              <div v-if="pertanyaan.length === 0" class="text-center py-12 text-gray-500">
-                <i class="fas fa-question-circle text-4xl text-gray-300 mb-4"></i>
-                <p class="text-lg">Belum ada pertanyaan</p>
-                <p class="text-sm">Tambahkan pertanyaan pertama Anda!</p>
-              </div>
-
-              <div v-else class="space-y-3">
-                <div
-                  v-for="(q, index) in pertanyaan"
-                  :key="q.id"
-                  class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all"
-                >
-                  <!-- Mode Edit -->
-                  <div v-if="editingId === q.id" class="flex items-center gap-3">
-                    <span class="text-sm font-medium text-gray-500 min-w-0 flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full">
-                      {{ index + 1 }}
-                    </span>
-                    <input 
-                      v-model="editText" 
-                      class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all"
-                    />
-                    <div class="flex gap-2">
-                      <button 
-                        @click="updatePertanyaan(q.id)" 
-                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-sm transition-all"
-                      >
-                        <i class="fas fa-check mr-1"></i>
-                        Simpan
-                      </button>
-                      <button 
-                        @click="cancelEdit" 
-                        class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 text-sm transition-all"
-                      >
-                        <i class="fas fa-times mr-1"></i>
-                        Batal
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Mode View -->
-                  <div v-else class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                      <span class="text-sm font-medium text-white bg-blue-500 w-8 h-8 rounded-full flex items-center justify-center">
-                        {{ index + 1 }}
-                      </span>
-                      <span class="text-gray-900 font-medium">{{ q.text }}</span>
-                    </div>
-                    <div class="flex gap-2">
-                      <button 
-                        @click="startEdit(q.id, q.text)" 
-                        class="text-blue-600 hover:text-blue-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-blue-50 transition-all"
-                      >
-                        <i class="fas fa-edit mr-1"></i>
-                        Edit
-                      </button>
-                      <button 
-                        @click="deletePertanyaan(q.id)" 
-                        class="text-red-600 hover:text-red-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-red-50 transition-all"
-                      >
-                        <i class="fas fa-trash mr-1"></i>
-                        Hapus
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div v-if="pertanyaan.length === 0" class="p-12 text-center">
+            <div class="flex flex-col items-center">
+              <i class="fas fa-question-circle text-6xl text-gray-300 mb-4"></i>
+              <p class="text-gray-500 text-lg">Belum ada pertanyaan</p>
+              <p class="text-gray-400 text-sm mt-2">Klik tombol "Tambah Pertanyaan" untuk memulai</p>
             </div>
           </div>
-        </section>
 
-        <!-- Section: Pencarian & Edit Tanaman -->
-        <section class="bg-white rounded-xl shadow-md overflow-hidden">
-          <div class="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4 text-white">
-            <h2 class="text-xl font-semibold flex items-center">
-              <i class="fas fa-search mr-3"></i>
-              Pencarian & Edit Tanaman
-            </h2>
-          </div>
-          
-          <div class="p-6">
-            <div class="flex gap-3 mb-6">
-              <div class="flex-1 relative">
-                <input 
-                  v-model="searchTumbuhan" 
-                  placeholder="Masukkan nama tumbuhan..." 
-                  class="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                  @keyup.enter="cariJawaban"
-                />
-                <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
-              </div>
-              <button 
-                @click="cariJawaban" 
-                class="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-medium shadow-md"
-              >
-                <i class="fas fa-search mr-2"></i>
-                Cari
-              </button>
-            </div>
-
-            <!-- Hasil Pencarian & Edit -->
-            <div v-if="hasilJawaban" class="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl overflow-hidden shadow-sm">
-              <!-- Header Hasil -->
-              <div class="bg-gradient-to-r from-green-100 to-blue-100 px-6 py-4 flex justify-between items-center border-b border-green-200">
-                <h3 class="font-bold text-green-900 text-lg flex items-center">
-                  <i class="fas fa-seedling mr-2"></i>
-                  {{ hasilJawaban.tumbuhan }}
-                </h3>
-                <div class="flex gap-2">
-                  <button 
-                    v-if="!isEditingSearch"
-                    @click="startEditSearch" 
-                    class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium text-sm transition-all shadow-sm"
-                  >
-                    <i class="fas fa-edit mr-1"></i>
-                    Edit Data
-                  </button>
-                  <button 
-                    @click="clearSearch" 
-                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 font-medium text-sm transition-all shadow-sm"
-                  >
-                    <i class="fas fa-times mr-1"></i>
-                    Tutup
-                  </button>
-                </div>
-              </div>
-
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+            <div
+              v-for="(question, index) in pertanyaan"
+              :key="question.id"
+              class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            >
               <div class="p-6">
-                <!-- Mode View -->
-                <div v-if="!isEditingSearch">
-                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div 
-                      v-for="(val, key) in hasilJawaban.answers" 
-                      :key="key"
-                      class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div class="text-sm font-medium text-gray-700 mb-2">{{ key }}</div>
-                      <div 
-                        class="text-lg font-bold flex items-center"
-                        :class="val === 'Ya' ? 'text-green-600' : 'text-red-600'"
-                      >
-                        <i :class="val === 'Ya' ? 'fas fa-check-circle mr-2' : 'fas fa-times-circle mr-2'"></i>
-                        {{ val }}
-                      </div>
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                      <span class="text-white font-bold">{{ index + 1 }}</span>
+                    </div>
+                    <div class="flex-1">
+                      <p class="text-gray-900 font-medium">{{ question.text }}</p>
                     </div>
                   </div>
-                </div>
-
-                <!-- Mode Edit -->
-                <div v-else class="space-y-6">
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div v-for="(q, qIndex) in pertanyaan" :key="q.id" class="space-y-2">
-                      <label class="block text-sm font-medium text-gray-700">
-                        {{ qIndex + 1 }}. {{ q.text }}
-                      </label>
-                      <select 
-                        v-model="searchEditData[q.text]" 
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 transition-all"
-                      >
-                        <option value="">Pilih Jawaban</option>
-                        <option value="Ya">Ya</option>
-                        <option value="Tidak">Tidak</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div class="flex gap-3 pt-4 border-t border-gray-200">
-                    <button 
-                      @click="submitSearchEdit" 
-                      class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-medium transition-all shadow-md"
+                  <div class="flex space-x-2">
+                    <button
+                      @click="editQuestion(question)"
+                      class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
+                      title="Edit"
                     >
-                      <i class="fas fa-save mr-2"></i>
-                      Simpan Perubahan
+                      <i class="fas fa-edit"></i>
                     </button>
-                    <button 
-                      @click="cancelSearchEdit" 
-                      class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 font-medium transition-all shadow-md"
+                    <button
+                      @click="confirmDeleteQuestion(question)"
+                      class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                      title="Hapus"
                     >
-                      <i class="fas fa-times mr-2"></i>
-                      Batal Edit
+                      <i class="fas fa-trash-alt"></i>
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-
-            <!-- Pesan jika tidak ditemukan -->
-            <div v-if="searchNotFound" class="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-6 text-center">
-              <i class="fas fa-exclamation-triangle text-red-500 text-3xl mb-3"></i>
-              <p class="text-red-700 font-semibold text-lg">
-                Tanaman <strong>"{{ searchTumbuhan }}"</strong> tidak ditemukan
-              </p>
-              <p class="text-sm text-red-600 mt-2">
-                Pastikan nama tanaman sudah benar atau tambahkan data tanaman baru di bawah
-              </p>
-            </div>
           </div>
-        </section>
+        </div>
 
-        <!-- Section: Tambah Jawaban -->
-        <section class="bg-white rounded-xl shadow-md overflow-hidden">
-          <div class="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4 text-white">
-            <h2 class="text-xl font-semibold flex items-center">
-              <i class="fas fa-plus-square mr-3"></i>
-              Tambah Jawaban Tanaman
-            </h2>
-          </div>
-          
-          <div class="p-6">
-            <form @submit.prevent="submitJawaban" class="space-y-6">
-              <!-- Input Nama Tumbuhan -->
-              <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg border border-purple-200">
-                <label class="block text-sm font-semibold text-gray-800 mb-3 flex items-center">
-                  <i class="fas fa-seedling text-purple-600 mr-2"></i>
-                  Nama Tumbuhan
-                </label>
+        <!-- Plants Answer Grid -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+            <h3 class="text-lg font-medium text-gray-900">Data Tanaman & Jawaban</h3>
+            <div class="flex items-center space-x-3">
+              <div class="relative">
                 <input
-                  v-model="jawabanForm.Tumbuhan"
+                  v-model="searchTumbuhan"
                   type="text"
-                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                  placeholder="Contoh: Mawar, Melati, Bayam"
-                  required
-                />
+                  placeholder="Cari tanaman..."
+                  class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  @keyup.enter="cariJawaban"
+                >
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
               </div>
-
-              <!-- Jawaban untuk setiap pertanyaan -->
-              <div v-if="pertanyaan.length > 0">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <i class="fas fa-clipboard-list text-purple-600 mr-2"></i>
-                  Karakteristik Tanaman
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div v-for="(q, index) in pertanyaan" :key="q.id" class="space-y-3">
-                    <label class="block text-sm font-medium text-gray-700 flex items-center">
-                      <span class="bg-purple-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-2">
-                        {{ index + 1 }}
-                      </span>
-                      {{ q.text }}
-                    </label>
-                    <select 
-                      v-model="jawabanForm.answers[q.text]" 
-                      class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-purple-500 transition-all"
-                      required
-                    >
-                      <option value="">Pilih Jawaban</option>
-                      <option value="Ya">✓ Ya</option>
-                      <option value="Tidak">✗ Tidak</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div v-else class="text-center py-12 text-gray-500">
-                <i class="fas fa-info-circle text-4xl text-gray-300 mb-4"></i>
-                <p class="text-lg">Tambahkan pertanyaan terlebih dahulu</p>
-                <p class="text-sm">untuk dapat menambah jawaban tanaman.</p>
-              </div>
-
-              <button 
-                v-if="pertanyaan.length > 0"
-                type="submit" 
-                class="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-4 px-6 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all font-semibold shadow-lg"
+              <button
+                @click="cariJawaban"
+                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
               >
-                <i class="fas fa-save mr-2"></i>
-                Simpan Jawaban Tanaman
+                <i class="fas fa-search"></i>
               </button>
-            </form>
-          </div>
-        </section>
-
-        <!-- Section: Daftar Jawaban -->
-        <section class="bg-white rounded-xl shadow-md overflow-hidden">
-          <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 text-white">
-            <h2 class="text-xl font-semibold flex items-center">
-              <i class="fas fa-database mr-3"></i>
-              Daftar Jawaban Tumbuhan ({{ jawaban.length }})
-            </h2>
+            </div>
           </div>
           
-          <div class="p-6">
-            <div v-if="jawaban.length === 0" class="text-center py-12 text-gray-500">
-              <i class="fas fa-seedling text-4xl text-gray-300 mb-4"></i>
-              <p class="text-lg">Belum ada data tanaman</p>
-              <p class="text-sm">Tambahkan tanaman pertama Anda!</p>
+          <div v-if="jawaban.length === 0" class="p-12 text-center">
+            <div class="flex flex-col items-center">
+              <i class="fas fa-seedling text-6xl text-gray-300 mb-4"></i>
+              <p class="text-gray-500 text-lg">Belum ada data tanaman</p>
+              <p class="text-gray-400 text-sm mt-2">Klik tombol "Tambah Tanaman" untuk memulai</p>
             </div>
+          </div>
 
-            <div v-else class="space-y-4">
-              <div 
-                v-for="(j, index) in jawaban" 
-                :key="j.id" 
-                class="border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-              >
-                <!-- Header Tanaman -->
-                <div class="bg-gradient-to-r from-gray-50 to-orange-50 px-6 py-4 flex justify-between items-center border-b border-gray-200">
-                  <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                    <i class="fas fa-seedling text-orange-500 mr-2"></i>
-                    {{ j.tumbuhan }}
-                  </h3>
-                  <div class="flex gap-2">
-                    <button 
-                      @click="startEditJawaban(j.tumbuhan)" 
-                      class="text-blue-600 hover:text-blue-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-blue-50 transition-all"
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+            <div
+              v-for="plant in jawaban"
+              :key="plant.id"
+              class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div class="p-6">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                      <i class="fas fa-leaf text-white text-lg"></i>
+                    </div>
+                    <div>
+                      <h4 class="text-lg font-semibold text-gray-900">{{ plant.tumbuhan }}</h4>
+                      <p class="text-sm text-gray-500">{{ Object.keys(getAnswersOnly(plant)).length }} jawaban</p>
+                    </div>
+                  </div>
+                  <div class="flex space-x-2">
+                    <button
+                      @click="editPlantAnswer(plant)"
+                      class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
+                      title="Edit"
                     >
-                      <i class="fas fa-edit mr-1"></i>
-                      Edit
+                      <i class="fas fa-edit"></i>
                     </button>
-                    <button 
-                      @click="deleteJawaban(j.tumbuhan)" 
-                      class="text-red-600 hover:text-red-800 font-medium text-sm px-3 py-1 rounded-md hover:bg-red-50 transition-all"
+                    <button
+                      @click="viewPlantDetail(plant)"
+                      class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
+                      title="Lihat Detail"
                     >
-                      <i class="fas fa-trash-alt mr-1"></i>
-                      Hapus
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button
+                      @click="confirmDeletePlant(plant)"
+                      class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                      title="Hapus"
+                    >
+                      <i class="fas fa-trash-alt"></i>
                     </button>
                   </div>
                 </div>
-
-                <!-- Content -->
-                <div class="p-6">
-                  <!-- Mode Edit -->
-                  <div v-if="editingJawaban === j.tumbuhan" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div v-for="(q, qIndex) in pertanyaan" :key="q.id" class="space-y-2">
-                        <label class="block text-sm font-medium text-gray-700 flex items-center">
-                          <span class="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-2">
-                            {{ qIndex + 1 }}
-                          </span>
-                          {{ q.text }}
-                        </label>
-                        <select 
-                          v-model="editJawabanData[q.text]" 
-                          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition-all"
-                        >
-                          <option value="">Pilih Jawaban</option>
-                          <option value="Ya">✓ Ya</option>
-                          <option value="Tidak">✗ Tidak</option>
-                        </select>
-                      </div>
-                    </div>
-                    
-                    <div class="flex gap-3 pt-4 border-t border-gray-200">
-                      <button 
-                        @click="submitEditJawaban(j.tumbuhan)" 
-                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium transition-all shadow-md"
-                      >
-                        <i class="fas fa-save mr-2"></i>
-                        Simpan Perubahan
-                      </button>
-                      <button 
-                        @click="cancelEditJawaban" 
-                        class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 font-medium transition-all shadow-md"
-                      >
-                        <i class="fas fa-times mr-2"></i>
-                        Batal
-                      </button>
-                    </div>
+                
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">Jawaban "Ya":</span>
+                    <span class="font-medium text-green-600">{{ countYesAnswers(plant) }}</span>
                   </div>
-
-                  <!-- Mode View -->
-                  <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div 
-                      v-for="(val, key) in getAnswersOnly(j)" 
-                      :key="key"
-                      class="bg-gradient-to-r from-gray-50 to-white p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow"
-                    >
-                      <div class="text-sm font-medium text-gray-700 mb-2">{{ key }}</div>
-                      <div 
-                        class="text-lg font-bold flex items-center"
-                        :class="val === 'Ya' ? 'text-green-600' : 'text-red-600'"
-                      >
-                        <i :class="val === 'Ya' ? 'fas fa-check-circle mr-2' : 'fas fa-times-circle mr-2'"></i>
-                        {{ val }}
-                      </div>
-                    </div>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600">Jawaban "Tidak":</span>
+                    <span class="font-medium text-red-600">{{ countNoAnswers(plant) }}</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </div>
     </main>
+
+    <!-- Add Question Modal -->
+    <div v-if="showAddQuestionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div class="relative top-20 mx-auto p-5 border max-w-md shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Tambah Pertanyaan Baru</h3>
+            <button @click="closeAddQuestionModal" class="text-gray-400 hover:text-gray-600">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          
+          <form @submit.prevent="addQuestion" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Pertanyaan</label>
+              <input
+                v-model="newPertanyaan"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Contoh: Apakah tanaman ini memiliki bunga?"
+              >
+            </div>
+
+            <div class="pt-4 border-t">
+              <button
+                type="submit"
+                class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Tambah Pertanyaan
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Plant Modal -->
+    <div v-if="showAddPlantModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div class="relative top-10 mx-auto p-5 border max-w-2xl shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Tambah Data Tanaman</h3>
+            <button @click="closeAddPlantModal" class="text-gray-400 hover:text-gray-600">
+              <i class="fas fa-times text-xl"></i>
+            </button>
+          </div>
+          
+          <form @submit.prevent="addPlantAnswer" class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nama Tanaman</label>
+              <input
+                v-model="jawabanForm.Tumbuhan"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                placeholder="Contoh: Mawar, Melati, Bayam"
+              >
+            </div>
+
+            <div v-if="pertanyaan.length > 0">
+              <h4 class="text-sm font-medium text-gray-700 mb-3">Jawaban untuk setiap pertanyaan:</h4>
+              <div class="space-y-4">
+                <div v-for="(question, index) in pertanyaan" :key="question.id" class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">
+                    {{ index + 1 }}. {{ question.text }}
+                  </label>
+                  <select 
+                    v-model="jawabanForm.answers[question.text]" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500"
+                    required
+                  >
+                    <option value="">Pilih Jawaban</option>
+                    <option value="Ya">Ya</option>
+                    <option value="Tidak">Tidak</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div v-else class="text-center py-8 text-gray-500">
+              <i class="fas fa-info-circle text-3xl text-gray-300 mb-2"></i>
+              <p>Tambahkan pertanyaan terlebih dahulu untuk dapat menambah data tanaman.</p>
+            </div>
+
+            <div class="pt-4 border-t">
+              <button
+                v-if="pertanyaan.length > 0"
+                type="submit"
+                class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              >
+                Tambah Data Tanaman
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plant Detail Modal -->
+    <div v-if="showDetailModal && selectedPlant" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-5 mx-auto p-5 border max-w-4xl shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                <i class="fas fa-leaf text-white text-lg"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">{{ selectedPlant.tumbuhan }}</h3>
+                <p class="text-gray-600">Detail jawaban tanaman</p>
+            </div>
+            </div>
+            <button @click="closeDetailModal" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div class="max-h-96 overflow-y-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Perubahan utama di sini: -->
+            <div
+                v-for="question in pertanyaan"
+                :key="question.id"
+                class="bg-gray-50 p-4 rounded-lg border"
+                >
+                <h4 class="font-medium text-gray-900 mb-2">{{ question.text }}</h4>
+                <div class="flex items-center space-x-2">
+                    <template v-if="selectedPlant && selectedPlant[question.text] !== undefined">
+                    <i :class="selectedPlant[question.text] === 'Ya' ? 'fas fa-check-circle text-green-600' : 'fas fa-times-circle text-red-600'"></i>
+                    <span :class="selectedPlant[question.text] === 'Ya' ? 'text-green-600' : 'text-red-600'" class="font-semibold">
+                        {{ selectedPlant[question.text] }}
+                    </span>
+                    </template>
+                    <template v-else>
+                    <i class="fas fa-question-circle text-gray-400"></i>
+                    <span class="text-gray-500 font-semibold">{{ jawaban }}</span>
+                    </template>
+                </div>
+                </div>
+        </div>
+        </div>
+        
+        <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 mt-6">
+            <button
+            @click="closeDetailModal"
+            class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400"
+            >
+            Tutup
+            </button>
+            <button
+            @click="editPlantAnswer(selectedPlant)"
+            class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700"
+            >
+            Edit Jawaban
+            </button>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Edit Question Modal -->
+    <div v-if="showEditQuestionModal && selectedQuestion" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border max-w-md shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Edit Pertanyaan</h3>
+            <button @click="closeEditQuestionModal" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <form @submit.prevent="updateQuestion" class="space-y-4">
+            <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Pertanyaan</label>
+            <input
+                v-model="editQuestionText"
+                type="text"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            >
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-4 border-t">
+            <button
+                type="button"
+                @click="closeEditQuestionModal"
+                class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors"
+            >
+                Batal
+            </button>
+            <button
+                type="submit"
+                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+                Perbarui
+            </button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+            <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mt-4">Konfirmasi Hapus</h3>
+          <div class="mt-2 px-7 py-3">
+            <p class="text-sm text-gray-500">
+              {{ deleteMessage }}
+            </p>
+          </div>
+          <div class="flex items-center justify-center gap-4 mt-4">
+            <button
+              @click="closeDeleteModal"
+              class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400"
+            >
+              Batal
+            </button>
+            <button
+              @click="confirmDelete"
+              class="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-red-700"
+            >
+              Hapus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { router, usePage, Link } from '@inertiajs/vue3'
+
+// ===== TYPES =====
+interface Question {
+  id: string | number
+  text: string
+}
+
+interface PlantAnswer {
+  _id?: string
+  tumbuhan: string
+  [key: string]: any // For dynamic question-answer pairs
+}
+
+interface JawabanForm {
+  Tumbuhan: string
+  answers: Record<string, string>
+}
 
 // ===== DATA PROPS =====
 const page = usePage()
-const { user, pertanyaan, jawaban } = usePage().props
-const currentUrl = computed(() => page.url.value)
+const props = defineProps<{
+  user: {
+    fullName: string
+    email: string
+  }
+  pertanyaan: Question[]
+  jawaban: PlantAnswer[]
+}>()
 
-const isActive = (path) => {
-  return typeof currentUrl.value === 'string' && currentUrl.value.startsWith(path)
+const currentUrl = computed(() => page.url)
+
+// ===== REACTIVE STATE =====
+// Modal states
+const showAddQuestionModal = ref(false)
+const showAddPlantModal = ref(false)
+const showDetailModal = ref(false)
+const showEditQuestionModal = ref(false)
+const showDeleteModal = ref(false)
+
+// Form data
+const newPertanyaan = ref('')
+const jawabanForm = ref<JawabanForm>({
+  Tumbuhan: '',
+  answers: {}
+})
+
+// Selected items
+const selectedQuestion = ref<Question | null>(null)
+const selectedPlant = ref<PlantAnswer | null>(null)
+const editQuestionText = ref('')
+
+// Delete confirmation
+const deleteType = ref<'question' | 'plant'>('question')
+const deleteTarget = ref<Question | PlantAnswer | null>(null)
+const deleteMessage = ref('')
+
+// Search
+const searchTumbuhan = ref('')
+const searchNotFound = ref(false)
+
+// ===== COMPUTED PROPERTIES =====
+const isActive = (path: string) => {
+  return currentUrl.value.startsWith(path)
 }
 
-const getSidebarItemClass = (path) => {
-  const isActive = currentUrl.value === path
+const getSidebarItemClass = (path: string) => {
   return [
     'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-    isActive 
+    isActive(path)
       ? 'bg-green-600 text-white shadow-lg' 
       : 'text-green-100 hover:bg-white/10 hover:text-white'
   ]
 }
 
-// ===== PERTANYAAN MANAGEMENT =====
-const newPertanyaan = ref('')
-const editingId = ref(null)
-const editText = ref('')
-
-// Fungsi untuk mengelola pertanyaan
-const startEdit = (id, text) => {
-  editingId.value = id
-  editText.value = text
-}
-
-const cancelEdit = () => {
-  editingId.value = null
-  editText.value = ''
-}
-
-const updatePertanyaan = (id) => {
-  if (!editText.value.trim()) {
-    alert('Pertanyaan tidak boleh kosong!')
-    return
-  }
+const getCompletionPercentage = computed(() => {
+  if (props.pertanyaan.length === 0 || props.jawaban.length === 0) return 0
   
-  router.put(`/admin/quiz/pertanyaan/${id}`, { 
-    pertanyaan: editText.value.trim() 
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      cancelEdit()
-      router.reload({ only: ['pertanyaan'] })
-    },
-    onError: () => {
-      alert('Gagal mengupdate pertanyaan!')
-    }
-  })
-}
-
-const deletePertanyaan = (id) => {
-  if (confirm('Yakin ingin menghapus pertanyaan ini?\nData jawaban terkait juga akan terpengaruh.')) {
-    router.delete(`/admin/quiz/pertanyaan/${id}`, {
-      preserveScroll: true,
-      onSuccess: () => router.reload({ only: ['pertanyaan', 'jawaban'] }),
-      onError: () => {
-        alert('Gagal menghapus pertanyaan!')
-      }
-    })
-  }
-}
-
-const submitPertanyaan = () => {
-  if (!newPertanyaan.value.trim()) {
-    alert('Pertanyaan tidak boleh kosong!')
-    return
-  }
-
-  router.post('/admin/quiz/pertanyaan', { 
-    pertanyaan: newPertanyaan.value.trim() 
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      newPertanyaan.value = ''
-      router.reload({ only: ['pertanyaan'] })
-    },
-    onError: () => {
-      alert('Gagal menyimpan pertanyaan!')
-    }
-  })
-}
-
-// ===== PENCARIAN & EDIT JAWABAN =====
-const searchTumbuhan = ref('')
-const hasilJawaban = ref(null)
-const searchNotFound = ref(false)
-const isEditingSearch = ref(false)
-const searchEditData = ref({})
-
-const cariJawaban = async () => {
-  if (!searchTumbuhan.value.trim()) {
-    alert('Masukkan nama tumbuhan!')
-    return
-  }
-
-  // Reset states
-  searchNotFound.value = false
-  hasilJawaban.value = null
-  isEditingSearch.value = false
-
-  try {
-    const response = await fetch(`/admin/quiz/jawaban/${encodeURIComponent(searchTumbuhan.value.trim())}`)
-    if (!response.ok) throw new Error('Tidak ditemukan')
-    
-    const data = await response.json()
-    hasilJawaban.value = data
-    searchNotFound.value = false
-  } catch (error) {
-    hasilJawaban.value = null
-    searchNotFound.value = true
-    // Reset search input setelah 3 detik
-    setTimeout(() => {
-      searchNotFound.value = false
-    }, 3000)
-  }
-}
-
-const startEditSearch = () => {
-  if (!hasilJawaban.value) return
+  const totalExpected = props.pertanyaan.length * props.jawaban.length
+  let totalAnswered = 0
   
-  isEditingSearch.value = true
-  // Copy data jawaban untuk editing
-  searchEditData.value = { ...hasilJawaban.value.answers }
-}
-
-const cancelSearchEdit = () => {
-  isEditingSearch.value = false
-  searchEditData.value = {}
-}
-
-const submitSearchEdit = () => {
-  if (!hasilJawaban.value) return
-
-  // Validasi semua jawaban sudah diisi
-  const isComplete = pertanyaan.every(q => searchEditData.value[q.text] !== '')
-  if (!isComplete) {
-    alert('Harap lengkapi semua jawaban!')
-    return
-  }
-
-  const tumbuhan = hasilJawaban.value.tumbuhan
-
-  router.put(`/admin/quiz/jawaban/${encodeURIComponent(tumbuhan)}`, {
-    answers: searchEditData.value,
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      // Update hasil pencarian dengan data baru
-      hasilJawaban.value.answers = { ...searchEditData.value }
-      isEditingSearch.value = false
-      searchEditData.value = {}
-      
-      // Reload data jawaban di section lain
-      router.reload({ only: ['jawaban'] })
-      
-      alert('Data berhasil diperbarui!')
-    },
-    onError: () => {
-      alert('Gagal mengupdate jawaban!')
-    }
+  props.jawaban.forEach(plant => {
+    const answers = getAnswersOnly(plant)
+    totalAnswered += Object.keys(answers).length
   })
-}
-
-const clearSearch = () => {
-  hasilJawaban.value = null
-  searchNotFound.value = false
-  isEditingSearch.value = false
-  searchEditData.value = {}
-  searchTumbuhan.value = ''
-}
-
-// ===== JAWABAN MANAGEMENT =====
-const jawabanForm = ref({
-  Tumbuhan: '',
-  answers: {}
+  
+  return Math.round((totalAnswered / totalExpected) * 100)
 })
 
-// Inisialisasi form jawaban
-const initializeAnswerForm = () => {
-  jawabanForm.value.answers = {}
-  pertanyaan.forEach((q) => {
-    jawabanForm.value.answers[q.text] = ''
-  })
-}
-
-// Inisialisasi saat pertama kali load
-initializeAnswerForm()
-
-const submitJawaban = () => {
-  if (!jawabanForm.value.Tumbuhan.trim()) {
-    alert('Nama tumbuhan tidak boleh kosong!')
-    return
-  }
-
-  // Validasi semua jawaban sudah diisi
-  const isComplete = pertanyaan.every(q => jawabanForm.value.answers[q.text] !== '')
-  if (!isComplete) {
-    alert('Harap lengkapi semua jawaban!')
-    return
-  }
-
-  router.post('/admin/quiz/jawaban', {
-    Tumbuhan: jawabanForm.value.Tumbuhan.trim(),
-    answers: jawabanForm.value.answers,
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      jawabanForm.value.Tumbuhan = ''
-      initializeAnswerForm()
-      router.reload({ only: ['jawaban'] })
-    },
-    onError: () => {
-      alert('Gagal menyimpan jawaban!')
-    }
-  })
-}
-
-// ===== EDIT JAWABAN =====
-const editingJawaban = ref(null)
-const editJawabanData = ref({})
-
-const startEditJawaban = (tumbuhan) => {
-  editingJawaban.value = tumbuhan
-  const target = jawaban.find(j => j.tumbuhan === tumbuhan)
-  
-  if (target) {
-    const copy = { ...target }
-    delete copy.id
-    delete copy.tumbuhan
-    editJawabanData.value = { ...copy }
-  }
-}
-
-const submitEditJawaban = (tumbuhan) => {
-  router.put(`/admin/quiz/jawaban/${encodeURIComponent(tumbuhan)}`, {
-    answers: editJawabanData.value,
-  }, {
-    preserveScroll: true,
-    onSuccess: () => {
-      cancelEditJawaban()
-      router.reload({ only: ['jawaban'] })
-    },
-    onError: () => {
-      alert('Gagal mengupdate jawaban!')
-    }
-  })
-}
-
-const cancelEditJawaban = () => {
-  editingJawaban.value = null
-  editJawabanData.value = {}
-}
-
-const deleteJawaban = (tumbuhan) => {
-  if (confirm(`Yakin ingin menghapus data tanaman "${tumbuhan}"?`)) {
-    router.delete(`/admin/quiz/jawaban/${encodeURIComponent(tumbuhan)}`, {
-      preserveScroll: true,
-      onSuccess: () => router.reload({ only: ['jawaban'] }),
-      onError: () => {
-        alert('Gagal menghapus data tanaman!')
-      }
-    })
-  }
-}
-
 // ===== HELPER FUNCTIONS =====
-const getAnswersOnly = (jawaban) => {
-  const result = { ...jawaban }
-  delete result.id
-  delete result.tumbuhan
+const getAnswersOnly = (plant: PlantAnswer) => {
+  const result: Record<string, string> = {}
+  props.pertanyaan.forEach(q => {
+    const matchedKey = Object.keys(plant).find(key => 
+      key.trim().toLowerCase() === q.text.trim().toLowerCase()
+    )
+    result[q.text] = matchedKey ? plant[matchedKey] : 'Belum diisi'
+  })
   return result
+}
+
+const countYesAnswers = (plant: PlantAnswer) => {
+  const answers = getAnswersOnly(plant)
+  return Object.values(answers).filter(answer => answer === 'Ya').length
+}
+
+const countNoAnswers = (plant: PlantAnswer) => {
+  const answers = getAnswersOnly(plant)
+  return Object.values(answers).filter(answer => answer === 'Tidak').length
 }
 
 const getCurrentDate = () => {
@@ -855,154 +648,212 @@ const getCurrentDate = () => {
   })
 }
 
-const logout = () => {
-  router.get('/logout')
-}
-
-// Tambahkan fungsi-fungsi berikut ke dalam script setup:
-
-// ===== COMPUTED PROPERTIES =====
-const getCompletionPercentage = computed(() => {
-  if (pertanyaan.length === 0 || jawaban.length === 0) return 0
-  
-  // Hitung rata-rata kelengkapan data
-  let totalAnswered = 0
-  let totalQuestions = pertanyaan.length * jawaban.length
-  
-  jawaban.forEach(j => {
-    pertanyaan.forEach(q => {
-      if (j[q.text] && j[q.text] !== '') {
-        totalAnswered++
-      }
-    })
+const initializeAnswerForm = () => {
+  jawabanForm.value = {
+    Tumbuhan: '',
+    answers: {}
+  }
+  props.pertanyaan.forEach((q) => {
+    jawabanForm.value.answers[q.text] = ''
   })
+}
+
+// ===== QUESTION MANAGEMENT =====
+const openAddQuestionModal = () => {
+  showAddQuestionModal.value = true
+  newPertanyaan.value = ''
+}
+
+const closeAddQuestionModal = () => {
+  showAddQuestionModal.value = false
+}
+
+const addQuestion = () => {
+  if (!newPertanyaan.value.trim()) {
+    alert('Pertanyaan tidak boleh kosong!')
+    return
+  }
+
+  router.post('/admin/quiz/pertanyaan', { 
+    pertanyaan: newPertanyaan.value.trim() 
+  }, {
+    preserveScroll: true,
+    onSuccess: () => {
+      closeAddQuestionModal()
+      router.reload()
+    },
+    onError: () => {
+      alert('Gagal menyimpan pertanyaan!')
+    }
+  })
+}
+
+const editQuestion = (question: Question) => {
+  selectedQuestion.value = question
+  editQuestionText.value = question.text
+  showEditQuestionModal.value = true
+}
+
+const closeEditQuestionModal = () => {
+  showEditQuestionModal.value = false
+  selectedQuestion.value = null
+}
+
+const updateQuestion = () => {
+  if (!selectedQuestion.value || !editQuestionText.value.trim()) {
+    alert('Pertanyaan tidak boleh kosong!')
+    return
+  }
   
-  return totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0
-})
-
-// ===== MODAL MANAGEMENT =====
-const showAddModal = ref(false)
-
-const openAddModal = () => {
-  showAddModal.value = true
+  router.put(`/admin/quiz/pertanyaan/${selectedQuestion.value.id}`, { 
+    pertanyaan: editQuestionText.value.trim() 
+  }, {
+    preserveScroll: true,
+    onSuccess: () => {
+      closeEditQuestionModal()
+      router.reload()
+    },
+    onError: () => {
+      alert('Gagal mengupdate pertanyaan!')
+    }
+  })
 }
 
-const closeAddModal = () => {
-  showAddModal.value = false
-}
-
-// ===== WATCH UNTUK UPDATE FORM SAAT PERTANYAAN BERUBAH =====
-import { watch } from 'vue'
-
-watch(() => pertanyaan, (newPertanyaan) => {
-  // Update form jawaban ketika ada perubahan pertanyaan
+// ===== PLANT MANAGEMENT =====
+const openAddPlantModal = () => {
+  showAddPlantModal.value = true
   initializeAnswerForm()
-  
-  // Update search edit data jika sedang dalam mode edit
-  if (isEditingSearch.value && hasilJawaban.value) {
-    const updatedData = {}
-    newPertanyaan.forEach(q => {
-      updatedData[q.text] = searchEditData.value[q.text] || ''
-    })
-    searchEditData.value = updatedData
-  }
-  
-  // Update edit jawaban data jika sedang dalam mode edit
-  if (editingJawaban.value) {
-    const target = jawaban.find(j => j.tumbuhan === editingJawaban.value)
-    if (target) {
-      const updatedEditData = {}
-      newPertanyaan.forEach(q => {
-        updatedEditData[q.text] = target[q.text] || ''
-      })
-      editJawabanData.value = updatedEditData
-    }
-  }
-}, { deep: true })
+  selectedPlant.value = null
+}
 
-// ===== IMPROVED SEARCH FUNCTIONALITY =====
-const searchJawaban = async (searchTerm) => {
-  const term = searchTerm || searchTumbuhan.value
-  if (!term.trim()) {
-    alert('Masukkan nama tumbuhan!')
+const closeAddPlantModal = () => {
+  showAddPlantModal.value = false
+}
+
+const addPlantAnswer = () => {
+  if (!jawabanForm.value.Tumbuhan.trim()) {
+    alert('Nama tumbuhan tidak boleh kosong!')
     return
   }
 
-  try {
-    const response = await fetch(`/admin/quiz/search/${encodeURIComponent(term.trim())}`)
-    const data = await response.json()
-    
-    if (data.found) {
-      hasilJawaban.value = data.jawaban
-      searchNotFound.value = false
-    } else {
-      hasilJawaban.value = null
-      searchNotFound.value = true
-      setTimeout(() => searchNotFound.value = false, 3000)
-    }
-  } catch (error) {
-    console.error('Search error:', error)
-    hasilJawaban.value = null
-    searchNotFound.value = true
-    setTimeout(() => searchNotFound.value = false, 3000)
-  }
-}
-
-// ===== VALIDATION HELPERS =====
-const validateForm = (formData) => {
-  const errors = []
-  
-  if (!formData.Tumbuhan || !formData.Tumbuhan.trim()) {
-    errors.push('Nama tumbuhan wajib diisi')
-  }
-  
-  pertanyaan.forEach(q => {
-    if (!formData.answers[q.text] || formData.answers[q.text] === '') {
-      errors.push(`Jawaban untuk "${q.text}" wajib diisi`)
-    }
-  })
-  
-  return errors
-}
-
-const showValidationErrors = (errors) => {
-  alert('Terdapat kesalahan:\n' + errors.join('\n'))
-}
-
-// ===== ENHANCED SUBMIT FUNCTIONS =====
-const submitJawabanEnhanced = () => {
-  const errors = validateForm(jawabanForm.value)
-  if (errors.length > 0) {
-    showValidationErrors(errors)
+  const isComplete = props.pertanyaan.every(q => jawabanForm.value.answers[q.text] !== '')
+  if (!isComplete) {
+    alert('Harap lengkapi semua jawaban!')
     return
   }
 
-  // Check if plant already exists
-  const exists = jawaban.some(j => 
-    j.tumbuhan.toLowerCase() === jawabanForm.value.Tumbuhan.trim().toLowerCase()
-  )
-  
-  if (exists) {
-    if (!confirm('Tanaman dengan nama ini sudah ada. Apakah Anda ingin melanjutkan?')) {
-      return
-    }
-  }
+  const method = selectedPlant.value ? 'put' : 'post'
+  const url = selectedPlant.value 
+    ? `/admin/quiz/jawaban/${encodeURIComponent(selectedPlant.value.tumbuhan)}`
+    : '/admin/quiz/jawaban'
 
-  router.post('/admin/quiz/jawaban', {
+  router[method](url, {
     Tumbuhan: jawabanForm.value.Tumbuhan.trim(),
     answers: jawabanForm.value.answers,
   }, {
     preserveScroll: true,
     onSuccess: () => {
-      jawabanForm.value.Tumbuhan = ''
-      initializeAnswerForm()
-      router.reload({ only: ['jawaban'] })
-      alert('Data tanaman berhasil disimpan!')
+      closeAddPlantModal()
+      router.reload()
     },
-    onError: (errors) => {
-      console.error('Submit error:', errors)
-      alert('Gagal menyimpan jawaban! Silakan coba lagi.')
+    onError: () => {
+      alert(selectedPlant.value ? 'Gagal mengupdate jawaban!' : 'Gagal menyimpan jawaban!')
     }
   })
 }
+
+const viewPlantDetail = (plant: PlantAnswer) => {
+  selectedPlant.value = plant
+  showDetailModal.value = true
+}
+
+const editPlantAnswer = (plant: PlantAnswer) => {
+  selectedPlant.value = plant
+  jawabanForm.value = {
+    Tumbuhan: plant.tumbuhan,
+    answers: getAnswersOnly(plant)
+  }
+  showAddPlantModal.value = true
+}
+
+const closeDetailModal = () => {
+  showDetailModal.value = false
+}
+
+// ===== DELETE MANAGEMENT =====
+const confirmDeleteQuestion = (question: Question) => {
+  deleteType.value = 'question'
+  deleteTarget.value = question
+  deleteMessage.value = `Yakin ingin menghapus pertanyaan "${question.text}"? Data jawaban terkait juga akan terpengaruh.`
+  showDeleteModal.value = true
+}
+
+const confirmDeletePlant = (plant: PlantAnswer) => {
+  deleteType.value = 'plant'
+  deleteTarget.value = plant
+  deleteMessage.value = `Yakin ingin menghapus data tanaman "${plant.tumbuhan}"?`
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+}
+
+const confirmDelete = () => {
+  if (!deleteTarget.value) return
+
+  const url = deleteType.value === 'question'
+    ? `/admin/quiz/pertanyaan/${deleteTarget.value.id}`
+    : `/admin/quiz/jawaban/${encodeURIComponent((deleteTarget.value as PlantAnswer).tumbuhan)}`
+
+  router.delete(url, {
+    preserveScroll: true,
+    onSuccess: () => {
+      closeDeleteModal()
+      router.reload()
+    },
+    onError: () => {
+      alert(`Gagal menghapus ${deleteType.value === 'question' ? 'pertanyaan' : 'data tanaman'}!`)
+    }
+  })
+}
+
+// ===== SEARCH FUNCTIONALITY =====
+const cariJawaban = async () => {
+  if (!searchTumbuhan.value.trim()) {
+    alert('Masukkan nama tumbuhan!')
+    return
+  }
+
+  searchNotFound.value = false
+
+  try {
+    const response = await fetch(`/admin/quiz/jawaban/${encodeURIComponent(searchTumbuhan.value.trim())}`)
+    if (!response.ok) throw new Error('Tidak ditemukan')
+    
+    const data = await response.json()
+    selectedPlant.value = data
+  } catch (error) {
+    searchNotFound.value = true
+    setTimeout(() => {
+      searchNotFound.value = false
+    }, 3000)
+  }
+}
+
+const clearSearch = () => {
+  searchTumbuhan.value = ''
+  searchNotFound.value = false
+  selectedPlant.value = null
+}
+
+// ===== AUTH =====
+const logout = () => {
+  router.get('/logout')
+}
+
+// Initialize form on mount
+onMounted(() => {
+  initializeAnswerForm()
+})
 </script>
