@@ -49,6 +49,14 @@
     <div class="max-w-4xl mx-auto">
       <h2 class="text-3xl font-bold text-green-700 text-center">Panduan Praktis</h2>
 
+      <!-- Debug info - akan dihapus setelah testing -->
+      <div class="mt-4 p-4 bg-yellow-100 rounded-lg text-sm">
+        <p><strong>Debug Info:</strong></p>
+        <p>Infographics: {{ infographics?.length || 0 }} items</p>
+        <p>Videos: {{ videos?.length || 0 }} items</p>
+        <p>FAQs: {{ faqs?.length || 0 }} items</p>
+      </div>
+
       <!-- Tabs -->
       <div class="mt-8 flex border-b border-gray-200">
         <button 
@@ -68,57 +76,113 @@
       <!-- Tab Content -->
       <div class="mt-6">
         <!-- Infografis -->
-        <div v-if="activeTab === 'infographic'" class="grid md:grid-cols-2 gap-6">
-          <div 
-            v-for="item in infographics" 
-            :key="item.id"
-            class="border border-gray-200 rounded-lg overflow-hidden"
-          >
-            <img :src="item.image" class="w-full h-48 object-cover" />
-            <div class="p-4">
-              <h3 class="font-bold">{{ item.title }}</h3>
-              <p class="mt-2 text-sm text-gray-600">{{ item.caption }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Video -->
-        <div v-else-if="activeTab === 'video'" class="grid md:grid-cols-2 gap-6">
-          <div 
-            v-for="video in videos" 
-            :key="video.id"
-            class="rounded-lg overflow-hidden shadow-md"
-          >
-            <iframe 
-              :src="video.embedUrl"
-              class="w-full h-48"
-              frameborder="0"
-              allowfullscreen
-            ></iframe>
-            <div class="p-4">
-              <h3 class="font-bold">{{ video.title }}</h3>
-              <p class="mt-1 text-sm text-gray-500">{{ video.duration }} · {{ video.views }}</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- FAQ -->
-        <div v-else-if="activeTab === 'faq'" class="space-y-4">
-          <div 
-            v-for="faq in faqs" 
-            :key="faq.id"
-            class="border-b border-gray-200 pb-4"
-          >
-            <button 
-              @click="toggleFaq(faq.id)"
-              class="flex justify-between items-center w-full text-left"
+        <div v-if="activeTab === 'infographic'">
+          <div v-if="infographics && infographics.length > 0" class="grid md:grid-cols-2 gap-6">
+            <div 
+              v-for="item in infographics" 
+              :key="item.id"
+              class="border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all"
             >
-              <span class="font-medium">{{ faq.question }}</span>
-              <span>{{ expandedFaqs.includes(faq.id) ? '−' : '+' }}</span>
-            </button>
-            <p v-if="expandedFaqs.includes(faq.id)" class="mt-2 text-gray-600">
-              {{ faq.answer }}
-            </p>
+              <div class="relative group cursor-pointer" @click="openImageModal(item.link)">
+                <img 
+                  :src="item.link" 
+                  :alt="item.title || 'Infografis Hidroponik'"
+                  class="w-full h-48 object-cover transition-all duration-500 group-hover:scale-[1.02]" 
+                  @error="handleImageError"
+                />
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+                  <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl text-gray-800 font-medium shadow-lg">
+                    <i class="fas fa-search-plus mr-2"></i>Klik untuk memperbesar
+                  </div>
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold">{{ item.title || 'Infografis Hidroponik' }}</h3>
+                <p class="mt-2 text-sm text-gray-600">{{ item.deskripsi || 'Panduan praktis hidroponik' }}</p>
+              </div>
+            </div>
+          </div>
+          <div v-else class="text-center py-8">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-image text-green-600 text-2xl"></i>
+            </div>
+            <p class="text-gray-500 font-medium">Belum ada infografis tersedia</p>
+            <p class="text-sm text-gray-400 mt-1">Infografis akan segera ditambahkan</p>
+          </div>
+        </div>
+        <!-- Perbaikan untuk section Video -->
+        <div v-else-if="activeTab === 'video'">
+          <div v-if="videos && videos.length > 0" class="grid md:grid-cols-2 gap-6">
+            <div 
+              v-for="video in videos" 
+              :key="video.id"
+              class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+            >
+              <div class="relative">
+                <iframe 
+                  :src="getEmbedUrl(video.link)"
+                  class="w-full h-48"
+                  frameborder="0"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
+              <div class="p-4">
+                <h3 class="font-bold text-gray-900 mb-2">{{ video.title || 'Video Tutorial' }}</h3>
+                <div class="flex items-center justify-between text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <i class="fas fa-clock"></i>
+                    {{ video.durasi || 'Durasi tidak diketahui' }}
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <i class="fas fa-play-circle"></i>
+                    Tutorial
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="text-center py-8">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-video text-red-600 text-2xl"></i>
+            </div>
+            <p class="text-gray-500 font-medium">Belum ada video tersedia</p>
+            <p class="text-sm text-gray-400 mt-1">Video tutorial akan segera ditambahkan</p>
+          </div>
+        </div>
+
+        <!-- Perbaikan untuk section FAQ -->
+        <div v-else-if="activeTab === 'faq'">
+          <div v-if="faqs && faqs.length > 0" class="space-y-4">
+            <div 
+              v-for="faq in faqs" 
+              :key="faq.id"
+              class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+            >
+              <button 
+                @click="toggleFaq(faq.id)"
+                class="flex justify-between items-center w-full text-left p-4 hover:bg-gray-50 transition-colors"
+              >
+                <span class="font-medium text-gray-900 pr-4">{{ faq.pertanyaan }}</span>
+                <span class="text-green-600 text-xl font-bold flex-shrink-0">
+                  {{ expandedFaqs.includes(faq.id) ? '−' : '+' }}
+                </span>
+              </button>
+              <transition name="faq-expand">
+                <div v-if="expandedFaqs.includes(faq.id)" class="px-4 pb-4">
+                  <div class="pt-2 border-t border-gray-100">
+                    <p class="text-gray-600 leading-relaxed">{{ faq.jawaban }}</p>
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
+          <div v-else class="text-center py-8">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-question-circle text-blue-600 text-2xl"></i>
+            </div>
+            <p class="text-gray-500 font-medium">Belum ada FAQ tersedia</p>
+            <p class="text-sm text-gray-400 mt-1">Pertanyaan yang sering diajukan akan segera ditambahkan</p>
           </div>
         </div>
 
@@ -277,7 +341,6 @@
                         </p>
                       </div>
                     </div>
-<<<<<<< Updated upstream
                     
                     <!-- Actions untuk pemilik postingan -->
                     <div v-if="exp.user_id === user.id" class="relative">
@@ -311,61 +374,7 @@
                 <div class="px-6 pb-4">
                   <p class="text-gray-700 leading-relaxed">{{ exp.story }}</p>
                 </div>
-=======
-                  </div>
 
-                  <div v-else class="relative">
-                    <div class="relative rounded-xl overflow-hidden">
-                      <img :src="newExperience.photo" class="w-full h-48 object-cover" />
-                      <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center opacity-0 hover:opacity-100">
-                        <button 
-                          type="button" 
-                          @click="removePhoto"
-                          class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-colors"
-                        >
-                          <i class="fas fa-trash mr-2"></i>Hapus Foto
-                        </button>
-                      </div>
-                    </div>
-                    <button 
-                      type="button" 
-                      @click="$refs.fileInput.click()"
-                      class="absolute top-3 right-3 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium shadow-md transition-all"
-                    >
-                      <i class="fas fa-camera mr-1"></i>Ganti
-                    </button>
-                    <input 
-                      type="file" 
-                      @change="handleFileUpload" 
-                      accept="image/*" 
-                      class="hidden" 
-                      ref="fileInput"
-                    />
-                  </div>
-                </div>
-
-                <div class="flex gap-3 pt-2">
-                  <button 
-                    v-if="editId"
-                    type="button"
-                    @click="cancelEdit"
-                    class="flex-1 px-6 py-3 border-2 border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium"
-                  >
-                    <i class="fas fa-times mr-2"></i>Batal
-                  </button>
-                  <button 
-                    type="submit"
-                    class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                  >
-                    <i class="fas fa-share-alt mr-2"></i>
-                    {{ editId ? 'Update Pengalaman' : 'Bagikan Pengalaman' }}
-                  </button>
-                </div>
-              </form>
-            </div>
->>>>>>> Stashed changes
-
-                <!-- Foto jika ada -->
                 <!-- Foto jika ada - dengan fitur modal -->
                 <div v-if="exp.photo" class="px-8 pb-8">
                   <div class="relative group cursor-pointer" @click="openImageModal(exp.photo)">
@@ -379,7 +388,7 @@
                       </div>
                     </div>
                   </div>
-                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -394,49 +403,76 @@
           </div>
         </div>
       </div>
+      
       <!-- Modal untuk melihat gambar -->
-    <transition 
-      enter-active-class="transition-all duration-300 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-all duration-200 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div 
-        v-if="imageModal.show" 
-        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        @click="closeImageModal"
+      <transition 
+        enter-active-class="transition-all duration-300 ease-out"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-all duration-200 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
       >
-        <div class="relative max-w-4xl max-h-full">
-          <button 
-            @click="closeImageModal"
-            class="absolute -top-4 -right-4 w-12 h-12 bg-white/90 hover:bg-white text-gray-800 rounded-full flex items-center justify-center shadow-2xl transition-all duration-200 hover:scale-110 z-10"
-          >
-            <i class="fas fa-times text-xl"></i>
-          </button>
-          <img 
-            :src="imageModal.src" 
-            class="max-w-full max-h-full rounded-2xl shadow-2xl"
-            @click.stop
-          />
+        <div 
+          v-if="imageModal.show" 
+          class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          @click="closeImageModal"
+        >
+          <div class="relative w-full h-full max-w-[90vw] max-h-[90vh] flex items-center justify-center">
+            <button 
+              @click="closeImageModal"
+              class="absolute -top-12 -right-4 md:-right-12 w-12 h-12 bg-white/90 hover:bg-white text-gray-800 rounded-full flex items-center justify-center shadow-2xl transition-all duration-200 hover:scale-110 z-10"
+            >
+              <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <!-- Container untuk gambar dengan scroll jika diperlukan -->
+            <div class="relative w-full h-full overflow-auto flex items-center justify-center p-4">
+              <img 
+                :src="imageModal.src" 
+                class="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                :style="imageModalStyle"
+                @click.stop
+              />
+            </div>
+            
+            <!-- Tombol zoom in/out -->
+            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-white/90 rounded-full p-2 shadow-lg">
+              <button 
+                @click.stop="zoomOut"
+                class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors"
+              >
+                <i class="fas fa-search-minus"></i>
+              </button>
+              <button 
+                @click.stop="zoomReset"
+                class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors"
+              >
+                <i class="fas fa-expand"></i>
+              </button>
+              <button 
+                @click.stop="zoomIn"
+                class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors"
+              >
+                <i class="fas fa-search-plus"></i>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </transition>
+      </transition>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { router, Link, usePage } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/id'
 
 dayjs.extend(relativeTime)
-dayjs.locale('id') // Gunakan locale Bahasa Indonesia
-
+dayjs.locale('id')
 
 defineOptions({
   name: 'Guides'
@@ -450,12 +486,6 @@ const activeTab = ref('infographic')
 const expandedFaqs = ref([])
 const activePostMenu = ref(null)
 
-// Modal untuk gambar
-const imageModal = ref({
-  show: false,
-  src: ''
-})
-
 const tabs = [
   { id: 'infographic', label: 'Infografis' },
   { id: 'video', label: 'Video' },
@@ -463,42 +493,63 @@ const tabs = [
   { id: 'community', label: 'Komunitas' }
 ]
 
-<<<<<<< Updated upstream
-const infographics = ref([
-  {
-    id: 1,
-    title: "Cara Menyemai Benih",
-    caption: "Langkah-langkah sederhana untuk pemula",
-    image: "https://placehold.co/600x400/green/white?text=Infografis+1"
-  }
-])
+const handleImageError = (event) => {
+  event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04MCA2MEw5MCA3MEw5MCA4MEw4MCA5MEw3MCA4MEw3MCA3MEw4MCA2MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHN2Zz4K'
+}
 
-const videos = ref([
-  {
-    id: "abc123",
-    title: "Cara Setup Hidroponik Sederhana",
-    embedUrl: "https://www.youtube.com/embed/PxmZ-_YP1dM?si=oWTzOslUhY5JrD4n",
-    duration: "9:02",
-    views: "10K ditonton"
-  }
-])
+// Data from database props - dengan reactive refs dan proper initialization
+const infographics = ref([])
+const videos = ref([])
+const faqs = ref([])
+const experiences = ref([])
 
-const faqs = ref([
-  {
-    id: 1,
-    question: "Tanaman apa yang cocok untuk kamar tidur?",
-    answer: "Lidah mertua atau Peace Lily bisa jadi pilihan..."
-  }
-])
+// Initialize data from props
+onMounted(() => {
+  console.log('🔍 Page props received:', page.props)
+  
+  // Safely initialize data with fallbacks
+  infographics.value = page.props.infographics || []
+  videos.value = page.props.videos || []
+  faqs.value = page.props.faqs || []
+  experiences.value = page.props.experiences || []
+  
+  console.log('📊 Data initialized:')
+  console.log('- Infographics:', infographics.value.length, infographics.value)
+  console.log('- Videos:', videos.value.length, videos.value)
+  console.log('- FAQs:', faqs.value.length, faqs.value)
+  console.log('- Experiences:', experiences.value.length)
+})
 
-=======
->>>>>>> Stashed changes
 // Fungsi untuk modal gambar
+const imageModal = ref({
+  show: false,
+  src: '',
+  zoom: 1
+})
+
+const imageModalStyle = computed(() => ({
+  transform: `scale(${imageModal.value.zoom})`,
+  transition: 'transform 0.3s ease'
+}))
+
 const openImageModal = (src) => {
   imageModal.value = {
     show: true,
-    src: src
+    src: src,
+    zoom: 1
   }
+}
+
+const zoomIn = () => {
+  imageModal.value.zoom = Math.min(imageModal.value.zoom + 0.25, 3)
+}
+
+const zoomOut = () => {
+  imageModal.value.zoom = Math.max(imageModal.value.zoom - 0.25, 0.5)
+}
+
+const zoomReset = () => {
+  imageModal.value.zoom = 1
 }
 
 const closeImageModal = () => {
@@ -507,27 +558,39 @@ const closeImageModal = () => {
     src: ''
   }
 }
-<<<<<<< Updated upstream
 
-const experiences = ref(page.props.experiences || [
-  {
-    id: 1,
-    username: "Ali",
-    story: "Saya mulai menanam sayur organik di balkon rumah. Hasilnya sangat memuaskan dan keluarga jadi lebih sehat!",
-    photo: null,
-    user_id: 1
-  },
-  {
-    id: 2,
-    username: "Sari",
-    story: "Tips dari saya: gunakan pupuk organik dari sisa dapur. Tanaman jadi subur dan ramah lingkungan!",
-    photo: "https://placehold.co/600x400/green/white?text=Foto+Tanaman",
-    user_id: 2
+// Fungsi untuk mengonversi YouTube URL ke embed URL
+const getEmbedUrl = (url) => {
+  if (!url) return ''
+  
+  try {
+    // Jika sudah embed URL, return as is
+    if (url.includes('embed/')) return url
+    
+    // Convert YouTube watch URL to embed URL
+    if (url.includes('youtube.com/watch?v=')) {
+      const videoId = url.split('v=')[1]?.split('&')[0]
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`
+      }
+    }
+    
+    // Convert YouTube short URL to embed URL
+    if (url.includes('youtu.be/')) {
+      const videoId = url.split('youtu.be/')[1]?.split('?')[0]
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`
+      }
+    }
+    
+    // Jika bukan YouTube, return URL asli
+    return url
+  } catch (error) {
+    console.error('Error processing video URL:', error)
+    return ''
   }
-])
+}
 
-=======
->>>>>>> Stashed changes
 const newExperience = ref({
   story: '',
   photo: null,
@@ -587,34 +650,20 @@ const addExperience = () => {
     router.put(`/guides/${editId.value}`, form, {
       forceFormData: true,
       onSuccess: () => {
-        const idx = experiences.value.findIndex(exp => exp.id === editId.value)
-        if (idx !== -1) {
-          experiences.value[idx].story = newExperience.value.story
-          experiences.value[idx].photo = newExperience.value.photo
-        }
-        cancelEdit()
+        // Refresh halaman untuk reload data terbaru
+        router.get('/guides')
       },
       onError: (errors) => {
         console.error('Error updating experience:', errors)
-        router.post(`/guides/${editId.value}/edit`, form, {
-          forceFormData: true,
-          onSuccess: () => {
-            cancelEdit()
-          },
-          onError: (fallbackErrors) => {
-            console.error('Fallback edit also failed:', fallbackErrors)
-            alert('Gagal mengupdate pengalaman. Silakan coba lagi.')
-          }
-        })
+        alert('Gagal mengupdate pengalaman. Silakan coba lagi.')
       }
     })
   } else {
     router.post('/guides', form, {
       forceFormData: true,
-      onSuccess: (page) => {
-        const newExp = page.props.experiences?.slice(-1)[0] // ambil data terbaru
-        if (newExp) experiences.value.push(newExp)
-        newExperience.value = { story: '', photo: null, photoFile: null }
+      onSuccess: () => {
+        // Refresh halaman untuk reload data terbaru
+        router.get('/guides')
       },
       onError: (errors) => {
         console.error('Error creating experience:', errors)
@@ -628,8 +677,8 @@ const deleteExperience = (id) => {
   if (confirm('Apakah Anda yakin ingin menghapus pengalaman ini?')) {
     router.delete(`/guides/${id}`, {
       onSuccess: () => {
-        experiences.value = experiences.value.filter(exp => exp.id !== id)
-        activePostMenu.value = null
+        // Refresh halaman untuk reload data terbaru
+        router.get('/guides')
       }
     })
   }
@@ -645,7 +694,44 @@ const startEditExperience = (exp) => {
   activePostMenu.value = null
   
   // Scroll to form
-  document.querySelector('form').scrollIntoView({ behavior: 'smooth', block: 'center' })
+  document.querySelector('form')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+}
+</script>
+
+<style scoped>
+/* Tambahkan animasi untuk FAQ expand */
+.faq-expand-enter-active,
+.faq-expand-leave-active {
+  transition: all 0.3s ease;
 }
 
-</script>
+.faq-expand-enter-from,
+.faq-expand-leave-to {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.faq-expand-enter-to,
+.faq-expand-leave-from {
+  opacity: 1;
+  max-height: 200px;
+}
+
+/* Tambahkan di bagian style */
+.img-modal-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.5) transparent;
+}
+
+.img-modal-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.img-modal-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,0.5);
+  border-radius: 3px;
+}
+</style>

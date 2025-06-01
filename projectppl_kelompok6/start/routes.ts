@@ -47,6 +47,7 @@ router.get('/signup', async ({ inertia }) => {
 router.post('/signup', [AuthController, 'signup'])
 
 
+
 router.get('/dashboard', async ({ session, inertia, response }) => {
   const user = session.get('user')
 
@@ -100,17 +101,20 @@ router.post('/profile/update', [ProfileController, 'update'])
   
   .middleware([middleware.auth()])
 
-import ExperienceController from '#controllers/experience_controller'
 import PlantController from '#controllers/plant_controller'
+const GuidesController = () => import('#controllers/guides_controller')
 
-router.get('/guides', [ExperienceController, 'index'])
-// POST guides (harus login dulu)
-router.post('/guides', [ExperienceController, 'store']).use(middleware.auth())
+router.get('/info', [GuidesController, 'info']).as('guides.info').use(middleware.auth())
 
-// DELETE guides/:id (harus login dulu)
-router.delete('/guides/:id', [ExperienceController, 'delete']).use(middleware.auth())
-router.post('/guides/:id/edit',[ExperienceController, 'edit']) 
-router.put('/guides/:id', [ExperienceController, 'update']) 
+// Community routes - handles experiences (tab 4)
+router.get('/guides', [GuidesController, 'index'])
+
+// Community CRUD operations
+router.post('/guides', [GuidesController, 'store']).use(middleware.auth())
+router.put('/guides/:id', [GuidesController, 'update']).use(middleware.auth())
+router.delete('/guides/:id', [GuidesController, 'delete']).use(middleware.auth())
+
+router.post('/guides/:id/edit',[GuidesController, 'edit'])
 
 router.get('/plants', [PlantController, 'index']) 
 router.get('/plants/:id', [PlantController, 'show']) 
