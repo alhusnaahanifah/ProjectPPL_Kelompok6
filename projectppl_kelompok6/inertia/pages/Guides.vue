@@ -277,7 +277,6 @@
                         </p>
                       </div>
                     </div>
-<<<<<<< Updated upstream
                     
                     <!-- Actions untuk pemilik postingan -->
                     <div v-if="exp.user_id === user.id" class="relative">
@@ -311,59 +310,6 @@
                 <div class="px-6 pb-4">
                   <p class="text-gray-700 leading-relaxed">{{ exp.story }}</p>
                 </div>
-=======
-                  </div>
-
-                  <div v-else class="relative">
-                    <div class="relative rounded-xl overflow-hidden">
-                      <img :src="newExperience.photo" class="w-full h-48 object-cover" />
-                      <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center opacity-0 hover:opacity-100">
-                        <button 
-                          type="button" 
-                          @click="removePhoto"
-                          class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition-colors"
-                        >
-                          <i class="fas fa-trash mr-2"></i>Hapus Foto
-                        </button>
-                      </div>
-                    </div>
-                    <button 
-                      type="button" 
-                      @click="$refs.fileInput.click()"
-                      class="absolute top-3 right-3 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium shadow-md transition-all"
-                    >
-                      <i class="fas fa-camera mr-1"></i>Ganti
-                    </button>
-                    <input 
-                      type="file" 
-                      @change="handleFileUpload" 
-                      accept="image/*" 
-                      class="hidden" 
-                      ref="fileInput"
-                    />
-                  </div>
-                </div>
-
-                <div class="flex gap-3 pt-2">
-                  <button 
-                    v-if="editId"
-                    type="button"
-                    @click="cancelEdit"
-                    class="flex-1 px-6 py-3 border-2 border-gray-200 text-gray-600 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium"
-                  >
-                    <i class="fas fa-times mr-2"></i>Batal
-                  </button>
-                  <button 
-                    type="submit"
-                    class="flex-1 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                  >
-                    <i class="fas fa-share-alt mr-2"></i>
-                    {{ editId ? 'Update Pengalaman' : 'Bagikan Pengalaman' }}
-                  </button>
-                </div>
-              </form>
-            </div>
->>>>>>> Stashed changes
 
                 <!-- Foto jika ada -->
                 <!-- Foto jika ada - dengan fitur modal -->
@@ -463,7 +409,6 @@ const tabs = [
   { id: 'community', label: 'Komunitas' }
 ]
 
-<<<<<<< Updated upstream
 const infographics = ref([
   {
     id: 1,
@@ -491,8 +436,6 @@ const faqs = ref([
   }
 ])
 
-=======
->>>>>>> Stashed changes
 // Fungsi untuk modal gambar
 const openImageModal = (src) => {
   imageModal.value = {
@@ -507,7 +450,6 @@ const closeImageModal = () => {
     src: ''
   }
 }
-<<<<<<< Updated upstream
 
 const experiences = ref(page.props.experiences || [
   {
@@ -526,8 +468,6 @@ const experiences = ref(page.props.experiences || [
   }
 ])
 
-=======
->>>>>>> Stashed changes
 const newExperience = ref({
   story: '',
   photo: null,

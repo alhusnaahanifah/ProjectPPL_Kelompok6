@@ -15,6 +15,7 @@ import QuizController from '#controllers/quiz_controller'
 import ProfileController from '#controllers/profiles_controller'
 import ExperienceController from '#controllers/experience_controller'
 import PlantController from '#controllers/plant_controller'
+import AdminController from '#controllers/admin_controller'
 
 // landing pages
 router.on('/').renderInertia('LandingPage')
@@ -43,15 +44,8 @@ router.get('/dashboard', async ({ session, inertia }) => {
   middleware.role(['user']) // hanya untuk role 'user'
 ])
 
+router.get('/DashboardAdmin', [AdminController, 'index']).use([middleware.auth(), middleware.role(['admin'])])
 
-// dashboard admin
-router.get('/DashboardAdmin', async ({ session, inertia }) => {
-  const user = session.get('user')
-  return inertia.render('DashboardAdmin', { user })
-}).use([
-  middleware.auth(),
-  middleware.role(['admin']) // hanya untuk role 'admin'
-])
 
 // Plant Quiz page
 router.get('plant-quiz', [QuizController, 'index']).use([middleware.auth(), middleware.role(['user'])])
@@ -99,7 +93,7 @@ router.post('/guides', [ExperienceController, 'store']).use([middleware.auth(), 
 // DELETE guides/:id (harus login dulu)
 router.delete('/guides/:id', [ExperienceController, 'delete']).use([middleware.auth(), middleware.role(['user'])])
 router.post('/guides/:id/edit',[ExperienceController, 'edit']).use([middleware.auth(), middleware.role(['user'])]) 
-router.put('/guides/:id', [ExperienceController, 'update']) .use([middleware.auth(), middleware.role(['user'])])
+router.put('/guides/:id', [ExperienceController, 'update']).use([middleware.auth(), middleware.role(['user'])])
 
 router.get('/plants', [PlantController, 'index']).use([middleware.auth(), middleware.role(['user'])]) 
 router.get('/plants/:id', [PlantController, 'show']).use([middleware.auth(), middleware.role(['user'])]) 
@@ -107,3 +101,15 @@ router.get('/plants/:id', [PlantController, 'show']).use([middleware.auth(), mid
 
 router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/complete', [PlantController, 'completeChallenge']).use([middleware.auth(), middleware.role(['user'])])
 router.post('/plants/:plantId/steps/:stepId/challenges/:challengeId/note', [PlantController, 'saveNote']).use([middleware.auth(), middleware.role(['user'])])
+
+router.get('/admin/users', [AdminController, 'kelolaUsers']).use([middleware.auth(), middleware.role(['admin'])])
+
+// Routes for plants management
+router.get('/admin/plants', [AdminController, 'kelolaTanaman']).as('admin.plants.index').use([middleware.auth(), middleware.role(['admin'])])
+router.post('/admin/plants', [AdminController, 'storePlant']).as('admin.plants.store').use([middleware.auth(), middleware.role(['admin'])])
+router.get('/admin/plants/:id', [AdminController, 'getPlant']).as('admin.plants.show').use([middleware.auth(), middleware.role(['admin'])])
+router.put('/admin/plants/:id', [AdminController, 'updatePlant']).as('admin.plants.update').use([middleware.auth(), middleware.role(['admin'])])
+router.delete('/admin/plants/:id', [AdminController, 'deletePlant']).as('admin.plants.destroy').use([middleware.auth(), middleware.role(['admin'])])
+
+// Routes for users managemen
+router.delete('/admin/users/:id', [AdminController, 'deleteUser']).as('admin.users.destroy').use([middleware.auth(), middleware.role(['admin'])])
