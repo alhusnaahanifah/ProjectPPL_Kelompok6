@@ -13,8 +13,8 @@ import { middleware } from '#start/kernel'
 import AuthController from '#controllers/auth_controller'
 import QuizController from '#controllers/quiz_controller'
 import ProfileController from '#controllers/profiles_controller'
-import ExperienceController from '#controllers/experience_controller'
 import PlantController from '#controllers/plant_controller'
+import GuidesController from '#controllers/guides_controller'
 
 // landing pages
 router.on('/').renderInertia('LandingPage')
@@ -91,9 +91,6 @@ router.get('/profile/edit', async ({ session, inertia, response }) => {
     },
   })
 }).use([middleware.auth(), middleware.role(['user'])])
-
-import PlantController from '#controllers/plant_controller'
-const GuidesController = () => import('#controllers/guides_controller')
 
 router.get('/info', [GuidesController, 'info']).as('guides.info').use(middleware.auth())
 
