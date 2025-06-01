@@ -73,6 +73,7 @@
         </button>
       </div>
     </aside>
+
     <!-- Main Content -->
     <main class="flex-1 overflow-auto ml-64">
       <!-- Top Header -->
@@ -395,106 +396,105 @@
 
     <!-- Plant Detail Modal -->
     <div v-if="showDetailModal && selectedPlant" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-5 mx-auto p-5 border max-w-4xl shadow-lg rounded-md bg-white">
+      <div class="relative top-5 mx-auto p-5 border max-w-4xl shadow-lg rounded-md bg-white">
         <div class="mt-3">
-        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center justify-between mb-6">
             <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+              <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
                 <i class="fas fa-leaf text-white text-lg"></i>
-            </div>
-            <div>
+              </div>
+              <div>
                 <h3 class="text-xl font-bold text-gray-900">{{ selectedPlant.tumbuhan }}</h3>
                 <p class="text-gray-600">Detail jawaban tanaman</p>
-            </div>
+              </div>
             </div>
             <button @click="closeDetailModal" class="text-gray-400 hover:text-gray-600">
-            <i class="fas fa-times text-xl"></i>
+              <i class="fas fa-times text-xl"></i>
             </button>
-        </div>
-        
-        <div class="max-h-96 overflow-y-auto">
+          </div>
+          
+          <div class="max-h-96 overflow-y-auto">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Perubahan utama di sini: -->
-            <div
+              <div
                 v-for="question in pertanyaan"
                 :key="question.id"
                 class="bg-gray-50 p-4 rounded-lg border"
-                >
+              >
                 <h4 class="font-medium text-gray-900 mb-2">{{ question.text }}</h4>
                 <div class="flex items-center space-x-2">
-                    <template v-if="selectedPlant && selectedPlant[question.text] !== undefined">
+                  <template v-if="selectedPlant && selectedPlant[question.text] !== undefined">
                     <i :class="selectedPlant[question.text] === 'Ya' ? 'fas fa-check-circle text-green-600' : 'fas fa-times-circle text-red-600'"></i>
                     <span :class="selectedPlant[question.text] === 'Ya' ? 'text-green-600' : 'text-red-600'" class="font-semibold">
-                        {{ selectedPlant[question.text] }}
+                      {{ selectedPlant[question.text] }}
                     </span>
-                    </template>
-                    <template v-else>
+                  </template>
+                  <template v-else>
                     <i class="fas fa-question-circle text-gray-400"></i>
-                    <span class="text-gray-500 font-semibold">{{ jawaban }}</span>
-                    </template>
+                    <span class="text-gray-500 font-semibold">Belum dijawab</span>
+                  </template>
                 </div>
-                </div>
-        </div>
-        </div>
-        
-        <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 mt-6">
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 mt-6">
             <button
-            @click="closeDetailModal"
-            class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400"
+              @click="closeDetailModal"
+              class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400"
             >
-            Tutup
+              Tutup
             </button>
             <button
-            @click="editPlantAnswer(selectedPlant)"
-            class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700"
+              @click="editPlantAnswer(selectedPlant)"
+              class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700"
             >
-            Edit Jawaban
+              Edit Jawaban
             </button>
+          </div>
         </div>
-        </div>
-    </div>
+      </div>
     </div>
 
     <!-- Edit Question Modal -->
     <div v-if="showEditQuestionModal && selectedQuestion" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border max-w-md shadow-lg rounded-md bg-white">
+      <div class="relative top-20 mx-auto p-5 border max-w-md shadow-lg rounded-md bg-white">
         <div class="mt-3">
-        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center justify-between mb-4">
             <h3 class="text-lg font-medium text-gray-900">Edit Pertanyaan</h3>
             <button @click="closeEditQuestionModal" class="text-gray-400 hover:text-gray-600">
-            <i class="fas fa-times text-xl"></i>
+              <i class="fas fa-times text-xl"></i>
             </button>
-        </div>
-        
-        <form @submit.prevent="updateQuestion" class="space-y-4">
+          </div>
+          
+          <form @submit.prevent="updateQuestion" class="space-y-4">
             <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Pertanyaan</label>
-            <input
+              <label class="block text-sm font-medium text-gray-700 mb-1">Pertanyaan</label>
+              <input
                 v-model="editQuestionText"
                 type="text"
                 required
                 class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            >
+              >
             </div>
 
             <div class="flex justify-end space-x-3 pt-4 border-t">
-            <button
+              <button
                 type="button"
                 @click="closeEditQuestionModal"
                 class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition-colors"
-            >
+              >
                 Batal
-            </button>
-            <button
+              </button>
+              <button
                 type="submit"
                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
+              >
                 Perbarui
-            </button>
+              </button>
             </div>
-        </form>
+          </form>
         </div>
-    </div>
+      </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
@@ -530,70 +530,86 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue'
 import { router, usePage, Link } from '@inertiajs/vue3'
-
-// ===== TYPES =====
-interface Question {
-  id: string | number
-  text: string
-}
-
-interface PlantAnswer {
-  _id?: string
-  tumbuhan: string
-  [key: string]: any // For dynamic question-answer pairs
-}
-
-interface JawabanForm {
-  Tumbuhan: string
-  answers: Record<string, string>
-}
 
 // ===== DATA PROPS =====
 const page = usePage()
-const props = defineProps<{
-  user: {
-    fullName: string
-    email: string
-  }
-  pertanyaan: Question[]
-  jawaban: PlantAnswer[]
-}>()
+const { user, pertanyaan, jawaban } = usePage().props
+const currentUrl = computed(() => page.url.value)
 
-const isActive = (path) => {
-  return typeof currentUrl.value === 'string' && currentUrl.value.startsWith(path)
-}
-
+// ===== SIDEBAR ITEM CLASS - CONSISTENT WITH TEMPLATE =====
 const getSidebarItemClass = (path) => {
-  const isActive = currentUrl.value === path
+  const page = usePage()
+  const currentPath = page.url
+  
+  // Add null/undefined check
+  if (!currentPath) {
+    return [
+      'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+      'text-gray-300 hover:bg-white/10 hover:text-white'
+    ]
+  }
+  
+  const isActive = currentPath === path || currentPath.startsWith(path + '/')
+  
   return [
-    'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-    isActive 
-      ? 'bg-green-600 text-white shadow-lg' 
-      : 'text-green-100 hover:bg-white/10 hover:text-white'
+    'flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200',
+    isActive
+      ? 'bg-green-500/20 text-green-300 border-l-4 border-green-400'
+      : 'text-gray-300 hover:bg-white/10 hover:text-white'
   ]
 }
 
+// ===== MODAL STATES =====
+const showAddQuestionModal = ref(false)
+const showAddPlantModal = ref(false)
+const showDetailModal = ref(false)
+const showEditQuestionModal = ref(false)
+const showDeleteModal = ref(false)
+
+// ===== FORM DATA =====
+const newPertanyaan = ref('')
+const editQuestionText = ref('')
+const searchTumbuhan = ref('')
+const searchNotFound = ref(false)
+const jawabanForm = ref({
+  Tumbuhan: '',
+  answers: {}
+})
+
+// ===== SELECTED ITEMS =====
+const selectedPlant = ref(null)
+const selectedQuestion = ref(null)
+
+// ===== DELETE MANAGEMENT =====
+const deleteType = ref('')
+const deleteTarget = ref(null)
+const deleteMessage = ref('')
+
+// ===== COMPUTED PROPERTIES =====
 const getCompletionPercentage = computed(() => {
-  if (props.pertanyaan.length === 0 || props.jawaban.length === 0) return 0
+  if (pertanyaan.length === 0 || jawaban.length === 0) return 0
   
-  const totalExpected = props.pertanyaan.length * props.jawaban.length
   let totalAnswered = 0
+  let totalQuestions = pertanyaan.length * jawaban.length
   
-  props.jawaban.forEach(plant => {
-    const answers = getAnswersOnly(plant)
-    totalAnswered += Object.keys(answers).length
+  jawaban.forEach(j => {
+    pertanyaan.forEach(q => {
+      if (j[q.text] && j[q.text] !== '') {
+        totalAnswered++
+      }
+    })
   })
   
-  return Math.round((totalAnswered / totalExpected) * 100)
+  return totalQuestions > 0 ? Math.round((totalAnswered / totalQuestions) * 100) : 0
 })
 
 // ===== HELPER FUNCTIONS =====
-const getAnswersOnly = (plant: PlantAnswer) => {
-  const result: Record<string, string> = {}
-  props.pertanyaan.forEach(q => {
+const getAnswersOnly = (plant) => {
+  const result = {}
+  pertanyaan.forEach(q => {
     const matchedKey = Object.keys(plant).find(key => 
       key.trim().toLowerCase() === q.text.trim().toLowerCase()
     )
@@ -602,12 +618,12 @@ const getAnswersOnly = (plant: PlantAnswer) => {
   return result
 }
 
-const countYesAnswers = (plant: PlantAnswer) => {
+const countYesAnswers = (plant) => {
   const answers = getAnswersOnly(plant)
   return Object.values(answers).filter(answer => answer === 'Ya').length
 }
 
-const countNoAnswers = (plant: PlantAnswer) => {
+const countNoAnswers = (plant) => {
   const answers = getAnswersOnly(plant)
   return Object.values(answers).filter(answer => answer === 'Tidak').length
 }
@@ -626,7 +642,7 @@ const initializeAnswerForm = () => {
     Tumbuhan: '',
     answers: {}
   }
-  props.pertanyaan.forEach((q) => {
+  pertanyaan.forEach((q) => {
     jawabanForm.value.answers[q.text] = ''
   })
 }
@@ -653,7 +669,7 @@ const addQuestion = () => {
     preserveScroll: true,
     onSuccess: () => {
       closeAddQuestionModal()
-      router.reload()
+      router.reload({ only: ['pertanyaan'] })
     },
     onError: () => {
       alert('Gagal menyimpan pertanyaan!')
@@ -661,7 +677,7 @@ const addQuestion = () => {
   })
 }
 
-const editQuestion = (question: Question) => {
+const editQuestion = (question) => {
   selectedQuestion.value = question
   editQuestionText.value = question.text
   showEditQuestionModal.value = true
@@ -684,7 +700,7 @@ const updateQuestion = () => {
     preserveScroll: true,
     onSuccess: () => {
       closeEditQuestionModal()
-      router.reload()
+      router.reload({ only: ['pertanyaan'] })
     },
     onError: () => {
       alert('Gagal mengupdate pertanyaan!')
@@ -709,7 +725,7 @@ const addPlantAnswer = () => {
     return
   }
 
-  const isComplete = props.pertanyaan.every(q => jawabanForm.value.answers[q.text] !== '')
+  const isComplete = pertanyaan.every(q => jawabanForm.value.answers[q.text] !== '')
   if (!isComplete) {
     alert('Harap lengkapi semua jawaban!')
     return
@@ -727,7 +743,7 @@ const addPlantAnswer = () => {
     preserveScroll: true,
     onSuccess: () => {
       closeAddPlantModal()
-      router.reload()
+      router.reload({ only: ['jawaban'] })
     },
     onError: () => {
       alert(selectedPlant.value ? 'Gagal mengupdate jawaban!' : 'Gagal menyimpan jawaban!')
@@ -735,12 +751,12 @@ const addPlantAnswer = () => {
   })
 }
 
-const viewPlantDetail = (plant: PlantAnswer) => {
+const viewPlantDetail = (plant) => {
   selectedPlant.value = plant
   showDetailModal.value = true
 }
 
-const editPlantAnswer = (plant: PlantAnswer) => {
+const editPlantAnswer = (plant) => {
   selectedPlant.value = plant
   jawabanForm.value = {
     Tumbuhan: plant.tumbuhan,
@@ -751,103 +767,30 @@ const editPlantAnswer = (plant: PlantAnswer) => {
 
 const closeDetailModal = () => {
   showDetailModal.value = false
+  selectedPlant.value = null
 }
 
-// ===== DELETE MANAGEMENT =====
-const confirmDeleteQuestion = (question: Question) => {
-  deleteType.value = 'question'
-  deleteTarget.value = question
-  deleteMessage.value = `Yakin ingin menghapus pertanyaan "${question.text}"? Data jawaban terkait juga akan terpengaruh.`
-  showDeleteModal.value = true
-}
+// ===== SEARCH FUNCTIONALITY =====
+const hasilJawaban = ref(null)
 
-const confirmDeletePlant = (plant: PlantAnswer) => {
-  deleteType.value = 'plant'
-  deleteTarget.value = plant
-  deleteMessage.value = `Yakin ingin menghapus data tanaman "${plant.tumbuhan}"?`
-  showDeleteModal.value = true
-}
-
-const closeDeleteModal = () => {
-  showDeleteModal.value = false
-}
-
-const confirmDelete = () => {
-  if (!deleteTarget.value) return
-
-  const url = deleteType.value === 'question'
-    ? `/admin/quiz/pertanyaan/${deleteTarget.value.id}`
-    : `/admin/quiz/jawaban/${encodeURIComponent((deleteTarget.value as PlantAnswer).tumbuhan)}`
-
-// Tambahkan fungsi-fungsi berikut ke dalam script setup:
-
-// ===== COMPUTED PROPERTIES =====
-const getCompletionPercentage = computed(() => {
-  if (pertanyaan.length === 0 || jawaban.length === 0) return 0
-  
-  // Hitung rata-rata kelengkapan data
-  let totalAnswered = 0
-  let totalQuestions = pertanyaan.length * jawaban.length
-  
-  jawaban.forEach(j => {
-    pertanyaan.forEach(q => {
-      if (j[q.text] && j[q.text] !== '') {
-        totalAnswered++
-      }
-    })
-  })
-}
-
-const closeAddModal = () => {
-  showAddModal.value = false
-}
-
-// ===== WATCH UNTUK UPDATE FORM SAAT PERTANYAAN BERUBAH =====
-import { watch } from 'vue'
-
-watch(() => pertanyaan, (newPertanyaan) => {
-  // Update form jawaban ketika ada perubahan pertanyaan
-  initializeAnswerForm()
-  
-  // Update search edit data jika sedang dalam mode edit
-  if (isEditingSearch.value && hasilJawaban.value) {
-    const updatedData = {}
-    newPertanyaan.forEach(q => {
-      updatedData[q.text] = searchEditData.value[q.text] || ''
-    })
-    searchEditData.value = updatedData
-  }
-  
-  // Update edit jawaban data jika sedang dalam mode edit
-  if (editingJawaban.value) {
-    const target = jawaban.find(j => j.tumbuhan === editingJawaban.value)
-    if (target) {
-      const updatedEditData = {}
-      newPertanyaan.forEach(q => {
-        updatedEditData[q.text] = target[q.text] || ''
-      })
-      editJawabanData.value = updatedEditData
-    }
-  }
-}, { deep: true })
-
-// ===== IMPROVED SEARCH FUNCTIONALITY =====
-const searchJawaban = async (searchTerm) => {
-  const term = searchTerm || searchTumbuhan.value
-  if (!term.trim()) {
-    alert('Masukkan nama tumbuhan!')
+const cariJawaban = async () => {
+  if (!searchTumbuhan.value.trim()) {
+    alert('Masukkan nama tumbuhan untuk dicari!')
     return
   }
 
   searchNotFound.value = false
+  hasilJawaban.value = null
 
   try {
     const response = await fetch(`/admin/quiz/jawaban/${encodeURIComponent(searchTumbuhan.value.trim())}`)
     if (!response.ok) throw new Error('Tidak ditemukan')
     
     const data = await response.json()
-    selectedPlant.value = data
+    hasilJawaban.value = data
+    searchNotFound.value = false
   } catch (error) {
+    hasilJawaban.value = null
     searchNotFound.value = true
     setTimeout(() => {
       searchNotFound.value = false
@@ -858,7 +801,48 @@ const searchJawaban = async (searchTerm) => {
 const clearSearch = () => {
   searchTumbuhan.value = ''
   searchNotFound.value = false
-  selectedPlant.value = null
+  hasilJawaban.value = null
+}
+
+// ===== DELETE MANAGEMENT =====
+const confirmDeleteQuestion = (question) => {
+  deleteType.value = 'question'
+  deleteTarget.value = question
+  deleteMessage.value = `Yakin ingin menghapus pertanyaan "${question.text}"? Data jawaban terkait juga akan terpengaruh.`
+  showDeleteModal.value = true
+}
+
+const confirmDeletePlant = (plant) => {
+  deleteType.value = 'plant'
+  deleteTarget.value = plant
+  deleteMessage.value = `Yakin ingin menghapus data tanaman "${plant.tumbuhan}"?`
+  showDeleteModal.value = true
+}
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false
+  deleteType.value = ''
+  deleteTarget.value = null
+  deleteMessage.value = ''
+}
+
+const confirmDelete = () => {
+  if (!deleteTarget.value) return
+
+  const url = deleteType.value === 'question'
+    ? `/admin/quiz/pertanyaan/${deleteTarget.value.id}`
+    : `/admin/quiz/jawaban/${encodeURIComponent(deleteTarget.value.tumbuhan)}`
+
+  router.delete(url, {
+    preserveScroll: true,
+    onSuccess: () => {
+      closeDeleteModal()
+      router.reload({ only: deleteType.value === 'question' ? ['pertanyaan', 'jawaban'] : ['jawaban'] })
+    },
+    onError: () => {
+      alert(`Gagal menghapus ${deleteType.value === 'question' ? 'pertanyaan' : 'data tanaman'}!`)
+    }
+  })
 }
 
 // ===== AUTH =====
@@ -866,28 +850,23 @@ const logout = () => {
   router.get('/logout')
 }
 
-// Initialize form on mount
+// ===== WATCHERS =====
+watch(() => pertanyaan, (newPertanyaan) => {
+  // Update form jawaban ketika ada perubahan pertanyaan
+  if (showAddPlantModal.value) {
+    initializeAnswerForm()
+    if (selectedPlant.value) {
+      jawabanForm.value.Tumbuhan = selectedPlant.value.tumbuhan
+      newPertanyaan.forEach(q => {
+        const answers = getAnswersOnly(selectedPlant.value)
+        jawabanForm.value.answers[q.text] = answers[q.text] || ''
+      })
+    }
+  }
+}, { deep: true, immediate: true })
+
+// ===== LIFECYCLE =====
 onMounted(() => {
   initializeAnswerForm()
 })
 </script>
-
-<style scoped>
-/* Custom scrollbar untuk sidebar */
-aside::-webkit-scrollbar {
-  width: 4px;
-}
-
-aside::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-aside::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-}
-
-aside::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-</style>
