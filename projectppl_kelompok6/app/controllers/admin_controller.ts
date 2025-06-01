@@ -239,4 +239,6 @@ export default class AdminController {
       return response.status(500).json({ message: 'Gagal mengambil data tanaman' })
     }
   }
+
+  
 }

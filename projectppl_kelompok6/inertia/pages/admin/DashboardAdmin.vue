@@ -56,19 +56,18 @@
             </a>
           </li>
           <li>
-            <a
-              href="#"
+            <Link
+              href="/admin/panduan"
               @click="setActiveMenu('guides')"
               :class="[
                 'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
                 activeMenu === 'guides' 
                   ? 'bg-green-600 text-white shadow-lg' 
                   : 'text-green-100 hover:bg-white/10 hover:text-white'
-              ]"
-            >
+              ]">
               <i class="fas fa-book-open w-5"></i>
               <span>Kelola Panduan</span>
-            </a>
+          </Link>
           </li>
           <li>
             <a

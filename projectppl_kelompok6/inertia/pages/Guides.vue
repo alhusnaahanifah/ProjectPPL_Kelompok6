@@ -504,20 +504,12 @@ const faqs = ref([])
 const experiences = ref([])
 
 // Initialize data from props
-onMounted(() => {
-  console.log('🔍 Page props received:', page.props)
-  
+onMounted(() => {  
   // Safely initialize data with fallbacks
   infographics.value = page.props.infographics || []
   videos.value = page.props.videos || []
   faqs.value = page.props.faqs || []
   experiences.value = page.props.experiences || []
-  
-  console.log('📊 Data initialized:')
-  console.log('- Infographics:', infographics.value.length, infographics.value)
-  console.log('- Videos:', videos.value.length, videos.value)
-  console.log('- FAQs:', faqs.value.length, faqs.value)
-  console.log('- Experiences:', experiences.value.length)
 })
 
 // Fungsi untuk modal gambar
@@ -650,7 +642,6 @@ const addExperience = () => {
     router.put(`/guides/${editId.value}`, form, {
       forceFormData: true,
       onSuccess: () => {
-        // Refresh halaman untuk reload data terbaru
         router.get('/guides')
       },
       onError: (errors) => {
