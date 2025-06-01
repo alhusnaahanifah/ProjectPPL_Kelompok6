@@ -16,6 +16,7 @@ import ProfileController from '#controllers/profiles_controller'
 import PlantController from '#controllers/plant_controller'
 import GuidesController from '#controllers/guides_controller'
 import AdminController from '#controllers/admin_controller'
+import AdminPanduanController from '#controllers/adminpanduan_controller'
 import AdminQuizsController from '#controllers/admin_quizs_controller'
 
 // landing pages
@@ -118,6 +119,28 @@ router.delete('/admin/plants/:id', [AdminController, 'deletePlant']).as('admin.p
 // Routes for users managemen
 router.delete('/admin/users/:id', [AdminController, 'deleteUser']).as('admin.users.destroy').use([middleware.auth(), middleware.role(['admin'])])
 
+
+// Admin Panduan (Guides) Management Routes
+router.get('/admin/panduan', [AdminPanduanController, 'index']).as('admin.panduan.index').use([middleware.auth(), middleware.role(['admin'])])
+router.get('/admin/panduan/statistics', [AdminPanduanController, 'getStatistics']).as('admin.panduan.statistics').use([middleware.auth(), middleware.role(['admin'])])
+
+// Infographic Routes
+router.post('/admin/panduan/infographics', [AdminPanduanController, 'storeInfographic']).as('admin.panduan.infographics.store').use([middleware.auth(), middleware.role(['admin'])])
+router.put('/admin/panduan/infographics/:id', [AdminPanduanController, 'updateInfographic']).as('admin.panduan.infographics.update').use([middleware.auth(), middleware.role(['admin'])])
+router.delete('/admin/panduan/infographics/:id', [AdminPanduanController, 'destroyInfographic']).as('admin.panduan.infographics.destroy').use([middleware.auth(), middleware.role(['admin'])])
+
+// Video Routes
+router.post('/admin/panduan/videos', [AdminPanduanController, 'storeVideo']).as('admin.panduan.videos.store').use([middleware.auth(), middleware.role(['admin'])])
+router.put('/admin/panduan/videos/:id', [AdminPanduanController, 'updateVideo']).as('admin.panduan.videos.update').use([middleware.auth(), middleware.role(['admin'])])
+router.delete('/admin/panduan/videos/:id', [AdminPanduanController, 'destroyVideo']).as('admin.panduan.videos.destroy').use([middleware.auth(), middleware.role(['admin'])])
+
+// FAQ Routes
+router.post('/admin/panduan/faqs', [AdminPanduanController, 'storeFaq']).as('admin.panduan.faqs.store').use([middleware.auth(), middleware.role(['admin'])])
+router.put('/admin/panduan/faqs/:id', [AdminPanduanController, 'updateFaq']).as('admin.panduan.faqs.update').use([middleware.auth(), middleware.role(['admin'])])
+router.delete('/admin/panduan/faqs/:id', [AdminPanduanController, 'destroyFaq']).as('admin.panduan.faqs.destroy').use([middleware.auth(), middleware.role(['admin'])])
+
+// Experience Routes (Admin can only delete community experiences)
+router.delete('/admin/panduan/experiences/:id', [AdminPanduanController, 'destroyExperience']).as('admin.panduan.experiences.destroy').use([middleware.auth(), middleware.role(['admin'])])
 
 router.group(() => {
   router.get('/admin/quiz', [AdminQuizsController, 'index'])
