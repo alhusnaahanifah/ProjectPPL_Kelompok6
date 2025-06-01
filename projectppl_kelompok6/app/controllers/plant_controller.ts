@@ -38,7 +38,7 @@ export default class PlantController {
 
 
     // Tandai challenge selesai
-  public async completeChallenge({ params, session }: HttpContext) {
+  public async completeChallenge({ response, params, session }: HttpContext) {
     const db = getMongoDb()
     const plantId = params.plantId
     const stepId = params.stepId
@@ -61,11 +61,11 @@ export default class PlantController {
       { upsert: true }
     )
 
-    return { success: true };
+    return response.redirect().back()
   }
 
   // Simpan catatan
-  public async saveNote({ params, request, session }: HttpContext) {
+  public async saveNote({ response, params, request, session }: HttpContext) {
     const db = getMongoDb()
     const plantId = params.plantId
     const stepId = params.stepId
@@ -87,7 +87,7 @@ export default class PlantController {
       },
       { upsert: true }
     )
-    return { success: true };
+    return response.redirect().back()
   }
 
 }
