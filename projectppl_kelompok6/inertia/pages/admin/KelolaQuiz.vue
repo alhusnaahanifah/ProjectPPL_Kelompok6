@@ -16,31 +16,36 @@
       <nav class="mt-6 px-4">
         <ul class="space-y-2">
           <li>
-            <Link href="/DashboardAdmin" :class="getSidebarItemClass('/admin/dashboard')">
+            <Link href="/DashboardAdmin"
+              :class="getSidebarItemClass('/DashboardAdmin')">
               <i class="fas fa-tachometer-alt w-5"></i>
               <span>Dashboard</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/users" :class="getSidebarItemClass('/admin/users')">
+            <Link href="/admin/users"
+              :class="getSidebarItemClass('/admin/users')">
               <i class="fas fa-users w-5"></i>
               <span>Kelola Pengguna</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/plants" :class="getSidebarItemClass('/admin/plants')">
+            <Link href="/admin/plants"
+              :class="getSidebarItemClass('/admin/plants')">
               <i class="fas fa-seedling w-5"></i>
               <span>Kelola Tanaman</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/guides" :class="getSidebarItemClass('/admin/guides')">
+            <Link href="/admin/panduan"
+              :class="getSidebarItemClass('/admin/panduan')">
               <i class="fas fa-book-open w-5"></i>
               <span>Kelola Panduan</span>
             </Link>
           </li>
           <li>
-            <Link href="/admin/quiz" :class="getSidebarItemClass('/admin/quiz')">
+            <Link href="/admin/quiz"
+              :class="getSidebarItemClass('/admin/quiz')">
               <i class="fas fa-question-circle w-5"></i>
               <span>Kelola Quiz</span>
             </Link>
@@ -49,8 +54,8 @@
       </nav>
 
       <!-- Admin Profile Section -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/20">
-        <div class="flex items-center space-x-3 mb-3">
+      <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/20">
+        <div class="flex items-center space-x-3 mb-4">
           <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
             <i class="fas fa-user-shield text-white"></i>
           </div>
@@ -61,14 +66,13 @@
         </div>
         <button
           @click="logout"
-          class="w-60 flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+          class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
         >
           <i class="fas fa-sign-out-alt"></i>
-          <span>Keluar</span>
+          <span>Keluar</span> 
         </button>
       </div>
     </aside>
-
     <!-- Main Content -->
     <main class="flex-1 overflow-auto ml-64">
       <!-- Top Header -->
@@ -558,46 +562,15 @@ const props = defineProps<{
   jawaban: PlantAnswer[]
 }>()
 
-const currentUrl = computed(() => page.url)
-
-// ===== REACTIVE STATE =====
-// Modal states
-const showAddQuestionModal = ref(false)
-const showAddPlantModal = ref(false)
-const showDetailModal = ref(false)
-const showEditQuestionModal = ref(false)
-const showDeleteModal = ref(false)
-
-// Form data
-const newPertanyaan = ref('')
-const jawabanForm = ref<JawabanForm>({
-  Tumbuhan: '',
-  answers: {}
-})
-
-// Selected items
-const selectedQuestion = ref<Question | null>(null)
-const selectedPlant = ref<PlantAnswer | null>(null)
-const editQuestionText = ref('')
-
-// Delete confirmation
-const deleteType = ref<'question' | 'plant'>('question')
-const deleteTarget = ref<Question | PlantAnswer | null>(null)
-const deleteMessage = ref('')
-
-// Search
-const searchTumbuhan = ref('')
-const searchNotFound = ref(false)
-
-// ===== COMPUTED PROPERTIES =====
-const isActive = (path: string) => {
-  return currentUrl.value.startsWith(path)
+const isActive = (path) => {
+  return typeof currentUrl.value === 'string' && currentUrl.value.startsWith(path)
 }
 
-const getSidebarItemClass = (path: string) => {
+const getSidebarItemClass = (path) => {
+  const isActive = currentUrl.value === path
   return [
     'flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200',
-    isActive(path)
+    isActive 
       ? 'bg-green-600 text-white shadow-lg' 
       : 'text-green-100 hover:bg-white/10 hover:text-white'
   ]
@@ -806,21 +779,62 @@ const confirmDelete = () => {
     ? `/admin/quiz/pertanyaan/${deleteTarget.value.id}`
     : `/admin/quiz/jawaban/${encodeURIComponent((deleteTarget.value as PlantAnswer).tumbuhan)}`
 
-  router.delete(url, {
-    preserveScroll: true,
-    onSuccess: () => {
-      closeDeleteModal()
-      router.reload()
-    },
-    onError: () => {
-      alert(`Gagal menghapus ${deleteType.value === 'question' ? 'pertanyaan' : 'data tanaman'}!`)
-    }
+// Tambahkan fungsi-fungsi berikut ke dalam script setup:
+
+// ===== COMPUTED PROPERTIES =====
+const getCompletionPercentage = computed(() => {
+  if (pertanyaan.length === 0 || jawaban.length === 0) return 0
+  
+  // Hitung rata-rata kelengkapan data
+  let totalAnswered = 0
+  let totalQuestions = pertanyaan.length * jawaban.length
+  
+  jawaban.forEach(j => {
+    pertanyaan.forEach(q => {
+      if (j[q.text] && j[q.text] !== '') {
+        totalAnswered++
+      }
+    })
   })
 }
 
-// ===== SEARCH FUNCTIONALITY =====
-const cariJawaban = async () => {
-  if (!searchTumbuhan.value.trim()) {
+const closeAddModal = () => {
+  showAddModal.value = false
+}
+
+// ===== WATCH UNTUK UPDATE FORM SAAT PERTANYAAN BERUBAH =====
+import { watch } from 'vue'
+
+watch(() => pertanyaan, (newPertanyaan) => {
+  // Update form jawaban ketika ada perubahan pertanyaan
+  initializeAnswerForm()
+  
+  // Update search edit data jika sedang dalam mode edit
+  if (isEditingSearch.value && hasilJawaban.value) {
+    const updatedData = {}
+    newPertanyaan.forEach(q => {
+      updatedData[q.text] = searchEditData.value[q.text] || ''
+    })
+    searchEditData.value = updatedData
+  }
+  
+  // Update edit jawaban data jika sedang dalam mode edit
+  if (editingJawaban.value) {
+    const target = jawaban.find(j => j.tumbuhan === editingJawaban.value)
+    if (target) {
+      const updatedEditData = {}
+      newPertanyaan.forEach(q => {
+        updatedEditData[q.text] = target[q.text] || ''
+      })
+      editJawabanData.value = updatedEditData
+    }
+  }
+}, { deep: true })
+
+// ===== IMPROVED SEARCH FUNCTIONALITY =====
+const searchJawaban = async (searchTerm) => {
+  const term = searchTerm || searchTumbuhan.value
+  if (!term.trim()) {
     alert('Masukkan nama tumbuhan!')
     return
   }
@@ -857,3 +871,23 @@ onMounted(() => {
   initializeAnswerForm()
 })
 </script>
+
+<style scoped>
+/* Custom scrollbar untuk sidebar */
+aside::-webkit-scrollbar {
+  width: 4px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+</style>
